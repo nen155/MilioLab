@@ -42,7 +42,7 @@ const SKILLS: Skill[] = [
       <p class="kicker">habilidades · {{ skills.length }} tecnologías</p>
       <h1>Stack y años de uso</h1>
       <p class="lede">
-        Cada habilidad con su tiempo real de uso, sus proyectos y una línea de tiempo.
+        Cada habilidad con sus **años** de uso, sus proyectos y una línea de tiempo.
         Ordena con los botones: de mayor a menor tiempo, por nombre o por uso más reciente.
       </p>
 
@@ -72,7 +72,7 @@ const SKILLS: Skill[] = [
               <p class="skill-projects">{{ skill.projects.join(' · ') }}</p>
             </div>
             <div class="skill-years">
-              <strong>{{ years(skill) }}</strong>
+              <strong>{{ years(skill) }}<small style="font-size:.55rem;font-family:var(--font-mono);letter-spacing:.08em"> años</small></strong>
               <span class="mono">{{ skill.from }}–{{ skill.to }}</span>
             </div>
           </article>
