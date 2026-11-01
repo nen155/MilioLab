@@ -195,15 +195,15 @@ export class ApiService {
 
   // --- Temas ---------------------------------------------------------------
 
-  themes(): Observable<{ data: Theme[]; allowed: string[] }> {
-    return this.http.get<{ data: Theme[]; allowed: string[] }>(`${this.base}/themes`);
+  themes(): Observable<{ data: Theme[]; allowed: string[]; layouts: string[] }> {
+    return this.http.get<{ data: Theme[]; allowed: string[]; layouts: string[] }>(`${this.base}/themes`);
   }
 
-  createTheme(payload: { name: string; tokens: Record<string, string>; activate?: boolean }) {
+  createTheme(payload: { name: string; tokens: Record<string, string>; layout?: string; activate?: boolean }) {
     return this.http.post<{ data: Theme }>(`${this.base}/themes`, payload).pipe(map((r) => r.data));
   }
 
-  updateTheme(id: number, payload: { name: string; tokens: Record<string, string> }) {
+  updateTheme(id: number, payload: { name: string; tokens: Record<string, string>; layout?: string }) {
     return this.http.put<{ data: Theme }>(`${this.base}/themes/${id}`, payload).pipe(map((r) => r.data));
   }
 

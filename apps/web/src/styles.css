@@ -259,7 +259,8 @@ p {
 
 .brand {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
+  line-height: 1;
   gap: 0.55rem;
   font-family: var(--font-serif);
   font-size: 1.3rem;
@@ -1787,17 +1788,146 @@ body:has([data-theme="Nodos"]) {
 /* --- Logo de la cabecera ------------------------------------------------- */
 
 .brand-logo {
-  height: 1.15em;
+  height: 1.5rem;
   width: auto;
   flex: 0 0 auto;
+  align-self: center;
+  margin: 0 0.1rem 0 0;
   color: var(--ink);
   transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .brand:hover .brand-logo {
-  height: 1.15em;
+  height: 1.5rem;
   width: auto;
   flex: 0 0 auto;
+  align-self: center;
+  margin: 0 0.1rem 0 0;
   color: var(--ink);
   transition: transform 0.2s ease, color 0.2s ease;
+}
+
+
+/* ==========================================================================
+   Variantes de diseño (data-layout en <html>). El contenido es el mismo.
+   ========================================================================== */
+
+/* --- Cartas (Magic) ------------------------------------------------------ */
+
+[data-layout="cards"] .specimen,
+[data-layout="cards"] .node {
+  border: 2px solid var(--line-strong);
+  border-radius: 14px;
+  padding: 0.9rem 0.95rem 1.1rem;
+  background: linear-gradient(160deg, var(--paper-2), var(--paper) 70%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--paper) 70%, transparent);
+}
+
+[data-layout="cards"] .specimen::before {
+  width: 100%;
+  height: 6px;
+  left: 0;
+  top: 0;
+  border: 0;
+  border-radius: 12px 12px 0 0;
+  background: linear-gradient(90deg, var(--accent), transparent);
+}
+
+[data-layout="cards"] .specimen-title {
+  font-family: var(--font-serif);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 1.2rem;
+}
+
+[data-layout="cards"] .specimen-tag {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+}
+
+[data-layout="cards"] .chip {
+  border-radius: 999px;
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* --- Croquis (boulder) --------------------------------------------------- */
+
+[data-layout="sketch"] .specimen,
+[data-layout="sketch"] .node {
+  border: 1.5px dashed var(--line-strong);
+  border-radius: 4px;
+  transform: rotate(-0.5deg);
+  background: transparent;
+}
+
+[data-layout="sketch"] .specimen:nth-child(even) {
+  transform: rotate(0.6deg);
+}
+
+[data-layout="sketch"] .specimen:hover {
+  transform: rotate(0) translateY(-2px);
+}
+
+[data-layout="sketch"] .display,
+[data-layout="sketch"] h1,
+[data-layout="sketch"] h2 {
+  font-style: italic;
+}
+
+[data-layout="sketch"] .kicker {
+  letter-spacing: 0.28em;
+}
+
+[data-layout="sketch"] .specimen-title a {
+  background-image: none;
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+/* --- HUD (shooter) ------------------------------------------------------- */
+
+[data-layout="hud"] .specimen,
+[data-layout="hud"] .node {
+  border-radius: 0;
+  border: 1px solid var(--line-strong);
+  background: color-mix(in srgb, var(--paper) 92%, black 8%);
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+}
+
+[data-layout="hud"] .specimen::before {
+  width: 14px;
+  height: 14px;
+  border: 0;
+  border-top: 2px solid var(--accent);
+  border-left: 2px solid var(--accent);
+  background: none;
+}
+
+[data-layout="hud"] .specimen-tag,
+[data-layout="hud"] .specimen-foot,
+[data-layout="hud"] .node-meta {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+}
+
+[data-layout="hud"] .display,
+[data-layout="hud"] h1,
+[data-layout="hud"] h2 {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+
+[data-layout="hud"] .chip {
+  border-radius: 0;
+  border-color: var(--accent);
+}
+
+[data-layout="hud"] .specimen:hover,
+[data-layout="hud"] .node:hover {
+  box-shadow: 0 0 0 1px var(--accent), 0 0 22px color-mix(in srgb, var(--accent) 40%, transparent);
 }

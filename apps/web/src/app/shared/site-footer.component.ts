@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 
 import { LabService } from '../core/lab.service';
 import { MenuItem } from '../core/models';
+import { I18nService } from '../core/i18n';
 import { SiteService } from '../core/site.service';
 
 @Component({
@@ -23,7 +24,7 @@ import { SiteService } from '../core/site.service';
         </div>
 
         <div>
-          <h3>Índice</h3>
+          <h3>{{ i18n.t('footer.index') }}</h3>
           <ul>
             @for (item of navigation(); track item.id) {
               @if (isExternal(item.url)) {
@@ -32,12 +33,12 @@ import { SiteService } from '../core/site.service';
                 <li><a [routerLink]="item.url">{{ item.label }}</a></li>
               }
             }
-            <li><a routerLink="/texto">Texto plano</a></li>
+            <li><a routerLink="/texto">{{ i18n.t('footer.plain') }}</a></li>
           </ul>
         </div>
 
         <div>
-          <h3>Señales</h3>
+          <h3>{{ i18n.t('footer.signals') }}</h3>
           <ul>
             @if (social('social_github'); as github) {
               <li><a [href]="github" target="_blank" rel="noopener">GitHub</a></li>
@@ -53,20 +54,21 @@ import { SiteService } from '../core/site.service';
             }
             <li><a href="/feed.xml">RSS</a></li>
             <li><a href="/llms.txt">llms.txt</a></li>
-            <li><button class="egg-trigger" type="button" (click)="lab.show()">experimentos</button></li>
+            <li><button class="egg-trigger" type="button" (click)="lab.show()">{{ i18n.t('footer.experiments') }}</button></li>
           </ul>
         </div>
       </div>
 
       <div class="footer-legal">
         <span>© {{ year }} {{ site.siteName() }}</span>
-        <span class="mono">sin cookies · sin rastreadores</span>
+        <span class="mono">{{ i18n.t('footer.noCookies') }}</span>
       </div>
     </footer>
   `,
 })
 export class SiteFooterComponent {
   protected readonly site = inject(SiteService);
+  protected readonly i18n = inject(I18nService);
   protected readonly lab = inject(LabService);
   protected readonly year = new Date().getFullYear();
   protected readonly email = computed(() => this.site.setting<string>('contact_email', ''));

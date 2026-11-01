@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
+import { I18nService } from '../core/i18n';
 import { SiteService } from '../core/site.service';
 
 @Component({
@@ -21,7 +22,7 @@ import { SiteService } from '../core/site.service';
         aria-controls="nav-principal"
         (click)="open.set(!open())"
       >
-        índice
+        {{ i18n.t('nav.index') }}
       </button>
 
       <nav class="nav" id="nav-principal" [class.nav-open]="open()" aria-label="Principal">
@@ -35,12 +36,12 @@ import { SiteService } from '../core/site.service';
       </nav>
 
       <form class="search" role="search" (submit)="search($event)">
-        <label class="mono muted" for="q">buscar</label>
+        <label class="mono muted" for="q">{{ i18n.t('nav.search') }}</label>
         <input
           id="q"
           type="search"
           name="q"
-          placeholder="término…"
+          [placeholder]="i18n.t('nav.searchPlaceholder')"
           [value]="query()"
           (input)="query.set($any($event.target).value)"
         />
@@ -50,6 +51,7 @@ import { SiteService } from '../core/site.service';
 })
 export class SiteHeaderComponent {
   protected readonly site = inject(SiteService);
+  protected readonly i18n = inject(I18nService);
   private readonly router = inject(Router);
 
   protected readonly open = signal(false);

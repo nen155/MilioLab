@@ -30,6 +30,7 @@ class SiteController extends Controller
             'settings' => Setting::toArrayOfValues(),
             'theme' => $theme === null ? null : [
                 'name' => $theme->name,
+                'layout' => $theme->layout,
                 'tokens' => $theme->tokens,
             ],
             'home' => $homeId > 0 ? Page::query()->published()->whereKey($homeId)->value('slug') : null,

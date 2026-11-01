@@ -127,6 +127,7 @@ export interface Theme {
   id: number;
   name: string;
   slug: string;
+  layout: 'notebook' | 'cards' | 'sketch' | 'hud';
   tokens: Record<string, string>;
   is_active: boolean;
   updated_at?: string | null;

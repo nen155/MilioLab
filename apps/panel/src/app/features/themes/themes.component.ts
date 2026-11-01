@@ -76,6 +76,16 @@ import { Theme } from '../../core/models';
           <input id="theme-name" class="input" [(ngModel)]="name" placeholder="Papel viejo" />
         </div>
 
+        <div class="field">
+          <label for="theme-layout">Diseño</label>
+          <select id="theme-layout" class="input" [(ngModel)]="layout">
+            <option value="notebook">Cuaderno (papel y libreta)</option>
+            <option value="cards">Cartas (MTG)</option>
+            <option value="sketch">Croquis (boulder)</option>
+            <option value="hud">HUD (shooter)</option>
+          </select>
+        </div>
+
         <div class="form-row">
           @for (token of allowed(); track token) {
             <div class="field">
@@ -138,6 +148,7 @@ export class ThemesComponent implements OnInit {
   protected readonly editingId = signal<number | null>(null);
 
   protected name = '';
+  protected layout: 'notebook' | 'cards' | 'sketch' | 'hud' = 'notebook';
   protected importJson = '';
   protected importActivate = true;
 
@@ -148,12 +159,14 @@ export class ThemesComponent implements OnInit {
   protected edit(theme: Theme): void {
     this.editingId.set(theme.id);
     this.name = theme.name;
+    this.layout = theme.layout ?? 'notebook';
     this.tokens.set({ ...theme.tokens });
   }
 
   protected newTheme(): void {
     this.editingId.set(null);
     this.name = '';
+    this.layout = 'notebook';
     this.tokens.set({ ...(this.themes().find((t) => t.is_active)?.tokens ?? {}) });
   }
 
@@ -182,8 +195,8 @@ export class ThemesComponent implements OnInit {
 
     const id = this.editingId();
     const request = id
-      ? this.api.updateTheme(id, { name: this.name.trim(), tokens: this.tokens() })
-      : this.api.createTheme({ name: this.name.trim(), tokens: this.tokens() });
+      ? this.api.updateTheme(id, { name: this.name.trim(), tokens: this.tokens(), layout: this.layout })
+      : this.api.createTheme({ name: this.name.trim(), tokens: this.tokens(), layout: this.layout });
 
     request.subscribe({
       next: (theme) => {

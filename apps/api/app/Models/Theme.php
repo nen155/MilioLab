@@ -6,7 +6,7 @@ use App\Models\Concerns\HasSlug;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['name', 'slug', 'tokens', 'is_active'])]
+#[Fillable(['name', 'slug', 'tokens', 'layout', 'is_active'])]
 class Theme extends Model
 {
     use HasSlug;
@@ -21,6 +21,9 @@ class Theme extends Model
         '--grid', '--grid-size', '--measure', '--rail', '--radius',
         '--font-serif', '--font-sans', '--font-mono',
     ];
+
+    /** Variantes de diseño disponibles. El contenido es el mismo; cambia la piel. */
+    public const LAYOUTS = ['notebook', 'cards', 'sketch', 'hud'];
 
     protected function casts(): array
     {

@@ -302,6 +302,7 @@ class DatabaseSeeder extends Seeder
             ['slug' => 'cuaderno'],
             [
                 'name' => 'Cuaderno de laboratorio',
+                'layout' => 'notebook',
                 'tokens' => [
                     '--paper' => '#f6f3ea',
                     '--paper-2' => '#efeade',
@@ -322,6 +323,7 @@ class DatabaseSeeder extends Seeder
             ['slug' => 'nodos'],
             [
                 'name' => 'Nodos',
+                'layout' => 'sketch',
                 'tokens' => [
                     '--paper' => '#120e1d',
                     '--paper-2' => '#1a1430',

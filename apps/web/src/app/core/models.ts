@@ -77,6 +77,7 @@ export interface Page {
 
 export interface SiteTheme {
   name: string;
+  layout?: 'notebook' | 'cards' | 'sketch' | 'hud';
   tokens: Record<string, string>;
 }
 

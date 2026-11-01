@@ -1,6 +1,7 @@
 import { Component, effect, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
+import { I18nService } from './core/i18n';
 import { LabService } from './core/lab.service';
 import { SiteService } from './core/site.service';
 import { LabPanelComponent } from './features/lab/lab-panel.component';
@@ -64,9 +65,11 @@ export class App {
   protected readonly year = new Date().getFullYear();
 
   private readonly site = inject(SiteService);
+  private readonly i18n = inject(I18nService);
 
   constructor() {
     this.site.load().subscribe();
+    this.i18n.set(this.i18n.locale());
 
     // Tema activo (se elige en el panel) + acento suelto de los ajustes.
     effect(() => {
@@ -77,6 +80,7 @@ export class App {
 
       if (theme) {
         root.dataset['theme'] = theme.name;
+        root.dataset['layout'] = theme.layout ?? 'notebook';
         Object.entries(theme.tokens).forEach(([key, value]) => root.style.setProperty(key, value));
       }
 

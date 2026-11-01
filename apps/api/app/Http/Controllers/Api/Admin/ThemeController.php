@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Theme;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class ThemeController extends Controller
@@ -20,6 +21,7 @@ class ThemeController extends Controller
                 ->map(fn (Theme $theme) => $this->payload($theme))
                 ->all(),
             'allowed' => Theme::ALLOWED_TOKENS,
+            'layouts' => Theme::LAYOUTS,
         ];
     }
 
@@ -76,6 +78,7 @@ class ThemeController extends Controller
         $theme = Theme::query()->create([
             'name' => $data['name'],
             'tokens' => Theme::sanitizeTokens($data['tokens']),
+            'layout' => $request->input('layout', 'notebook'),
             'is_active' => false,
         ]);
 
@@ -95,6 +98,7 @@ class ThemeController extends Controller
             'name' => ['required', 'string', 'max:120'],
             'slug' => ['nullable', 'string', 'max:120'],
             'tokens' => ['required', 'array'],
+            'layout' => ['nullable', Rule::in(Theme::LAYOUTS)],
         ]);
 
         $tokens = Theme::sanitizeTokens($data['tokens']);
@@ -109,6 +113,7 @@ class ThemeController extends Controller
             'name' => $data['name'],
             'slug' => $data['slug'] ?? null,
             'tokens' => $tokens,
+            'layout' => $data['layout'] ?? $theme?->layout ?? 'notebook',
             'is_active' => $theme?->is_active ?? false,
         ];
     }
@@ -123,6 +128,7 @@ class ThemeController extends Controller
             'name' => $theme->name,
             'slug' => $theme->slug,
             'tokens' => $theme->tokens,
+            'layout' => $theme->layout,
             'is_active' => $theme->is_active,
             'updated_at' => $theme->updated_at?->toIso8601String(),
         ];
