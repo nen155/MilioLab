@@ -100,6 +100,12 @@ Cada requisito enlaza las historias que lo cubren (ver
 | RF-10.1 | Existe un tema morado con estética de grafo y las entradas se muestran como nodos conectados | US-11.1 |
 | RF-10.3 | El mapa se recorre con teclado, pausa los vídeos fuera de pantalla y se apila en móvil | US-11.3 |
 
+## RF-11 · Contenido del portfolio
+
+| ID | Requisito | Historias |
+|---|---|---|
+| RF-11.1 | El sitio publica perfil, habilidades, proyectos, contacto y entradas técnicas basadas en la trayectoria real | US-12.1 |
+
 ## RNF · Requisitos no funcionales
 
 | ID | Requisito | Historias |

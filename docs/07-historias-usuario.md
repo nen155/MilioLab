@@ -21,6 +21,7 @@ Estado: ✅ Hecha · ⏳ Pendiente · 🧩 Parcial.
 | EP-8 | Identidad visual y experiencia |
 | EP-9 | Temas |
 | EP-10 | Nodos |
+| EP-11 | Contenido |
 
 ## Índice
 
@@ -61,6 +62,7 @@ Estado: ✅ Hecha · ⏳ Pendiente · 🧩 Parcial.
 | US-11.1 | Tema «Nodos» (grafos y morado) | EP-10 | RF-10.1 | ✅ | [`US-11.1`](historias-usuario/US-11.1-tema-nodos.md) |
 | US-11.2 | Nodos con vídeo generado (retirada) | EP-10 | — | 🗑️ | [`US-11.2`](historias-usuario/US-11.2-nodos-video-generado.md) |
 | US-11.3 | Mapa de nodos: navegación, rendimiento y ramas | EP-10 | RF-10.3, RNF-10 | ✅ | [`US-11.3`](historias-usuario/US-11.3-mapa-nodos-afinado.md) |
+| US-12.1 | Contenido del portfolio (CV, proyectos y contacto) | EP-11 | RF-11.1 | ✅ | [`US-12.1`](historias-usuario/US-12.1-contenido-portfolio.md) |
 
 ## Pendientes (backlog)
 
