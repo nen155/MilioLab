@@ -1,15 +1,23 @@
 # MilioLab · web pública (Angular)
 #
-# Se sube al docroot del dominio (p. ej. /htdocs/miliolab).
-# - Las rutas de Angular caen a index.html.
-# - /sitemap.xml y /feed.xml los sirve la API (subcarpeta /api).
+# Se sube al docroot del dominio (/miliolab).
+# - /api y /milio tienen su propio .htaccess: se dejan pasar tal cual.
+# - /app (aplicación Laravel) queda prohibida.
+# - El resto de rutas cae a index.html (SPA).
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
 
+  # La aplicación Laravel no es accesible por HTTP.
+  RewriteRule ^app(/|$) - [F]
+
+  # Rutas especiales servidas por la API.
   RewriteRule ^sitemap\.xml$ api/sitemap [L]
   RewriteRule ^feed\.xml$ api/feed [L]
+
+  # La API y el panel gestionan sus propias rutas.
+  RewriteRule ^(api|milio)(/|$) - [L]
 
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d

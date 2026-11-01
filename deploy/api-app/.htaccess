@@ -1,0 +1,14 @@
+# MilioLab · aplicación Laravel (NO accesible por HTTP).
+#
+# Vive dentro del docroot porque el hosting no permite crear carpetas en la
+# raíz del webspace. Este archivo bloquea todo el directorio; además el
+# `.htaccess` de la web devuelve 403 para /app.
+
+<IfModule mod_authz_core.c>
+  Require all denied
+</IfModule>
+
+<IfModule !mod_authz_core.c>
+  Order allow,deny
+  Deny from all
+</IfModule>

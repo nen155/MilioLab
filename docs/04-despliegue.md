@@ -7,14 +7,17 @@ Dominio: **miliolab.com**. Base de datos: **MariaDB 11.8** en
 ## 1. Estructura remota
 
 ```
-/htdocs/miliolab/            → web pública (build de apps/web + .htaccess)
-/htdocs/miliolab/milio/      → panel (build de apps/panel + .htaccess)
-/htdocs/miliolab/api/        → public/ de Laravel (index.php, .htaccess, media/)
-/htdocs/miliolab-api/        → aplicación Laravel completa (fuera del docroot)
+/miliolab/            → web pública (build de apps/web + .htaccess)
+/miliolab/milio/      → panel (build de apps/panel + .htaccess)
+/miliolab/api/        → public/ de Laravel (index.php, .htaccess, media/)
+/miliolab/app/        → aplicación Laravel completa (bloqueada por .htaccess)
 ```
 
-`/htdocs/miliolab` debe ser el **docroot de miliolab.com**. Si el dominio apunta a
-otra carpeta, cambia `DEPLOY_WEB_DIR` en `deploy/deploy.env`.
+`/miliolab` es el **docroot de miliolab.com** (comprobado en el webspace). La raíz
+del hosting es de solo lectura, así que la aplicación Laravel vive dentro del
+docroot en `app/`, protegida por `deploy/api-app/.htaccess` y por una regla `[F]`
+en el `.htaccess` de la web. Si el dominio apuntara a otra carpeta, cambia
+`DEPLOY_WEB_DIR` en `deploy/deploy.env`.
 
 ## 2. Preparar la base de datos
 
@@ -72,10 +75,10 @@ La forma recomendada es dejar que el script genere el `.env`:
    ```
 
 `-Env` sube `deploy/out/api.env` generado desde `deploy/api.env.template` a
-`/htdocs/miliolab-api/.env`. `-Seed` crea el usuario administrador y el contenido
+`/miliolab/app/.env`. `-Seed` crea el usuario administrador y el contenido
 de ejemplo. `deploy.php` genera la `APP_KEY` automáticamente si está vacía.
 
-> Alternativa manual: crea `/htdocs/miliolab-api/.env` por SFTP copiando
+> Alternativa manual: crea `/miliolab/app/.env` por SFTP copiando
 > `apps/api/.env.example`, y ejecuta una vez
 > `https://miliolab.com/api/deploy.php?token=…&key=1` para generar la clave.
 
@@ -88,7 +91,7 @@ APP_URL=https://miliolab.com
 DB_HOST=db5021798117.hosting-data.io
 DB_DATABASE=dbs16295460
 DB_USERNAME=dbu1543693
-MEDIA_ROOT=/htdocs/miliolab/api/media
+MEDIA_ROOT=/miliolab/api/media
 MEDIA_URL=https://miliolab.com/media
 ```
 
@@ -121,7 +124,7 @@ son idempotentes, pero sobrescriben los ajustes con los valores por defecto).
 
 - **Base de datos**: exporta desde phpMyAdmin o `mysqldump` (ver
   [`02-modelo-datos.md`](02-modelo-datos.md)).
-- **Medios**: descarga `/htdocs/miliolab/api/media` por SFTP.
+- **Medios**: descarga `/miliolab/api/media` por SFTP.
 - **Código**: está en GitHub (`nen155/MilioLab`).
 
 ## 10. Problemas habituales
@@ -129,8 +132,8 @@ son idempotentes, pero sobrescriben los ajustes con los valores por defecto).
 | Síntoma | Causa / solución |
 |---|---|
 | 500 en la API | Revisa `storage/logs/laravel.log` y que `storage/` y `bootstrap/cache/` sean escribibles (775). |
-| 404 en `/api/v1/...` | Falta `index.php` en `/htdocs/miliolab/api` o el `.htaccess` de Laravel. |
-| Las imágenes suben pero no se ven | `MEDIA_ROOT` no apunta a `/htdocs/miliolab/api/media` o faltan permisos. |
+| 404 en `/api/v1/...` | Falta `index.php` en `/miliolab/api` o el `.htaccess` de Laravel. |
+| Las imágenes suben pero no se ven | `MEDIA_ROOT` no apunta a `/miliolab/api/media` o faltan permisos. |
 | «No se pudo conectar con la API» | `APP_URL`, CORS o la API caída; revisa `/api/up`. |
 | El panel entra pero todo da 401 | Token caducado: cierra sesión y vuelve a entrar. |
 | `sitemap.xml` devuelve el HTML de la web | Falta la regla de reescritura del `.htaccess` de la web. |

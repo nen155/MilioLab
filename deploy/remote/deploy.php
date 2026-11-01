@@ -31,6 +31,19 @@ foreach (['pdo_mysql', 'mbstring', 'openssl', 'tokenizer', 'xml', 'ctype', 'json
 echo 'vendor: '.(is_dir($appPath.'/vendor') ? 'OK' : 'FALTA')."\n";
 echo '.env: '.(is_file($appPath.'/.env') ? 'OK' : 'FALTA')."\n\n";
 
+// Carpetas de escritura (el zip omite storage/ para no pisar datos).
+foreach ([
+    'storage', 'storage/app', 'storage/app/public', 'storage/app/purifier',
+    'storage/framework', 'storage/framework/cache', 'storage/framework/cache/data',
+    'storage/framework/sessions', 'storage/framework/views', 'storage/logs', 'bootstrap/cache',
+] as $dir) {
+    $path = $appPath.'/'.$dir;
+
+    if (! is_dir($path)) {
+        @mkdir($path, 0775, true);
+    }
+}
+
 require $appPath.'/vendor/autoload.php';
 
 $app = require $appPath.'/bootstrap/app.php';
@@ -61,7 +74,7 @@ $run('route:cache');
 $run('view:cache');
 
 // Permisos de las carpetas que escribe Laravel.
-foreach (['storage', 'storage/app', 'storage/framework', 'storage/framework/cache', 'storage/framework/sessions', 'storage/framework/views', 'storage/logs', 'bootstrap/cache', 'public/media'] as $dir) {
+foreach (['storage', 'storage/app', 'storage/framework', 'storage/framework/cache', 'storage/framework/sessions', 'storage/framework/views', 'storage/logs', 'bootstrap/cache'] as $dir) {
     $path = $appPath.'/'.$dir;
 
     if (is_dir($path)) {

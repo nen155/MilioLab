@@ -84,7 +84,8 @@ $appPathPhp = "__DIR__.'/$relativeApp'"
 function New-RemoteFile([string]$template, [string]$target) {
     $content = Get-Content $template -Raw
     $content = $content.Replace('__APP_PATH__', $appPathPhp).Replace('__DEPLOY_TOKEN__', $token)
-    Set-Content -Path $target -Value $content -Encoding UTF8 -NoNewline
+    # Sin BOM: un BOM antes de <?php rompe las cabeceras HTTP.
+    [System.IO.File]::WriteAllText($target, $content, (New-Object System.Text.UTF8Encoding($false)))
 }
 
 $tmp = Join-Path $env:TEMP ("miliolab-deploy-" + [guid]::NewGuid().ToString('N'))
@@ -116,6 +117,9 @@ if ($Env) {
     }
 
     Set-Content -Path (Join-Path $tmp "api.env") -Value $template -Encoding UTF8 -NoNewline
+    # El .env también sin BOM.
+    $envPath = Join-Path $tmp "api.env"
+    [System.IO.File]::WriteAllText($envPath, $template, (New-Object System.Text.UTF8Encoding($false)))
 }
 
 $session = "${protocol}://" + [uri]::EscapeDataString($cfg['DEPLOY_USER']) + ":" +
@@ -130,7 +134,6 @@ function Invoke-WinScp([string[]]$lines, [string]$step, [switch]$ContinueOnError
     $header = @(
         "option batch $batch",
         "option confirm off",
-        "log `"$log`"",
         "open `"$session`" -hostkey=`"*`""
     )
 
@@ -147,10 +150,10 @@ function Invoke-WinScp([string[]]$lines, [string]$step, [switch]$ContinueOnError
 try {
     # 0) Carpetas remotas (si ya existen, mkdir falla y se ignora)
     Invoke-WinScp @(
-        "call mkdir `"$apiAppDir`"",
-        "call mkdir `"$apiPublicDir`"",
-        "call mkdir `"$panelDir`"",
-        "call mkdir `"$apiPublicDir/media`""
+        "mkdir `"$apiAppDir`"",
+        "mkdir `"$apiPublicDir`"",
+        "mkdir `"$panelDir`"",
+        "mkdir `"$apiPublicDir/media`""
     ) "Creando carpetas" -ContinueOnError
 
     # 1) API: subir zip + extractor y ejecutarlo
@@ -183,7 +186,8 @@ try {
     Invoke-WinScp @(
         "put `"$(Join-Path $tmp 'index.php')`" `"$apiPublicDir/index.php`"",
         "put `"$(Join-Path $repoRoot 'apps/api/public/.htaccess')`" `"$apiPublicDir/.htaccess`"",
-        "call chmod 775 `"$apiPublicDir/media`"",
+        "put `"$(Join-Path $PSScriptRoot 'api-app/.htaccess')`" `"$apiAppDir/.htaccess`"",
+        "chmod 775 `"$apiPublicDir/media`"",
         "rm `"$apiPublicDir/unzip-deploy.php`"",
         "rm `"$apiPublicDir/deploy.php`""
     ) "Publicando la API" -ContinueOnError

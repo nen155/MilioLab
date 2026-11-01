@@ -44,13 +44,19 @@ $skipped = 0;
 $errors = 0;
 
 for ($i = 0; $i < $zip->numFiles; $i++) {
-    $name = $zip->getNameIndex($i);
+    // Windows puede guardar las rutas con "\": se normalizan.
+    $name = str_replace('\\', '/', (string) $zip->getNameIndex($i));
 
-    if (substr($name, -1) === '/' || ! str_starts_with($name, $prefix)) {
+    if (substr($name, -1) === '/' || $name === '') {
         continue;
     }
 
-    $relative = substr($name, strlen($prefix));
+    // Según cómo se comprimió, el zip puede llevar la carpeta raíz o no.
+    $relative = str_starts_with($name, $prefix) ? substr($name, strlen($prefix)) : $name;
+
+    if ($relative === '') {
+        continue;
+    }
 
     if (in_array($relative, $skipExact, true)) {
         $skipped++;

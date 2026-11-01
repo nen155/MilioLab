@@ -50,6 +50,12 @@ docs/       Arquitectura, modelo de datos, API y guía de despliegue
 
 ## Documentación
 
+**Especificación (SDD)**
+- [`docs/05-sdd.md`](docs/05-sdd.md) — metodología y definición de hecho
+- [`docs/06-requisitos.md`](docs/06-requisitos.md) — RF y RNF
+- [`docs/07-historias-usuario.md`](docs/07-historias-usuario.md) — épicas e índice de 25 historias
+
+**Técnica**
 - [`docs/01-arquitectura.md`](docs/01-arquitectura.md)
 - [`docs/02-modelo-datos.md`](docs/02-modelo-datos.md)
 - [`docs/03-api.md`](docs/03-api.md)
