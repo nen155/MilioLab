@@ -1257,3 +1257,82 @@ body:has([data-theme="Nodos"]) {
 [data-theme="Nodos"] .rail-mark {
   color: var(--accent);
 }
+
+
+/* --- Nodos: origen, ramas y extracto ------------------------------------ */
+
+.node-origin {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), 0 0 26px rgb(168 85 247 / 18%);
+}
+
+.node-origin .node-port {
+  background: var(--accent);
+}
+
+.node-branch {
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.node-excerpt {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0.35rem 0 0.55rem;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  opacity: 0;
+  max-height: 0;
+  transition: opacity 0.18s ease, max-height 0.18s ease;
+}
+
+.node:hover .node-excerpt,
+.node:focus-within .node-excerpt {
+  opacity: 1;
+  max-height: 4rem;
+}
+
+.node-title a:focus-visible {
+  outline-offset: 4px;
+}
+
+/* En móvil el grafo se lee en vertical. */
+@media (max-width: 760px) {
+  .node-map {
+    flex-direction: column;
+    gap: 2.4rem;
+    overflow-x: visible;
+  }
+
+  .node {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+
+  .node + .node::before {
+    top: -2.4rem;
+    left: 50%;
+    width: 1px;
+    height: 2.4rem;
+    background: linear-gradient(180deg, transparent, var(--accent));
+  }
+
+  .node + .node::after {
+    top: -0.35rem;
+    left: calc(50% - 3px);
+  }
+
+  .node-port {
+    top: auto;
+    bottom: -5px;
+    right: 50%;
+  }
+
+  .node-excerpt {
+    opacity: 1;
+    max-height: none;
+  }
+}

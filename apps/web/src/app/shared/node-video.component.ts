@@ -40,6 +40,9 @@ export class NodeVideoComponent implements OnDestroy {
 
   private frame = 0;
   private animation?: number;
+  private observer?: IntersectionObserver;
+  private userPaused = false;
+  private visible = true;
   private readonly reduced =
     typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -52,7 +55,8 @@ export class NodeVideoComponent implements OnDestroy {
       // Espera a que el canvas exista en el DOM.
       queueMicrotask(() => {
         this.paint();
-        if (!this.reduced) {
+        this.observe();
+        if (!this.reduced && this.visible) {
           this.play();
         }
       });
@@ -60,15 +64,41 @@ export class NodeVideoComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.observer?.disconnect();
     this.stop();
   }
 
   protected toggle(): void {
     if (this.playing()) {
+      this.userPaused = true;
       this.stop();
     } else {
+      this.userPaused = false;
       this.play();
     }
+  }
+
+  /** Pausa los vídeos que salen de pantalla (rendimiento y batería). */
+  private observe(): void {
+    if (typeof IntersectionObserver === 'undefined') {
+      return;
+    }
+
+    this.observer?.disconnect();
+    this.observer = new IntersectionObserver(
+      ([entry]) => {
+        this.visible = entry.isIntersecting;
+
+        if (!this.visible) {
+          this.stop();
+        } else if (!this.reduced && !this.userPaused) {
+          this.play();
+        }
+      },
+      { threshold: 0.25 },
+    );
+
+    this.observer.observe(this.canvas().nativeElement);
   }
 
   private play(): void {

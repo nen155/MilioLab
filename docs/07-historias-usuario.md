@@ -60,6 +60,7 @@ Estado: ✅ Hecha · ⏳ Pendiente · 🧩 Parcial.
 | US-10.2 | Crear, exportar e importar temas | EP-9 | RF-9.3, RF-9.4 | ✅ | [`US-10.2`](historias-usuario/US-10.2-importar-temas.md) |
 | US-11.1 | Tema «Nodos» (grafos y morado) | EP-10 | RF-10.1 | ✅ | [`US-11.1`](historias-usuario/US-11.1-tema-nodos.md) |
 | US-11.2 | Nodos con vídeo generado | EP-10 | RF-10.2, RNF-10 | ✅ | [`US-11.2`](historias-usuario/US-11.2-nodos-video-generado.md) |
+| US-11.3 | Mapa de nodos: navegación, rendimiento y ramas | EP-10 | RF-10.3, RNF-10 | ✅ | [`US-11.3`](historias-usuario/US-11.3-mapa-nodos-afinado.md) |
 
 ## Pendientes (backlog)
 
