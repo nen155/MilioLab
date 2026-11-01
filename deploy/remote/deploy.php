@@ -63,6 +63,9 @@ if (($_GET['key'] ?? '') === '1' || empty(config('app.key'))) {
     $run('key:generate', ['--force' => true]);
 }
 
+// La configuración cacheada de un despliegue anterior oculta el .env nuevo.
+$run('config:clear');
+
 $run('migrate', ['--force' => true]);
 
 if (($_GET['seed'] ?? '') === '1') {

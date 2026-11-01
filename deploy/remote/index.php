@@ -18,6 +18,12 @@ if (file_exists($maintenance = $app.'/storage/framework/maintenance.php')) {
     require $maintenance;
 }
 
+// La API se sirve en /api: se le dice a Symfony que la raíz es el dominio,
+// para que el prefijo `api` de las rutas case con la URL real.
+$_SERVER['SCRIPT_NAME'] = '/index.php';
+$_SERVER['PHP_SELF'] = '/index.php';
+$_SERVER['SCRIPT_FILENAME'] = __DIR__.'/index.php';
+
 require $app.'/vendor/autoload.php';
 
 (require_once $app.'/bootstrap/app.php')->handleRequest(Request::capture());

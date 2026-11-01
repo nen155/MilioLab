@@ -178,4 +178,4 @@ Authorization: Bearer …
 |---|---|
 | `GET /api/sitemap` | `sitemap.xml` (Apache lo publica en `/sitemap.xml`) |
 | `GET /api/feed` | RSS 2.0 (Apache lo publica en `/feed.xml`) |
-| `GET /api/up` | Health check de Laravel |
+| `GET /api/v1/site` | Comprobación rápida de que la API responde |

@@ -131,7 +131,7 @@ class PublicContentTest extends TestCase
         Page::query()->create(['title' => 'Sobre mí', 'status' => Page::STATUS_PUBLISHED]);
         $this->publishedPost();
 
-        $response = $this->get('/sitemap');
+        $response = $this->get('/api/sitemap');
         $base = rtrim((string) config('app.url'), '/');
 
         $response->assertOk();

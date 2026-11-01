@@ -198,7 +198,9 @@ try {
 
     # 4) Web pública y panel
     Invoke-WinScp @(
-        "synchronize remote `"$(Join-Path $out 'web')`" `"$webDir`""
+        "synchronize remote `"$(Join-Path $out 'web')`" `"$webDir`"",
+        "put `"$(Join-Path $PSScriptRoot 'remote/sitemap.php')`" `"$webDir/sitemap.php`"",
+        "put `"$(Join-Path $PSScriptRoot 'remote/feed.php')`" `"$webDir/feed.php`""
     ) "Subiendo la web"
 
     Invoke-WinScp @(

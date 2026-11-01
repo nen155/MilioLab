@@ -12,17 +12,20 @@
   # La aplicación Laravel no es accesible por HTTP.
   RewriteRule ^app(/|$) - [F]
 
-  # Rutas especiales servidas por la API.
-  RewriteRule ^sitemap\.xml$ api/sitemap [L]
-  RewriteRule ^feed\.xml$ api/feed [L]
+  # Rutas especiales servidas por la API (puentes en la raíz).
+  RewriteRule ^sitemap\.xml$ sitemap.php [L]
+  RewriteRule ^feed\.xml$ feed.php [L]
 
   # La API y el panel gestionan sus propias rutas.
-  RewriteRule ^(api|milio)(/|$) - [L]
+  RewriteCond %{REQUEST_URI} ^/(api|milio)(/|$)
+  RewriteRule ^ - [L]
 
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
+  # Nunca mandar /api ni /milio a la SPA.
+  RewriteCond %{REQUEST_URI} !^/(api|milio)(/|$)
   RewriteRule ^ index.html [L]
 </IfModule>
 

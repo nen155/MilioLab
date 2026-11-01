@@ -10,11 +10,17 @@ use App\Http\Controllers\Api\Admin\SettingController as AdminSettingController;
 use App\Http\Controllers\Api\Admin\StatsController as AdminStatsController;
 use App\Http\Controllers\Api\Admin\TagController as AdminTagController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\FeedController;
 use App\Http\Controllers\Api\PublicPageController;
 use App\Http\Controllers\Api\PublicPostController;
 use App\Http\Controllers\Api\SiteController;
+use App\Http\Controllers\Api\SitemapController;
 use App\Http\Controllers\Api\TaxonomyController;
 use Illuminate\Support\Facades\Route;
+
+// Sitemap y RSS (sin versión: /api/sitemap y /api/feed).
+Route::get('sitemap', SitemapController::class);
+Route::get('feed', FeedController::class);
 
 /*
 |--------------------------------------------------------------------------

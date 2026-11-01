@@ -64,7 +64,7 @@ La forma recomendada es dejar que el script genere el `.env`:
    ```dotenv
    DEPLOY_SITE_URL=https://miliolab.com
    DEPLOY_DB_PASSWORD=…        # contraseña de dbu1543693
-   DEPLOY_ADMIN_EMAIL=tu-correo@ejemplo.com
+   DEPLOY_ADMIN_EMAIL=admin@miliolab.com
    DEPLOY_ADMIN_PASSWORD=…     # contraseña inicial del panel
    ```
 
@@ -101,7 +101,7 @@ MEDIA_URL=https://miliolab.com/media
 |---|---|
 | `https://miliolab.com/` | Portada con las entradas de ejemplo |
 | `https://miliolab.com/milio/` | Login del panel (admin@…) |
-| `https://miliolab.com/api/up` | `200` con el health check |
+| `https://miliolab.com/api/v1/site` | JSON con ajustes y menú |
 | `https://miliolab.com/api/v1/site` | JSON con ajustes y menú |
 | `https://miliolab.com/sitemap.xml` | XML con páginas y entradas |
 | `https://miliolab.com/feed.xml` | RSS |
@@ -134,7 +134,7 @@ son idempotentes, pero sobrescriben los ajustes con los valores por defecto).
 | 500 en la API | Revisa `storage/logs/laravel.log` y que `storage/` y `bootstrap/cache/` sean escribibles (775). |
 | 404 en `/api/v1/...` | Falta `index.php` en `/miliolab/api` o el `.htaccess` de Laravel. |
 | Las imágenes suben pero no se ven | `MEDIA_ROOT` no apunta a `/miliolab/api/media` o faltan permisos. |
-| «No se pudo conectar con la API» | `APP_URL`, CORS o la API caída; revisa `/api/up`. |
+| «No se pudo conectar con la API» | `APP_URL`, CORS o la API caída; revisa `/api/v1/site`. |
 | El panel entra pero todo da 401 | Token caducado: cierra sesión y vuelve a entrar. |
 | `sitemap.xml` devuelve el HTML de la web | Falta la regla de reescritura del `.htaccess` de la web. |
 
