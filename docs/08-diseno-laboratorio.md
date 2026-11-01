@@ -68,10 +68,10 @@ Solo se aceptan las claves de `Theme::ALLOWED_TOKENS`; los valores con `{}`, `;`
 
 ## Tema «Nodos»
 
-Tema morado con estética de grafo: rejilla de puntos, nodos con puertos y
-conectores, y un **vídeo sintetizado por nodo** (tipografía cinética + onda)
-generado en el navegador a partir del título y la entradilla. No descarga nada y
-respeta `prefers-reduced-motion`. Se puede volver al tema «Cuaderno» desde el panel.
+Tema morado con estética de grafo: rejilla de puntos, nodos con puertos,
+conectores, nodo origen y navegación con teclado. Cada nodo muestra la **portada**
+de la entrada cuando existe. El vídeo sintetizado por nodo se retiró (US-11.2);
+el hueco está preparado para un clip generado por IA en el futuro.
 
 ## Rendimiento
 

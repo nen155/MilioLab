@@ -98,7 +98,6 @@ Cada requisito enlaza las historias que lo cubren (ver
 | ID | Requisito | Historias |
 |---|---|---|
 | RF-10.1 | Existe un tema morado con estética de grafo y las entradas se muestran como nodos conectados | US-11.1 |
-| RF-10.2 | Cada nodo incluye un vídeo corto generado a partir de su título y entradilla | US-11.2 |
 | RF-10.3 | El mapa se recorre con teclado, pausa los vídeos fuera de pantalla y se apila en móvil | US-11.3 |
 
 ## RNF · Requisitos no funcionales

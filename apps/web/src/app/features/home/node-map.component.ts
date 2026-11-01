@@ -3,18 +3,16 @@ import { RouterLink } from '@angular/router';
 
 import { formatDate } from '../../core/format';
 import { PostSummary } from '../../core/models';
-import { NodeVideoComponent } from '../../shared/node-video.component';
 
 /**
- * Mapa de nodos: encadena las entradas como nodos conectados. Cada nodo lleva
- * un pequeño vídeo sintetizado a partir de su título y su entradilla.
+ * Mapa de nodos: encadena las entradas como nodos conectados.
  *
  * Navegación: flechas izquierda/derecha (o Inicio/Fin) mueven el foco entre
- * nodos; el vídeo de cada nodo solo se reproduce cuando está a la vista.
+ * nodos.
  */
 @Component({
   selector: 'app-node-map',
-  imports: [RouterLink, NodeVideoComponent],
+  imports: [RouterLink],
   template: `
     <div
       class="node-map"
@@ -36,7 +34,11 @@ import { NodeVideoComponent } from '../../shared/node-video.component';
             <span class="node-edge">{{ first ? 'origen' : 'conecta' }}</span>
           </header>
 
-          <app-node-video [title]="post.title" [excerpt]="post.excerpt ?? null" />
+          @if (post.cover?.url) {
+            <a class="node-cover" [routerLink]="['/blog', post.slug]" tabindex="-1" aria-hidden="true">
+              <img [src]="post.cover!.url" [alt]="post.cover!.alt || post.title" loading="lazy" />
+            </a>
+          }
 
           <h3 class="node-title">
             <a
