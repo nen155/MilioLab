@@ -44,6 +44,14 @@ export class ApiService {
     return this.http.get<Stats>(`${this.base}/stats`);
   }
 
+  changePassword(payload: {
+    current_password: string;
+    password: string;
+    password_confirmation: string;
+  }): Observable<unknown> {
+    return this.http.put(`${this.base}/profile/password`, payload);
+  }
+
   // --- Entradas ------------------------------------------------------------
 
   posts(params: { page?: number; q?: string; status?: string; per_page?: number } = {}) {

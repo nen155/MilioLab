@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Admin\MediaController as AdminMediaController;
 use App\Http\Controllers\Api\Admin\MenuItemController as AdminMenuItemController;
 use App\Http\Controllers\Api\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Api\Admin\PostController as AdminPostController;
+use App\Http\Controllers\Api\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\Api\Admin\SettingController as AdminSettingController;
 use App\Http\Controllers\Api\Admin\StatsController as AdminStatsController;
 use App\Http\Controllers\Api\Admin\TagController as AdminTagController;
@@ -52,6 +53,7 @@ Route::prefix('v1/auth')->group(function (): void {
 */
 Route::prefix('v1/admin')->middleware('auth:sanctum')->group(function (): void {
     Route::get('stats', AdminStatsController::class);
+    Route::put('profile/password', [AdminProfileController::class, 'updatePassword']);
 
     Route::apiResource('pages', AdminPageController::class);
     Route::apiResource('posts', AdminPostController::class);

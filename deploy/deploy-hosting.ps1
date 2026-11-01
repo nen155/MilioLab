@@ -121,12 +121,14 @@ if ($Env) {
 $session = "${protocol}://" + [uri]::EscapeDataString($cfg['DEPLOY_USER']) + ":" +
     [uri]::EscapeDataString($cfg['DEPLOY_PASSWORD']) + "@" + $cfg['DEPLOY_HOST'] + ":$port/"
 
-function Invoke-WinScp([string[]]$lines, [string]$step) {
+function Invoke-WinScp([string[]]$lines, [string]$step, [switch]$ContinueOnError) {
     $script = Join-Path $tmp ("winscp-" + [guid]::NewGuid().ToString('N') + ".txt")
     $log = Join-Path $tmp ("winscp-" + [guid]::NewGuid().ToString('N') + ".log")
 
+    $batch = if ($ContinueOnError) { "continue" } else { "abort" }
+
     $header = @(
-        "option batch abort",
+        "option batch $batch",
         "option confirm off",
         "log `"$log`"",
         "open `"$session`" -hostkey=`"*`""
@@ -136,13 +138,21 @@ function Invoke-WinScp([string[]]$lines, [string]$step) {
 
     Write-Host "> $step" -ForegroundColor Yellow
     & $winscp /script=$script /log=$log /loglevel=0
-    if ($LASTEXITCODE -ne 0) {
+    if ($LASTEXITCODE -ne 0 -and -not $ContinueOnError) {
         Write-Host "WinSCP ha fallado (código $LASTEXITCODE). Log: $log" -ForegroundColor Red
         throw "Fallo en el paso: $step"
     }
 }
 
 try {
+    # 0) Carpetas remotas (si ya existen, mkdir falla y se ignora)
+    Invoke-WinScp @(
+        "call mkdir `"$apiAppDir`"",
+        "call mkdir `"$apiPublicDir`"",
+        "call mkdir `"$panelDir`"",
+        "call mkdir `"$apiPublicDir/media`""
+    ) "Creando carpetas" -ContinueOnError
+
     # 1) API: subir zip + extractor y ejecutarlo
     $uploadLines = @(
         "put `"$(Join-Path $out 'api.zip')`" `"$apiAppDir/_deploy.zip`"",
@@ -173,11 +183,10 @@ try {
     Invoke-WinScp @(
         "put `"$(Join-Path $tmp 'index.php')`" `"$apiPublicDir/index.php`"",
         "put `"$(Join-Path $repoRoot 'apps/api/public/.htaccess')`" `"$apiPublicDir/.htaccess`"",
-        "call mkdir `"$apiPublicDir/media`"",
         "call chmod 775 `"$apiPublicDir/media`"",
         "rm `"$apiPublicDir/unzip-deploy.php`"",
         "rm `"$apiPublicDir/deploy.php`""
-    ) "Publicando la API"
+    ) "Publicando la API" -ContinueOnError
 
     # 4) Web pública y panel
     Invoke-WinScp @(

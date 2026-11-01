@@ -8,8 +8,3 @@ use Illuminate\Support\Facades\Route;
 // Apache los publica en la raíz del dominio (ver deploy/web/.htaccess).
 Route::get('sitemap', SitemapController::class);
 Route::get('feed', FeedController::class);
-
-Route::get('/', fn () => response()->json([
-    'name' => config('app.name'),
-    'status' => 'ok',
-]));

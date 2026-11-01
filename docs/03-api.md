@@ -91,6 +91,23 @@ Todas requieren `Authorization: Bearer …`. Base: `/api/v1/admin`.
 | Multimedia | `GET /media`, `POST /media` (multipart `file`), `DELETE /media/{id}` |
 | Ajustes | `GET /settings`, `PUT /settings` (solo `admin`) |
 | Resumen | `GET /stats` |
+| Cuenta | `PUT /profile/password` |
+
+### Cambiar la contraseña
+
+```http
+PUT /api/v1/admin/profile/password
+Authorization: Bearer …
+
+{
+  "current_password": "…",
+  "password": "nueva-contraseña",
+  "password_confirmation": "nueva-contraseña"
+}
+```
+
+Mínimo 8 caracteres. Al cambiarla se **revocan los demás tokens** (las otras
+sesiones del panel se cierran); la sesión actual sigue viva.
 
 ### Crear una entrada
 
