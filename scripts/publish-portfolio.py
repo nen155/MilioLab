@@ -10,8 +10,8 @@ import urllib.error
 import urllib.request
 
 BASE = os.environ.get('MILIOLAB_API', 'https://miliolab.com/api/v1')
-EMAIL = os.environ.get('MILIOLAB_EMAIL', 'admin@miliolab.com')
-PASSWORD = os.environ.get('MILIOLAB_PASSWORD', 'miliolab')
+EMAIL = os.environ.get('MILIOLAB_EMAIL', '')
+PASSWORD = os.environ.get('MILIOLAB_PASSWORD', '')
 
 
 def call(method, path, body=None, token=None):

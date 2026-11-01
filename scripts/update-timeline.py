@@ -168,7 +168,7 @@ SKILLS = (
 def main():
     token = os.environ.get('MILIOLAB_TOKEN')
     if not token:
-        token = call('POST', '/auth/login', {'email': 'admin@miliolab.com', 'password': 'miliolab'})['token']
+        token = call('POST', '/auth/login', {'email': os.environ.get('MILIOLAB_EMAIL', ''), 'password': os.environ.get('MILIOLAB_PASSWORD', '')})['token']
 
     pages = {page['slug']: page['id'] for page in call('GET', '/admin/pages?per_page=100', token=token)['data']}
 

@@ -1787,14 +1787,17 @@ body:has([data-theme="Nodos"]) {
 /* --- Logo de la cabecera ------------------------------------------------- */
 
 .brand-logo {
-  width: 30px;
-  height: 30px;
+  height: 1.15em;
+  width: auto;
   flex: 0 0 auto;
   color: var(--ink);
   transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .brand:hover .brand-logo {
-  color: var(--accent);
-  transform: rotate(-6deg);
+  height: 1.15em;
+  width: auto;
+  flex: 0 0 auto;
+  color: var(--ink);
+  transition: transform 0.2s ease, color 0.2s ease;
 }

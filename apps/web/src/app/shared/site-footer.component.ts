@@ -59,7 +59,7 @@ import { SiteService } from '../core/site.service';
       </div>
 
       <div class="footer-legal">
-        <span>© {{ year }} {{ site.siteName() }} · Angular + Laravel</span>
+        <span>© {{ year }} {{ site.siteName() }}</span>
         <span class="mono">sin cookies · sin rastreadores</span>
       </div>
     </footer>
