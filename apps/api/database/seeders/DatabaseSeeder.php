@@ -317,6 +317,30 @@ class DatabaseSeeder extends Seeder
                 'is_active' => Theme::query()->where('is_active', true)->doesntExist(),
             ],
         );
+
+        $nodos = Theme::query()->updateOrCreate(
+            ['slug' => 'nodos'],
+            [
+                'name' => 'Nodos',
+                'tokens' => [
+                    '--paper' => '#120e1d',
+                    '--paper-2' => '#1a1430',
+                    '--ink' => '#f1ecff',
+                    '--ink-soft' => '#cdc2ee',
+                    '--ink-mute' => '#9a8fc0',
+                    '--line' => '#2e2450',
+                    '--line-strong' => '#4b3a7a',
+                    '--accent' => '#a855f7',
+                    '--accent-ink' => '#120e1d',
+                    '--accent-soft' => '#2a1b47',
+                    '--grid' => 'rgb(168 85 247 / 8%)',
+                    '--grid-size' => '32px',
+                ],
+            ],
+        );
+
+        // El tema de nodos es el que se quiere enseñar por defecto.
+        $nodos->activate();
     }
 
     /**

@@ -1106,3 +1106,154 @@ app-post-card {
     scroll-behavior: auto !important;
   }
 }
+
+
+/* --- Mapa de nodos ------------------------------------------------------- */
+
+.node-map {
+  display: flex;
+  gap: 2.2rem;
+  overflow-x: auto;
+  padding: 0.6rem 0.2rem 1.4rem;
+  scroll-snap-type: x mandatory;
+}
+
+.node {
+  position: relative;
+  flex: 0 0 260px;
+  scroll-snap-align: start;
+  padding: 0.9rem 0.9rem 1rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--paper-2);
+  transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.node:hover,
+.node:focus-within {
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 0 0 1px var(--accent), 0 10px 30px rgb(0 0 0 / 25%);
+}
+
+.node + .node::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -2.2rem;
+  width: 2.2rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent));
+}
+
+.node + .node::after {
+  content: "";
+  position: absolute;
+  top: calc(50% - 3px);
+  left: -0.35rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.node-port {
+  position: absolute;
+  top: 50%;
+  right: -5px;
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  background: var(--paper);
+}
+
+.node-head {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+.node-id {
+  color: var(--accent);
+}
+
+.node-video {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #0d0a16;
+}
+
+.node-video canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.node-video-toggle {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  padding: 0.15rem 0.4rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  background: rgb(18 14 29 / 80%);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  cursor: pointer;
+}
+
+.node-video-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.node-title {
+  margin: 0.7rem 0 0.35rem;
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.node-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--ink-mute);
+}
+
+/* --- Tema «Nodos» -------------------------------------------------------- */
+
+[data-theme="Nodos"] body,
+body:has([data-theme="Nodos"]) {
+  background-image: radial-gradient(var(--grid) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+}
+
+[data-theme="Nodos"] .specimen,
+[data-theme="Nodos"] .node {
+  background: linear-gradient(180deg, var(--paper-2), var(--paper));
+}
+
+[data-theme="Nodos"] .specimen::before {
+  border-color: var(--accent);
+  box-shadow: 0 0 12px var(--accent);
+}
+
+[data-theme="Nodos"] .display em {
+  text-shadow: 0 0 24px rgb(168 85 247 / 45%);
+}
+
+[data-theme="Nodos"] .rail-mark {
+  color: var(--accent);
+}

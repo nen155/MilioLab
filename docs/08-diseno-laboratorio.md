@@ -66,6 +66,13 @@ variables CSS en `:root`. Se pueden **exportar e importar** como JSON:
 Solo se aceptan las claves de `Theme::ALLOWED_TOKENS`; los valores con `{}`, `;`, `<` o
 `>` se descartan (un tema importado no puede inyectar CSS).
 
+## Tema «Nodos»
+
+Tema morado con estética de grafo: rejilla de puntos, nodos con puertos y
+conectores, y un **vídeo sintetizado por nodo** (tipografía cinética + onda)
+generado en el navegador a partir del título y la entradilla. No descarga nada y
+respeta `prefers-reduced-motion`. Se puede volver al tema «Cuaderno» desde el panel.
+
 ## Rendimiento
 
 Build de producción: **95,6 KB** de transferencia inicial (antes 78 KB; el

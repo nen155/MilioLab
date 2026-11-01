@@ -80,9 +80,10 @@ export class App {
         Object.entries(theme.tokens).forEach(([key, value]) => root.style.setProperty(key, value));
       }
 
+      // El acento suelto de los ajustes solo manda si el tema no define uno.
       const accent = this.site.setting<string>('accent_color', '');
 
-      if (accent) {
+      if (accent && !theme?.tokens['--accent']) {
         root.style.setProperty('--accent', accent);
       }
     });

@@ -8,10 +8,11 @@ import { SeoService } from '../../core/seo.service';
 import { SiteService } from '../../core/site.service';
 import { ContentPipe } from '../../shared/content.pipe';
 import { PostCardComponent } from '../../shared/post-card.component';
+import { NodeMapComponent } from './node-map.component';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, PostCardComponent, ContentPipe],
+  imports: [RouterLink, PostCardComponent, ContentPipe, NodeMapComponent],
   template: `
     <section class="hero">
       <div>
@@ -60,6 +61,15 @@ import { PostCardComponent } from '../../shared/post-card.component';
       @if (page.body) {
         <section class="prose" style="margin-top: 2.5rem" [innerHTML]="page.body | content"></section>
       }
+    }
+
+    @if (site.latestPosts().length) {
+      <div class="section-head">
+        <h2>Mapa de nodos</h2>
+        <span class="mono muted">cada nodo genera su propio vídeo</span>
+      </div>
+
+      <app-node-map [posts]="site.latestPosts()" />
     }
 
     <div class="section-head">

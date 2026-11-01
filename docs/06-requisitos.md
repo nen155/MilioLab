@@ -93,6 +93,13 @@ Cada requisito enlaza las historias que lo cubren (ver
 | RF-9.3 | Un tema se puede exportar a JSON e importar desde JSON | US-10.2 |
 | RF-9.4 | Solo se aceptan variables de una lista blanca y valores sin CSS arbitrario | US-10.2 |
 
+## RF-10 · Nodos
+
+| ID | Requisito | Historias |
+|---|---|---|
+| RF-10.1 | Existe un tema morado con estética de grafo y las entradas se muestran como nodos conectados | US-11.1 |
+| RF-10.2 | Cada nodo incluye un vídeo corto generado a partir de su título y entradilla | US-11.2 |
+
 ## RNF · Requisitos no funcionales
 
 | ID | Requisito | Historias |
