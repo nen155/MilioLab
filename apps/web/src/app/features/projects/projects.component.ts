@@ -42,6 +42,7 @@ const TECHS = {
   docker: T('Docker', 'DOCK', '#2496ed'),
   wordpress: T('WordPress', 'WP', '#21759b'),
   web: T('Web', 'WEB', '#64748b'),
+  ai: T('IA', 'IA', '#a855f7'),
 };
 
 const PROJECTS: Project[] = [
@@ -58,6 +59,13 @@ const PROJECTS: Project[] = [
     summary: 'Cinco plugins en C# para arreglar problemas concretos de mi biblioteca: portadas para carpetas de fotos, detección de contenido adulto, normalización de nombres para el scraper, filtrado de archivos no multimedia y limitación del tamaño de imagen servida. Cada uno vive en su repositorio y se publican juntos con un manifiesto. Desarrollados con IA y especificación previa (SDD).',
     tech: [TECHS.dotnet],
     link: 'https://github.com/nen155?tab=repositories',
+  },
+  {
+    name: 'Game-to-Web', from: 2025, to: 2026, period: '2025 — actualidad', kind: 'Propio',
+    roles: ['Investigación', 'Documentación', 'Automatización', 'IA'],
+    summary: 'Pipeline documentado para llevar cualquier juego a un clon jugable en el navegador reutilizando sus datos, arte y sonido. Cubre binarios nativos, código gestionado, juegos web, APK, imágenes de disco, instaladores y proyectos con fuentes, en trece fases (reconocimiento, extracción, decompilación, historias, stack, interfaz, implementación, verificación, cobertura, bugs, modelos, animaciones y HUDs). Está automatizado con un skill que ejecuta el proceso completo y deja plantillas para que el siguiente desarrollador pueda continuar.',
+    tech: [TECHS.ai, TECHS.web],
+    link: 'https://github.com/nen155/game-to-web',
   },
   {
     name: 'Cinema Decisive', from: 2023, to: 2026, period: 'abril 2023 — actualidad', kind: 'Propio',
