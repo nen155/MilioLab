@@ -60,7 +60,20 @@ docs/       Arquitectura, modelo de datos, API y guía de despliegue
 ```bash
 docker compose logs -f api          # registro de la API
 docker compose exec api php artisan migrate:fresh --seed   # reiniciar datos de ejemplo
-cd apps/api && docker compose run --rm api php artisan test  # tests del backend
+docker compose exec api php artisan test                    # tests del backend
 cd apps/web && npm run build        # build de producción de la web
 cd apps/panel && npm run build:prod # build del panel con base href /milio/
 ```
+
+## Despliegue en miliolab.com
+
+Todo el proceso está en [`docs/04-despliegue.md`](docs/04-despliegue.md). En resumen:
+
+```bash
+cp deploy/deploy.env.example deploy/deploy.env   # credenciales SFTP + BD (no se versiona)
+powershell -ExecutionPolicy Bypass -File deploy/deploy-hosting.ps1 -Build -Env -Seed
+```
+
+Estructura en el hosting: web en `/htdocs/miliolab`, panel en
+`/htdocs/miliolab/milio`, API pública en `/htdocs/miliolab/api` y aplicación
+Laravel en `/htdocs/miliolab-api` (fuera del docroot).

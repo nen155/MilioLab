@@ -54,46 +54,43 @@ El script:
 
 ## 5. Configurar la API en el servidor
 
-Crea `/htdocs/miliolab-api/.env` (por SFTP) partiendo de `apps/api/.env.example`:
+La forma recomendada es dejar que el script genere el `.env`:
+
+1. Rellena en `deploy/deploy.env`:
+
+   ```dotenv
+   DEPLOY_SITE_URL=https://miliolab.com
+   DEPLOY_DB_PASSWORD=…        # contraseña de dbu1543693
+   DEPLOY_ADMIN_EMAIL=tu-correo@ejemplo.com
+   DEPLOY_ADMIN_PASSWORD=…     # contraseña inicial del panel
+   ```
+
+2. Despliega con el paso de entorno:
+
+   ```bash
+   powershell -ExecutionPolicy Bypass -File deploy/deploy-hosting.ps1 -Build -Env -Seed
+   ```
+
+`-Env` sube `deploy/out/api.env` generado desde `deploy/api.env.template` a
+`/htdocs/miliolab-api/.env`. `-Seed` crea el usuario administrador y el contenido
+de ejemplo. `deploy.php` genera la `APP_KEY` automáticamente si está vacía.
+
+> Alternativa manual: crea `/htdocs/miliolab-api/.env` por SFTP copiando
+> `apps/api/.env.example`, y ejecuta una vez
+> `https://miliolab.com/api/deploy.php?token=…&key=1` para generar la clave.
+
+### Variables imprescindibles en producción
 
 ```dotenv
-APP_NAME=MilioLab
 APP_ENV=production
 APP_DEBUG=false
-APP_KEY=                      # lo genera el paso siguiente
 APP_URL=https://miliolab.com
-
-DB_CONNECTION=mysql
 DB_HOST=db5021798117.hosting-data.io
-DB_PORT=3306
 DB_DATABASE=dbs16295460
 DB_USERNAME=dbu1543693
-DB_PASSWORD=…                 # la contraseña de la base de datos
-
-SESSION_DRIVER=file
-CACHE_STORE=file
-QUEUE_CONNECTION=sync
-
 MEDIA_ROOT=/htdocs/miliolab/api/media
 MEDIA_URL=https://miliolab.com/media
-
-ADMIN_NAME=MilioLab
-ADMIN_EMAIL=tu-correo@ejemplo.com
-ADMIN_PASSWORD=…              # contraseña inicial del panel (cámbiala luego)
 ```
-
-Genera la `APP_KEY` ejecutando una vez (con el token del despliegue):
-
-```
-https://miliolab.com/api/deploy.php?token=…&key=1
-```
-
-> `deploy.php` genera la clave si se le pasa `&key=1`. Si prefieres hacerlo a mano,
-> cualquier clave `base64:` de 32 bytes vale (por ejemplo, generada en local con
-> `php -r "echo 'base64:'.base64_encode(random_bytes(32));"`).
-
-Después vuelve a lanzar el despliegue (`-Seed` la primera vez) para aplicar
-migraciones y crear el usuario administrador.
 
 ## 6. Comprobar
 

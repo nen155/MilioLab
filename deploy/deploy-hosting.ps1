@@ -19,6 +19,7 @@
 param(
     [switch]$Build,
     [switch]$Seed,
+    [switch]$Env,
     [string]$EnvFile = ""
 )
 
@@ -93,6 +94,30 @@ New-RemoteFile (Join-Path $PSScriptRoot "remote/index.php") (Join-Path $tmp "ind
 New-RemoteFile (Join-Path $PSScriptRoot "remote/unzip-deploy.php") (Join-Path $tmp "unzip-deploy.php")
 New-RemoteFile (Join-Path $PSScriptRoot "remote/deploy.php") (Join-Path $tmp "deploy.php")
 
+# `.env` de producción generado desde deploy.env (no se versiona).
+if ($Env) {
+    $template = Get-Content (Join-Path $PSScriptRoot "api.env.template") -Raw
+    $values = @{
+        '__APP_KEY__'         = $cfg['DEPLOY_APP_KEY']
+        '__SITE_URL__'        = $cfg['DEPLOY_SITE_URL']
+        '__DB_HOST__'         = $cfg['DEPLOY_DB_HOST']
+        '__DB_PORT__'         = $cfg['DEPLOY_DB_PORT']
+        '__DB_DATABASE__'     = $cfg['DEPLOY_DB_DATABASE']
+        '__DB_USERNAME__'     = $cfg['DEPLOY_DB_USERNAME']
+        '__DB_PASSWORD__'     = $cfg['DEPLOY_DB_PASSWORD']
+        '__MEDIA_ROOT__'      = "$apiPublicDir/media"
+        '__ADMIN_NAME__'      = $cfg['DEPLOY_ADMIN_NAME']
+        '__ADMIN_EMAIL__'     = $cfg['DEPLOY_ADMIN_EMAIL']
+        '__ADMIN_PASSWORD__'  = $cfg['DEPLOY_ADMIN_PASSWORD']
+    }
+
+    foreach ($key in $values.Keys) {
+        $template = $template.Replace($key, [string]$values[$key])
+    }
+
+    Set-Content -Path (Join-Path $tmp "api.env") -Value $template -Encoding UTF8 -NoNewline
+}
+
 $session = "${protocol}://" + [uri]::EscapeDataString($cfg['DEPLOY_USER']) + ":" +
     [uri]::EscapeDataString($cfg['DEPLOY_PASSWORD']) + "@" + $cfg['DEPLOY_HOST'] + ":$port/"
 
@@ -119,10 +144,16 @@ function Invoke-WinScp([string[]]$lines, [string]$step) {
 
 try {
     # 1) API: subir zip + extractor y ejecutarlo
-    Invoke-WinScp @(
+    $uploadLines = @(
         "put `"$(Join-Path $out 'api.zip')`" `"$apiAppDir/_deploy.zip`"",
         "put `"$(Join-Path $tmp 'unzip-deploy.php')`" `"$apiPublicDir/unzip-deploy.php`""
-    ) "Subiendo la API"
+    )
+
+    if ($Env) {
+        $uploadLines = @("put `"$(Join-Path $tmp 'api.env')`" `"$apiAppDir/.env`"") + $uploadLines
+    }
+
+    Invoke-WinScp $uploadLines "Subiendo la API"
 
     Write-Host "> Extrayendo la API" -ForegroundColor Yellow
     $unzipUrl = "$apiUrl/unzip-deploy.php?token=" + [uri]::EscapeDataString($token)
