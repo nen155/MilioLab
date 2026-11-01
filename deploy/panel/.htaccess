@@ -1,0 +1,20 @@
+# MilioLab · panel (Angular)
+#
+# Se sube a /htdocs/miliolab/milio (o al subdominio que uses).
+# Todas las rutas caen a index.html.
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /milio/
+
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header set X-Robots-Tag "noindex, nofollow"
+  Header set X-Content-Type-Options "nosniff"
+</IfModule>

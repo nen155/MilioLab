@@ -1,0 +1,62 @@
+# MilioLab — entorno de desarrollo
+#
+#   docker compose up -d --build      # base de datos + API (http://localhost:8000)
+#   docker compose exec api php artisan migrate --seed
+#
+# Las dos apps Angular se arrancan en local con `npm start` (apps/web en :4200 y
+# apps/panel en :4201), que hacen proxy de /api a este contenedor.
+
+services:
+  db:
+    image: mariadb:11.8
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+      MARIADB_DATABASE: ${DB_DATABASE:-miliolab}
+      MARIADB_USER: ${DB_USERNAME:-miliolab}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-miliolab}
+    ports:
+      - "${DB_PORT:-3307}:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+  api:
+    build: ./apps/api
+    restart: unless-stopped
+    ports:
+      - "${API_PORT:-8000}:80"
+    # Ojo: no definas aquí APP_ENV, APP_DEBUG, APP_URL ni DB_*.
+    # Las variables del contenedor acaban en $_SERVER y Laravel las lee antes que
+    # las de PHPUnit, así que los tests se saltarían `.env.testing` y vaciarían
+    # la base de datos de desarrollo. Esas claves viven en `apps/api/.env`.
+    environment:
+      FRONTEND_URL: http://localhost:4200
+      PANEL_URL: http://localhost:4201
+      ADMIN_NAME: ${ADMIN_NAME:-MilioLab}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@miliolab.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-miliolab}
+    volumes:
+      - ./apps/api:/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "[ -d vendor ] || composer install --no-interaction --prefer-dist;
+             [ -f .env ] || cp .env.example .env;
+             grep -q '^APP_KEY=base64' .env || php artisan key:generate --force;
+             mkdir -p storage/framework/cache/data storage/framework/sessions
+                      storage/framework/views storage/logs bootstrap/cache public/media;
+             php artisan migrate --force;
+             php artisan db:seed --force;
+             chown -R www-data:www-data storage bootstrap/cache public/media || true;
+             chmod -R 777 storage bootstrap/cache public/media || true;
+             apache2-foreground"
+
+volumes:
+  db_data:

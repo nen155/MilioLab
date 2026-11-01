@@ -1,0 +1,59 @@
+# Dependencias
+node_modules/
+vendor/
+
+# Builds
+dist/
+.angular/
+apps/*/dist/
+apps/*/.angular/
+
+# Entornos y secretos
+.env
+.env.*
+!.env.example
+apps/*/.env
+apps/*/.env.*
+!apps/*/.env.example
+!apps/api/.env.testing
+deploy/deploy.env
+
+# Laravel
+apps/api/storage/*.key
+apps/api/storage/logs/*.log
+apps/api/storage/framework/cache/data/*
+apps/api/storage/framework/sessions/*
+apps/api/storage/framework/views/*
+apps/api/storage/app/public/*
+!apps/api/storage/app/public/.gitkeep
+apps/api/database/*.sqlite
+apps/api/database/*.sqlite-journal
+apps/api/public/storage
+apps/api/public/media
+apps/api/public/build
+
+# Angular / Node
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Editores y sistema
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Artefactos de despliegue
+deploy/out/
+*.zip
+
+# Herramientas locales (WinSCP portable)
+tools/winscp/
+
+# Medios subidos desde el panel
+apps/api/public/media/*
+!apps/api/public/media/.gitkeep
