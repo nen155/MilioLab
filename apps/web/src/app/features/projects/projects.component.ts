@@ -48,29 +48,57 @@ const PROJECTS: Project[] = [
   {
     name: 'MilioLab', from: 2026, to: 2026, period: '2026 — actualidad', kind: 'Propio',
     roles: ['Producto', 'Diseño', 'Frontend', 'Backend', 'Despliegue'],
-    summary: 'Este sitio. Lo monté porque WordPress no me dejaba controlar el diseño ni el HTML que publico: definí el modelo de contenido (páginas, entradas, medios, menús y ajustes), construí la API en Laravel con Sanctum y un editor propio, y separé la web pública del panel para que no cargue el editor. El despliegue en hosting compartido sin SSH obligó a escribir un script que empaqueta, sube y migra por HTTP.',
+    summary: 'Este sitio. Lo monté porque WordPress no me dejaba controlar el diseño ni el HTML que publico: definí el modelo de contenido (páginas, entradas, medios, menús y ajustes), construí la API en Laravel con Sanctum y un editor propio, y separé la web pública del panel para que no cargue el editor. El despliegue en hosting compartido sin SSH obligó a escribir un script que empaqueta, sube y migra por HTTP. Lo desarrollé con IA siguiendo SDD: especificación primero y decisiones de arquitectura tomadas a mano.',
     tech: [TECHS.angular, TECHS.laravel, TECHS.php, TECHS.mysql, TECHS.docker],
     link: 'https://miliolab.com',
   },
   {
     name: 'Plugins de Jellyfin', from: 2026, to: 2026, period: 'noviembre 2026', kind: 'Propio',
     roles: ['Desarrollo', 'Diseño de plugins'],
-    summary: 'Cinco plugins en C# para arreglar problemas concretos de mi biblioteca: portadas para carpetas de fotos, detección de contenido adulto, normalización de nombres para el scraper, filtrado de archivos no multimedia y limitación del tamaño de imagen servida. Cada uno vive en su repositorio y se publican juntos con un manifiesto.',
+    summary: 'Cinco plugins en C# para arreglar problemas concretos de mi biblioteca: portadas para carpetas de fotos, detección de contenido adulto, normalización de nombres para el scraper, filtrado de archivos no multimedia y limitación del tamaño de imagen servida. Cada uno vive en su repositorio y se publican juntos con un manifiesto. Desarrollados con IA y especificación previa (SDD).',
     tech: [TECHS.dotnet],
     link: 'https://github.com/nen155?tab=repositories',
   },
   {
     name: 'Cinema Decisive', from: 2023, to: 2026, period: 'abril 2023 — actualidad', kind: 'Propio',
     roles: ['Analista', 'Arquitecto', 'Backend Python', 'Frontend Angular', 'API Laravel', 'Despliegue'],
-    summary: 'Un CMS de experiencias cinematográficas donde la siguiente escena la decide la emoción del público. Diseñé el árbol de escenas con transiciones por emoción y umbral, y un runtime en Python que captura con OpenCV, clasifica con un modelo ONNX y reproduce con VLC. Lo más difícil fue la latencia (medida por etapas), acoplar el vídeo a una ventana de escritorio y resolver los clips de YouTube con yt-dlp.',
+    summary: 'Un CMS de experiencias cinematográficas donde la siguiente escena la decide la emoción del público. Diseñé el árbol de escenas con transiciones por emoción y umbral, y un runtime en Python que captura con OpenCV, clasifica con un modelo ONNX y reproduce con VLC. Lo más difícil fue la latencia (medida por etapas), acoplar el vídeo a una ventana de escritorio y resolver los clips de YouTube con yt-dlp. El desarrollo se apoyó en IA con metodología SDD y revisión manual de cada decisión.',
     tech: [TECHS.python, TECHS.opencv, TECHS.onnx, TECHS.vlc, TECHS.angular, TECHS.laravel],
-    link: 'https://github.com/nen155/cinema_decisive',
+    link: 'https://cinemadecisive.miliolab.com',
   },
   {
-    name: 'Meteogalicia', from: 2022, to: 2026, period: 'mayo 2022 — actualidad', kind: 'Cliente',
+    name: 'MeteoGalicia', from: 2022, to: 2026, period: 'mayo 2022 — actualidad', kind: 'Cliente',
     company: { name: 'Xunta de Galicia · Sixtema', short: 'XG', color: '#3b82f6' },
-    roles: ['Analista', 'Programador', 'Mentoring'],
-    summary: 'Renovación del portal meteorológico de la Xunta. Trabajo con SCRUM modificado y entregas mensuales en contacto directo con el cliente: traduzco requisitos a historias, decido partes de la arquitectura y programo el frontend en Angular 14 y el backend en Spring Java 11. También acompaño a compañeros que se incorporan al proyecto.',
+    roles: ['Tech Lead transversal', 'Analista', 'Programador', 'Mentoring'],
+    summary: 'Renovación del portal meteorológico de la Xunta. Traduzco requisitos a historias, decido partes de la arquitectura y programo frontend en Angular 14 y backend en Spring Java 11, con SCRUM modificado y entregas mensuales en contacto directo con el cliente. Además del desarrollo, hago de Tech Lead transversal del resto de proyectos del equipo.',
+    tech: [TECHS.java, TECHS.spring, TECHS.angular],
+  },
+  {
+    name: 'GaliciaNomeada', from: 2022, to: 2026, period: 'mayo 2022 — actualidad', kind: 'Cliente',
+    company: { name: 'Real Academia Galega · Sixtema', short: 'RAG', color: '#16a34a' },
+    roles: ['Tech Lead transversal', 'Mantenimiento', 'Nuevas funcionalidades'],
+    summary: 'Mantenimiento y evolución del proyecto de toponimia de la Real Academia Galega: corrijo incidencias, mejoro el rendimiento de las consultas y desarrollo nuevas funcionalidades sobre el sistema existente, cuidando no romper lo que ya usan los investigadores.',
+    tech: [TECHS.java, TECHS.spring, TECHS.angular],
+  },
+  {
+    name: 'Gestor del Nomenclátor de Galicia', from: 2022, to: 2026, period: 'mayo 2022 — actualidad', kind: 'Cliente',
+    company: { name: 'Xunta de Galicia · Sixtema', short: 'XG', color: '#3b82f6' },
+    roles: ['Tech Lead transversal', 'Analista', 'Desarrollo'],
+    summary: 'Gestor interno para el nomenclátor oficial: altas, correcciones y publicación de topónimos. Participo en el análisis funcional, en el modelo de datos y en el desarrollo, y mantengo la integración con los sistemas de la Xunta.',
+    tech: [TECHS.java, TECHS.spring, TECHS.sqlserver],
+  },
+  {
+    name: 'INTECMAR', from: 2022, to: 2026, period: 'mayo 2022 — actualidad', kind: 'Cliente',
+    company: { name: 'INTECMAR · Sixtema', short: 'IT', color: '#0ea5e9' },
+    roles: ['Tech Lead transversal', 'Coordinación', 'Mantenimiento'],
+    summary: 'Coordinación y mantenimiento de los sistemas del Instituto Tecnológico para el Control del Medio Marino de Galicia: planifico las intervenciones, coordino al equipo y me aseguro de que las actualizaciones no afecten a la operativa diaria.',
+    tech: [TECHS.java, TECHS.spring, TECHS.angular],
+  },
+  {
+    name: 'RubioCar', from: 2025, to: 2026, period: '2025 — actualidad', kind: 'Cliente',
+    company: { name: 'RubioCar · Sixtema', short: 'RC', color: '#f59e0b' },
+    roles: ['Tech Lead transversal', 'Arquitecto', 'Desarrollo'],
+    summary: 'Software nuevo para la gestión de flotas de autobuses: definí la arquitectura y el stack, escribí la especificación y desarrollo el producto con asistencia de IA siguiendo SDD, dejando pruebas y documentación para que el equipo pueda mantenerlo.',
     tech: [TECHS.java, TECHS.spring, TECHS.angular],
   },
   {
@@ -164,6 +192,15 @@ const PROJECTS: Project[] = [
         Cada proyecto con su periodo, el papel que tuve y las tecnologías. Puedes verlo como
         línea de tiempo o como fichas, ordenarlo y filtrarlo por tecnología.
       </p>
+      <div class="tl-card" style="margin-top: 1.2rem">
+        <p style="margin: 0"><strong>Cómo trabajo ahora: SDD + IA.</strong> Los proyectos recientes
+        los construyo con asistencia de IA siguiendo <strong>Spec-Driven Development</strong>: el
+        análisis, la arquitectura y el stack los decido a mano y quedan escritos en la
+        especificación (requisitos, modelo de datos, contrato de API y despliegue) antes de
+        implementar. La IA acelera la generación de código; las decisiones y la revisión son mías.
+        El resultado es código mantenible, con pruebas y buenas prácticas, y una especificación que
+        permite a la siguiente persona continuar el proyecto sin reconstruir el contexto.</p>
+      </div>
 
       <div class="row" style="margin-top: 1.2rem" role="group" aria-label="Vista">
         <button class="chip" type="button" [class.chip-active]="view() === 'timeline'" (click)="view.set('timeline')">
