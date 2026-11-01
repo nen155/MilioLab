@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\Api\Admin\SettingController as AdminSettingController;
 use App\Http\Controllers\Api\Admin\StatsController as AdminStatsController;
 use App\Http\Controllers\Api\Admin\TagController as AdminTagController;
+use App\Http\Controllers\Api\Admin\ThemeController as AdminThemeController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\FeedController;
 use App\Http\Controllers\Api\PublicPageController;
@@ -73,6 +74,13 @@ Route::prefix('v1/admin')->middleware('auth:sanctum')->group(function (): void {
     Route::get('media', [AdminMediaController::class, 'index']);
     Route::post('media', [AdminMediaController::class, 'store']);
     Route::delete('media/{media}', [AdminMediaController::class, 'destroy']);
+
+    Route::get('themes', [AdminThemeController::class, 'index']);
+    Route::post('themes', [AdminThemeController::class, 'store']);
+    Route::post('themes/import', [AdminThemeController::class, 'import']);
+    Route::put('themes/{theme}', [AdminThemeController::class, 'update']);
+    Route::post('themes/{theme}/activate', [AdminThemeController::class, 'activate']);
+    Route::delete('themes/{theme}', [AdminThemeController::class, 'destroy']);
 
     Route::get('settings', [AdminSettingController::class, 'index']);
     Route::put('settings', [AdminSettingController::class, 'update'])->middleware('role:admin');

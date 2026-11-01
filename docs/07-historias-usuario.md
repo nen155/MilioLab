@@ -19,6 +19,7 @@ Estado: ✅ Hecha · ⏳ Pendiente · 🧩 Parcial.
 | EP-6 | Web pública |
 | EP-7 | API y calidad |
 | EP-8 | Identidad visual y experiencia |
+| EP-9 | Temas |
 
 ## Índice
 
@@ -54,6 +55,8 @@ Estado: ✅ Hecha · ⏳ Pendiente · 🧩 Parcial.
 | US-9.3 | Sala de experimentos (minijuegos) | EP-8 | RF-8.3, RNF-10 | ✅ | [`US-9.3`](historias-usuario/US-9.3-minijuegos.md) |
 | US-9.4 | Markdown, versión texto y lectura por máquinas | EP-8 | RF-8.4, RF-8.5 | ✅ | [`US-9.4`](historias-usuario/US-9.4-markdown-texto-maquinas.md) |
 | US-9.5 | Accesibilidad del nuevo diseño | EP-8 | RNF-10 | ✅ | [`US-9.5`](historias-usuario/US-9.5-accesibilidad.md) |
+| US-10.1 | Temas desde el panel | EP-9 | RF-9.1, RF-9.2 | ✅ | [`US-10.1`](historias-usuario/US-10.1-temas-panel.md) |
+| US-10.2 | Crear, exportar e importar temas | EP-9 | RF-9.3, RF-9.4 | ✅ | [`US-10.2`](historias-usuario/US-10.2-importar-temas.md) |
 
 ## Pendientes (backlog)
 

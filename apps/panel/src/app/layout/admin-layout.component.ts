@@ -24,6 +24,7 @@ import { environment } from '../../environments/environment';
           <a routerLink="/media" routerLinkActive="active">Multimedia</a>
           <a routerLink="/menu" routerLinkActive="active">Menú</a>
           <a routerLink="/settings" routerLinkActive="active">Ajustes</a>
+          <a routerLink="/themes" routerLinkActive="active">Temas</a>
           <a routerLink="/account" routerLinkActive="active">Mi cuenta</a>
         </nav>
 

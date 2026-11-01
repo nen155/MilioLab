@@ -123,6 +123,15 @@ export interface PagePayload {
   meta_description: string | null;
 }
 
+export interface Theme {
+  id: number;
+  name: string;
+  slug: string;
+  tokens: Record<string, string>;
+  is_active: boolean;
+  updated_at?: string | null;
+}
+
 export interface SettingsResponse {
   settings: Record<string, string | number | boolean | null>;
   groups: Record<string, SettingItem[]>;

@@ -8,6 +8,7 @@ use App\Models\Page;
 use App\Models\Post;
 use App\Models\Setting;
 use App\Models\Tag;
+use App\Models\Theme;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -31,6 +32,7 @@ class DatabaseSeeder extends Seeder
 
         $this->posts($admin, $categories, $tags);
         $this->settings($pages['inicio']);
+        $this->themes();
         $this->menu($pages);
     }
 
@@ -292,6 +294,29 @@ class DatabaseSeeder extends Seeder
         foreach ($settings as $setting) {
             Setting::query()->updateOrCreate(['key' => $setting['key']], $setting);
         }
+    }
+
+    private function themes(): void
+    {
+        Theme::query()->updateOrCreate(
+            ['slug' => 'cuaderno'],
+            [
+                'name' => 'Cuaderno de laboratorio',
+                'tokens' => [
+                    '--paper' => '#f6f3ea',
+                    '--paper-2' => '#efeade',
+                    '--ink' => '#17161a',
+                    '--ink-soft' => '#3b3a42',
+                    '--ink-mute' => '#6d6a63',
+                    '--line' => '#d9d3c4',
+                    '--line-strong' => '#b9b2a1',
+                    '--accent' => '#4f46e5',
+                    '--accent-ink' => '#ffffff',
+                    '--accent-soft' => '#e8e6fb',
+                ],
+                'is_active' => Theme::query()->where('is_active', true)->doesntExist(),
+            ],
+        );
     }
 
     /**

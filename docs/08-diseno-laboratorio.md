@@ -53,6 +53,19 @@ Modo oscuro automático con `prefers-color-scheme`; el acento sale de
 - `robots.txt` + `sitemap.xml` + `feed.xml`.
 - JSON-LD `WebSite` y `BlogPosting`.
 
+## Temas
+
+Los tokens viven en la tabla `themes` y se gestionan en el panel (**Temas**). El tema
+activo se sirve en `GET /api/v1/site` (`theme.tokens`) y la web los aplica como
+variables CSS en `:root`. Se pueden **exportar e importar** como JSON:
+
+```json
+{ "name": "Papel viejo", "tokens": { "--paper": "#f4efe3", "--ink": "#1b1a17", "--accent": "#8b5e34" } }
+```
+
+Solo se aceptan las claves de `Theme::ALLOWED_TOKENS`; los valores con `{}`, `;`, `<` o
+`>` se descartan (un tema importado no puede inyectar CSS).
+
 ## Rendimiento
 
 Build de producción: **95,6 KB** de transferencia inicial (antes 78 KB; el

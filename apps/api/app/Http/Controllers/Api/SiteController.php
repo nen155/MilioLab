@@ -9,6 +9,7 @@ use App\Models\MenuItem;
 use App\Models\Page;
 use App\Models\Post;
 use App\Models\Setting;
+use App\Models\Theme;
 
 class SiteController extends Controller
 {
@@ -23,8 +24,14 @@ class SiteController extends Controller
     {
         $homeId = (int) Setting::value('home_page_id', 0);
 
+        $theme = Theme::active();
+
         return [
             'settings' => Setting::toArrayOfValues(),
+            'theme' => $theme === null ? null : [
+                'name' => $theme->name,
+                'tokens' => $theme->tokens,
+            ],
             'home' => $homeId > 0 ? Page::query()->published()->whereKey($homeId)->value('slug') : null,
             'menu' => MenuItemResource::collection(
                 MenuItem::query()

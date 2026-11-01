@@ -68,11 +68,22 @@ export class App {
   constructor() {
     this.site.load().subscribe();
 
+    // Tema activo (se elige en el panel) + acento suelto de los ajustes.
     effect(() => {
+      const theme = this.site.site()?.theme;
+      const root = document.documentElement;
+
+      root.removeAttribute('data-theme');
+
+      if (theme) {
+        root.dataset['theme'] = theme.name;
+        Object.entries(theme.tokens).forEach(([key, value]) => root.style.setProperty(key, value));
+      }
+
       const accent = this.site.setting<string>('accent_color', '');
 
       if (accent) {
-        document.documentElement.style.setProperty('--accent', accent);
+        root.style.setProperty('--accent', accent);
       }
     });
 

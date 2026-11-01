@@ -84,6 +84,15 @@ Cada requisito enlaza las historias que lo cubren (ver
 | RF-8.4 | El contenido se puede escribir en Markdown además de HTML | US-9.4 |
 | RF-8.5 | Hay una versión texto (`/texto`) y `llms.txt` para robots y modelos de lenguaje | US-9.4 |
 
+## RF-9 · Temas
+
+| ID | Requisito | Historias |
+|---|---|---|
+| RF-9.1 | Los temas (variables CSS) se gestionan desde el panel y solo hay uno activo | US-10.1 |
+| RF-9.2 | El tema activo se aplica a la web pública sin desplegar | US-10.1 |
+| RF-9.3 | Un tema se puede exportar a JSON e importar desde JSON | US-10.2 |
+| RF-9.4 | Solo se aceptan variables de una lista blanca y valores sin CSS arbitrario | US-10.2 |
+
 ## RNF · Requisitos no funcionales
 
 | ID | Requisito | Historias |

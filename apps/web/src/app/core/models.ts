@@ -75,8 +75,14 @@ export interface Page {
   updated_at?: string | null;
 }
 
+export interface SiteTheme {
+  name: string;
+  tokens: Record<string, string>;
+}
+
 export interface Site {
   settings: SiteSettings;
+  theme: SiteTheme | null;
   home: string | null;
   menu: MenuItem[];
   latest_posts: PostSummary[];

@@ -15,6 +15,7 @@ import {
   PostPayload,
   SettingsResponse,
   Stats,
+  Theme,
   Tag,
 } from './models';
 
@@ -189,6 +190,36 @@ export class ApiService {
   reorderMenu(items: Array<{ id: number; position: number; parent_id: number | null }>) {
     return this.http
       .put<{ data: MenuItem[] }>(`${this.base}/menu-items/order`, { items })
+      .pipe(map((r) => r.data));
+  }
+
+  // --- Temas ---------------------------------------------------------------
+
+  themes(): Observable<{ data: Theme[]; allowed: string[] }> {
+    return this.http.get<{ data: Theme[]; allowed: string[] }>(`${this.base}/themes`);
+  }
+
+  createTheme(payload: { name: string; tokens: Record<string, string>; activate?: boolean }) {
+    return this.http.post<{ data: Theme }>(`${this.base}/themes`, payload).pipe(map((r) => r.data));
+  }
+
+  updateTheme(id: number, payload: { name: string; tokens: Record<string, string> }) {
+    return this.http.put<{ data: Theme }>(`${this.base}/themes/${id}`, payload).pipe(map((r) => r.data));
+  }
+
+  activateTheme(id: number): Observable<Theme> {
+    return this.http
+      .post<{ data: Theme }>(`${this.base}/themes/${id}/activate`, {})
+      .pipe(map((r) => r.data));
+  }
+
+  deleteTheme(id: number): Observable<unknown> {
+    return this.http.delete(`${this.base}/themes/${id}`);
+  }
+
+  importTheme(payload: { name: string; tokens: Record<string, string>; activate?: boolean }) {
+    return this.http
+      .post<{ data: Theme }>(`${this.base}/themes/import`, payload)
       .pipe(map((r) => r.data));
   }
 

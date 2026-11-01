@@ -75,6 +75,11 @@ export const routes: Routes = [
           import('./features/settings/settings.component').then((m) => m.SettingsComponent),
       },
       {
+        path: 'themes',
+        loadComponent: () =>
+          import('./features/themes/themes.component').then((m) => m.ThemesComponent),
+      },
+      {
         path: 'account',
         loadComponent: () =>
           import('./features/account/account.component').then((m) => m.AccountComponent),
