@@ -210,23 +210,29 @@ const PROJECTS: Project[] = [
         permite a la siguiente persona continuar el proyecto sin reconstruir el contexto.</p>
       </div>
 
-      <div class="row" style="margin-top: 1.2rem" role="group" aria-label="Vista">
-        <button class="chip" type="button" [class.chip-active]="view() === 'timeline'" (click)="view.set('timeline')">
-          línea de tiempo
-        </button>
-        <button class="chip" type="button" [class.chip-active]="view() === 'cards'" (click)="view.set('cards')">
-          fichas
-        </button>
+      <div class="toolbar">
+        <div class="toolbar-group" role="group" aria-label="Vista">
+          <span class="toolbar-label">vista</span>
+          <button class="chip" type="button" [class.chip-active]="view() === 'timeline'" (click)="view.set('timeline')">
+            línea de tiempo
+          </button>
+          <button class="chip" type="button" [class.chip-active]="view() === 'cards'" (click)="view.set('cards')">
+            fichas
+          </button>
+        </div>
 
-        <span class="mono muted" style="margin-left: .6rem">orden</span>
-        <select class="select" style="max-width: 170px" [value]="order()" (change)="order.set($any($event.target).value)">
-          <option value="recent">más reciente</option>
-          <option value="old">más antiguo</option>
-          <option value="name">nombre</option>
-        </select>
+        <div class="toolbar-group">
+          <label class="toolbar-label" for="order">orden</label>
+          <select id="order" class="select" [value]="order()" (change)="order.set($any($event.target).value)">
+            <option value="recent">más reciente</option>
+            <option value="old">más antiguo</option>
+            <option value="name">nombre</option>
+          </select>
+        </div>
       </div>
 
-      <div class="chips" style="margin-top: .9rem" role="group" aria-label="Filtrar por tecnología">
+      <div class="chips" style="margin-top: 1rem" role="group" aria-label="Filtrar por tecnología">
+        <span class="toolbar-label" style="align-self: center; margin-right: .3rem">tecnología</span>
         <button class="chip" type="button" [class.chip-active]="techFilter() === null" (click)="techFilter.set(null)">
           todas
         </button>

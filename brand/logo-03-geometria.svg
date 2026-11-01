@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Logo ECJ · geometría"><title>ECJ · geometría</title><style>
+  .ink { fill: currentColor; } .accent { fill: #a855f7; } .soft { fill: #c4b5fd; }
+  .line { stroke: #a855f7; } .line-soft { stroke: #c4b5fd; }
+  @media (prefers-color-scheme: light) {
+    .accent { fill: #6d28d9; } .soft { fill: #7c6cf0; }
+    .line { stroke: #6d28d9; } .line-soft { stroke: #7c6cf0; }
+  }
+</style><g class="ink"><rect x="10" y="34" width="28" height="6" rx="3"/><rect x="10" y="50" width="20" height="6" rx="3"/><rect x="10" y="66" width="28" height="6" rx="3"/></g><path d="M52 34 a18 18 0 1 0 0 36" fill="none" class="line" stroke-width="6" stroke-linecap="round"/><path d="M88 34 v28 a11 11 0 0 1 -22 0" fill="none" class="line-soft" stroke-width="6" stroke-linecap="round"/></svg>

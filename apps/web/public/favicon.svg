@@ -1,4 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="MilioLab">
-  <rect width="64" height="64" rx="16" fill="#6366f1"/>
-  <path d="M16 46V18h7l9 14 9-14h7v28h-7V30l-9 13-9-13v16z" fill="#ffffff"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="ECJ"><rect width="120" height="120" rx="26" fill="#120e1d"/><g fill="#f1ecff"><rect x="6" y="30" width="24" height="7" rx="3.5"/><rect x="6" y="47" width="16" height="7" rx="3.5"/><rect x="6" y="64" width="24" height="7" rx="3.5"/></g><path d="M64.9 34.7 A17 17 0 1 0 64.9 66.3" fill="none" stroke="#a855f7" stroke-width="7" stroke-linecap="butt"/><path d="M85.9 30 V49.5 a18 18 0 0 1 -18 18 H10" fill="none" stroke="#f1ecff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>

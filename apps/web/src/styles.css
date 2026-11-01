@@ -1495,7 +1495,7 @@ body:has([data-theme="Nodos"]) {
   margin-top: 1rem;
   border: 1px solid var(--line);
   border-radius: 8px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .gantt-axis,
@@ -1510,6 +1510,8 @@ body:has([data-theme="Nodos"]) {
 .gantt-axis {
   border-bottom: 1px solid var(--line);
   background: var(--paper-2);
+  border-radius: 8px 8px 0 0;
+  padding-top: 2rem;
 }
 
 .gantt-years {
@@ -1615,4 +1617,184 @@ body:has([data-theme="Nodos"]) {
 
 .tech-badge:hover {
   filter: brightness(1.15);
+}
+
+
+/* --- Habilidades: fila pulsable y detalle --------------------------------- */
+
+.skill-wrap {
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.skill {
+  width: 100%;
+  grid-template-columns: 52px minmax(0, 1fr) 110px 62px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--paper-2) 55%, transparent);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.skill-name {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.skill-mode {
+  justify-self: end;
+  padding: 0.12rem 0.4rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+.skill-mode.mode-ai {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.skill-mode.mode-soft {
+  border-color: var(--line-strong);
+  color: var(--ink-soft);
+}
+
+.skill[aria-expanded="true"] {
+  border-color: var(--accent);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.skill-detail {
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--accent);
+  border-top: 0;
+  border-radius: 0 0 6px 6px;
+  background: color-mix(in srgb, var(--accent-soft) 45%, var(--paper));
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 760px) {
+  .skill {
+    grid-template-columns: 44px minmax(0, 1fr) 74px;
+  }
+
+  .skill-mode {
+    display: none;
+  }
+}
+
+
+/* --- Controles de listado (vista, orden, filtros) ------------------------ */
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9rem 1.6rem;
+  margin-top: 1.2rem;
+}
+
+.toolbar-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.toolbar-label {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+.select {
+  padding: 0.32rem 0.55rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+.select:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+
+/* --- Marcador «IA» en la línea de tiempo --------------------------------- */
+
+.gantt {
+  position: relative;
+  --ai-pos: 78.5%;
+}
+
+.gantt-years {
+  position: relative;
+}
+
+.gantt-ai-label {
+  position: absolute;
+  top: -1.55rem;
+  transform: translateX(-50%);
+  padding: 0.1rem 0.35rem;
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.gantt-ai-label::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 1px;
+  height: 0.5rem;
+  background: var(--accent);
+}
+
+.gantt-track::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: var(--ai-pos);
+  border-left: 1px dashed var(--accent);
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+
+/* --- Logo de la cabecera ------------------------------------------------- */
+
+.brand-logo {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  color: var(--ink);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.brand:hover .brand-logo {
+  color: var(--accent);
+  transform: rotate(-6deg);
 }

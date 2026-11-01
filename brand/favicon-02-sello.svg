@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Logo ECJ · favicon sello"><title>ECJ · favicon sello</title><style>
+  .ink { fill: currentColor; } .accent { fill: #a855f7; } .soft { fill: #c4b5fd; }
+  .line { stroke: #a855f7; } .line-soft { stroke: #c4b5fd; }
+  @media (prefers-color-scheme: light) {
+    .accent { fill: #6d28d9; } .soft { fill: #7c6cf0; }
+    .line { stroke: #6d28d9; } .line-soft { stroke: #7c6cf0; }
+  }
+</style><rect width="120" height="120" rx="26" fill="#120e1d"/><circle cx="60" cy="60" r="42" fill="none" stroke="#a855f7" stroke-width="6"/><text x="60" y="72" text-anchor="middle" font-family='Georgia, "Iowan Old Style", "Palatino Linotype", serif' font-size="30" font-weight="700" fill="#f1ecff">ECJ</text></svg>

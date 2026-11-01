@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>ECJ · iteración 03</title>
+<style>
+  body { font-family: Georgia, serif; background:#0e0b16; color:#f1ecff; padding:32px; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  p { font-family: ui-monospace, monospace; font-size: 11px; color:#9a8fc0; margin: 0 0 22px; }
+  .grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; max-width: 860px; }
+  .card { margin:0; padding:18px; border:1px solid #2e2450; border-radius:12px; text-align:center;
+           background:linear-gradient(180deg,#17112a,#0e0b16); color:#f1ecff; }
+  .card img { width:150px; height:150px; }
+  figcaption { font-family: ui-monospace, monospace; font-size:10px; color:#c4b5fd; margin-top:10px; }
+  .light { background:#f6f3ea; color:#17161a; margin-top:28px; padding:22px; border-radius:12px; }
+  .light .card { background:#fff; border-color:#d9d3c4; color:#17161a; }
+  .light p { color:#6d6a63; }
+  .row { display:flex; gap:18px; align-items:flex-end; margin-top:26px; }
+  .row img { width:64px; height:64px; }
+  .row img.small { width:32px; height:32px; }
+  .row img.tiny { width:16px; height:16px; }
+</style></head>
+<body>
+  <h1>ECJ · variante geométrica, con aire</h1>
+  <p>la E ya no toca la C · prueba a 16, 32 y 64 px</p>
+  <div class="grid"><figure class="card"><img src="03a-aire.svg" alt="03a-aire.svg"><figcaption>03a-aire</figcaption></figure><figure class="card"><img src="03b-trazo-grueso.svg" alt="03b-trazo-grueso.svg"><figcaption>03b-trazo-grueso</figcaption></figure><figure class="card"><img src="03c-compacto.svg" alt="03c-compacto.svg"><figcaption>03c-compacto</figcaption></figure><figure class="card"><img src="03d-celdas.svg" alt="03d-celdas.svg"><figcaption>03d-celdas</figcaption></figure><figure class="card"><img src="03a-favicon.svg" alt="03a-favicon.svg"><figcaption>03a-favicon</figcaption></figure></div>
+
+  <div class="row">
+    <img src="03a-favicon.svg" alt="64"><img src="03a-favicon.svg" class="small" alt="32"><img src="03a-favicon.svg" class="tiny" alt="16">
+  </div>
+
+  <div class="light">
+    <h1>Sobre fondo claro</h1>
+    <div class="grid"><figure class="card"><img src="03a-aire.svg" alt="03a-aire.svg"><figcaption>03a-aire</figcaption></figure><figure class="card"><img src="03b-trazo-grueso.svg" alt="03b-trazo-grueso.svg"><figcaption>03b-trazo-grueso</figcaption></figure><figure class="card"><img src="03c-compacto.svg" alt="03c-compacto.svg"><figcaption>03c-compacto</figcaption></figure><figure class="card"><img src="03d-celdas.svg" alt="03d-celdas.svg"><figcaption>03d-celdas</figcaption></figure><figure class="card"><img src="03a-favicon.svg" alt="03a-favicon.svg"><figcaption>03a-favicon</figcaption></figure></div>
+  </div>
+</body></html>

@@ -9,7 +9,7 @@ import { SiteService } from '../core/site.service';
   template: `
     <header class="lab-header">
       <a class="brand" routerLink="/" aria-label="MilioLab, inicio">
-        <span class="brand-mark" aria-hidden="true">M</span>
+        <svg class="brand-logo" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><g fill="currentColor"><rect x="6" y="30" width="24" height="7" rx="3.5"/><rect x="6" y="47" width="16" height="7" rx="3.5"/><rect x="6" y="64" width="24" height="7" rx="3.5"/></g><path d="M64.9 34.7 A17 17 0 1 0 64.9 66.3" fill="none" stroke="#a855f7" stroke-width="7" stroke-linecap="butt"/><path d="M85.9 30 V49.5 a18 18 0 0 1 -18 18 H10" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <span>{{ site.siteName() }}</span>
       </a>
       <span class="brand-badge">LAB-01</span>
