@@ -50,6 +50,10 @@ foreach ($key in 'DEPLOY_HOST', 'DEPLOY_USER', 'DEPLOY_PASSWORD', 'DEPLOY_WEB_DI
     if (-not $cfg[$key]) { throw "Falta $key en $EnvFile" }
 }
 
+if ($Env -and -not $cfg['DEPLOY_DB_PASSWORD']) {
+    throw "Falta DEPLOY_DB_PASSWORD en $EnvFile (lo necesita el .env de la API)."
+}
+
 $port = if ($cfg['DEPLOY_PORT']) { $cfg['DEPLOY_PORT'] } else { '22' }
 $protocol = if ($cfg['DEPLOY_PROTOCOL']) { $cfg['DEPLOY_PROTOCOL'] } else { 'sftp' }
 
