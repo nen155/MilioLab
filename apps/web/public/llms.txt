@@ -1,0 +1,29 @@
+# MilioLab
+
+> Cuaderno de laboratorio de Emilio: desarrollo web, producto y experimentos.
+> Sitio estático (Angular) con API Laravel. Sin cookies ni rastreadores.
+
+Este archivo describe el sitio para modelos de lenguaje y agentes. La versión
+completa y actualizada está en https://miliolab.com/texto
+
+## Secciones
+
+- [Inicio](https://miliolab.com/): portada y últimas entradas.
+- [Blog](https://miliolab.com/blog): índice de entradas, filtrable por categoría y etiqueta.
+- [Versión texto](https://miliolab.com/texto): todo el contenido en un solo listado.
+- [Sobre mí](https://miliolab.com/sobre-mi)
+- [Contacto](https://miliolab.com/contacto)
+
+## Máquina
+
+- [Sitemap](https://miliolab.com/sitemap.xml)
+- [RSS](https://miliolab.com/feed.xml)
+- [API pública](https://miliolab.com/api/v1/site): JSON con ajustes, menú y últimas entradas.
+- [API de entradas](https://miliolab.com/api/v1/posts)
+
+## Notas
+
+- El contenido se escribe en un editor visual y se guarda como HTML limpio;
+  el sitio también acepta Markdown si el cuerpo no empieza por una etiqueta HTML.
+- Cada entrada tiene URL estable `https://miliolab.com/blog/<slug>`.
+- Los datos estructurados (JSON-LD) están en cada página.

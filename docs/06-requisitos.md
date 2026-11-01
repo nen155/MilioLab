@@ -74,6 +74,16 @@ Cada requisito enlaza las historias que lo cubren (ver
 | RF-7.3 | Validación de entrada y respuestas de error consistentes (422/401/403/404) | US-7.2 |
 | RF-7.4 | El HTML del editor se limpia en el servidor antes de guardarse | US-7.2 |
 
+## RF-8 · Identidad visual y experiencia
+
+| ID | Requisito | Historias |
+|---|---|---|
+| RF-8.1 | La web pública tiene un diseño propio de «cuaderno de laboratorio» (raíl, rejilla, muestras numeradas) | US-9.1 |
+| RF-8.2 | Hay notas y guiños ocultos que aparecen al pasar el ratón o al enfocar con teclado | US-9.2 |
+| RF-8.3 | Existe una «sala de experimentos» con minijuegos jugables con ratón y teclado | US-9.3 |
+| RF-8.4 | El contenido se puede escribir en Markdown además de HTML | US-9.4 |
+| RF-8.5 | Hay una versión texto (`/texto`) y `llms.txt` para robots y modelos de lenguaje | US-9.4 |
+
 ## RNF · Requisitos no funcionales
 
 | ID | Requisito | Historias |
@@ -86,3 +96,5 @@ Cada requisito enlaza las historias que lo cubren (ver
 | RNF-6 | Copias de seguridad posibles sin SSH (phpMyAdmin + SFTP) | US-0.2 |
 | RNF-7 | Pruebas automatizadas del backend aisladas de la base de datos de desarrollo | US-7.3 |
 | RNF-8 | Documentación técnica suficiente para retomar el proyecto sin contexto previo | US-7.4 |
+| RNF-9 | La web pública mantiene una transferencia inicial cercana a 100 KB | US-9.1 |
+| RNF-10 | Accesibilidad: teclado, foco visible, contraste AA y movimiento reducido | US-9.2, US-9.3, US-9.5 |

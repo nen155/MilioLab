@@ -189,7 +189,7 @@ try {
     # 3) index.php + .htaccess de la API y carpeta de medios
     Invoke-WinScp @(
         "put `"$(Join-Path $tmp 'index.php')`" `"$apiPublicDir/index.php`"",
-        "put `"$(Join-Path $repoRoot 'apps/api/public/.htaccess')`" `"$apiPublicDir/.htaccess`"",
+        "put `"$(Join-Path $PSScriptRoot 'remote/api.htaccess')`" `"$apiPublicDir/.htaccess`"",
         "put `"$(Join-Path $PSScriptRoot 'api-app/.htaccess')`" `"$apiAppDir/.htaccess`"",
         "chmod 775 `"$apiPublicDir/media`"",
         "rm `"$apiPublicDir/unzip-deploy.php`"",

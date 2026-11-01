@@ -18,6 +18,7 @@ Estado: ✅ Hecha · ⏳ Pendiente · 🧩 Parcial.
 | EP-5 | Navegación y ajustes |
 | EP-6 | Web pública |
 | EP-7 | API y calidad |
+| EP-8 | Identidad visual y experiencia |
 
 ## Índice
 
@@ -48,6 +49,11 @@ Estado: ✅ Hecha · ⏳ Pendiente · 🧩 Parcial.
 | US-7.2 | API de administración | EP-7 | RF-7.2–7.4 | ✅ | [`US-7.2`](historias-usuario/US-7.2-api-admin.md) |
 | US-7.3 | Pruebas y aislamiento de la base de datos | EP-7 | RNF-7 | ✅ | [`US-7.3`](historias-usuario/US-7.3-pruebas.md) |
 | US-7.4 | Documentación técnica y SDD | EP-7 | RNF-8 | ✅ | [`US-7.4`](historias-usuario/US-7.4-documentacion.md) |
+| US-9.1 | Rediseño «cuaderno de laboratorio» | EP-8 | RF-8.1, RNF-9 | ✅ | [`US-9.1`](historias-usuario/US-9.1-rediseno-laboratorio.md) |
+| US-9.2 | Easter eggs al pasar el ratón | EP-8 | RF-8.2, RNF-10 | ✅ | [`US-9.2`](historias-usuario/US-9.2-easter-eggs.md) |
+| US-9.3 | Sala de experimentos (minijuegos) | EP-8 | RF-8.3, RNF-10 | ✅ | [`US-9.3`](historias-usuario/US-9.3-minijuegos.md) |
+| US-9.4 | Markdown, versión texto y lectura por máquinas | EP-8 | RF-8.4, RF-8.5 | ✅ | [`US-9.4`](historias-usuario/US-9.4-markdown-texto-maquinas.md) |
+| US-9.5 | Accesibilidad del nuevo diseño | EP-8 | RNF-10 | ✅ | [`US-9.5`](historias-usuario/US-9.5-accesibilidad.md) |
 
 ## Pendientes (backlog)
 

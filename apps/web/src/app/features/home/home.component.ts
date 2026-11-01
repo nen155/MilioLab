@@ -6,49 +6,99 @@ import { absoluteUrl, plainText } from '../../core/format';
 import { Page } from '../../core/models';
 import { SeoService } from '../../core/seo.service';
 import { SiteService } from '../../core/site.service';
+import { ContentPipe } from '../../shared/content.pipe';
 import { PostCardComponent } from '../../shared/post-card.component';
-import { SafeHtmlPipe } from '../../shared/safe-html.pipe';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, PostCardComponent, SafeHtmlPipe],
+  imports: [RouterLink, PostCardComponent, ContentPipe],
   template: `
-    <section class="hero container">
-      <p class="eyebrow">Bienvenido</p>
-      <h1 class="hero-title">{{ site.siteName() }}</h1>
-      <p class="hero-tagline">{{ site.tagline() }}</p>
-      <div class="hero-actions">
-        <a class="button" routerLink="/blog">Leer el blog</a>
-        @if (site.homeSlug()) {
-          <a class="button button-ghost" [routerLink]="'/' + site.homeSlug()">Conocer el proyecto</a>
-        }
+    <section class="hero">
+      <div>
+        <p class="kicker">cuaderno de laboratorio · {{ year }}</p>
+        <h1 class="display">
+          {{ site.siteName() }}<br />
+          <em>{{ site.tagline() }}</em>
+        </h1>
+        <p class="lede">
+          Desarrollo web, producto y experimentos que aún no tienen nombre. Escribo lo que
+          pruebo y publico lo que funciona.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn" routerLink="/blog">Abrir el cuaderno</a>
+          <a class="btn btn-ghost" routerLink="/texto">Versión texto</a>
+        </div>
       </div>
+
+      <aside class="hero-aside" aria-label="Notas de la libreta">
+        <p>
+          <span class="egg" tabindex="0">
+            método
+            <span class="egg-note">Escribir, medir, corregir. Sin plantillas.</span>
+          </span>
+          — observación directa
+        </p>
+        <p>
+          <span class="egg" tabindex="0">
+            muestras
+            <span class="egg-note">Cada entrada es un experimento con fecha y número.</span>
+          </span>
+          — {{ site.latestPosts().length }} recientes
+        </p>
+        <p>
+          <span class="egg" tabindex="0">
+            residuo
+            <span class="egg-note">Sin cookies, sin analítica, sin rastreadores.</span>
+          </span>
+          — ninguno
+        </p>
+      </aside>
     </section>
 
     @if (homePage(); as page) {
       @if (page.body) {
-        <section class="container section prose" [innerHTML]="page.body | safeHtml"></section>
+        <section class="prose" style="margin-top: 2.5rem" [innerHTML]="page.body | content"></section>
       }
     }
 
-    @if (site.latestPosts().length) {
-      <section class="container section">
-        <div class="section-head">
-          <h2>Últimas entradas</h2>
-          <a class="link-arrow" routerLink="/blog">Ver todas →</a>
-        </div>
+    <div class="section-head">
+      <h2>Últimas muestras</h2>
+      <a class="link-arrow" routerLink="/blog">todas →</a>
+    </div>
 
-        <div class="post-grid">
-          @for (post of site.latestPosts(); track post.id) {
-            <app-post-card [post]="post" />
-          }
-        </div>
-      </section>
+    @if (site.latestPosts().length) {
+      <div class="samples">
+        @for (post of site.latestPosts(); track post.id) {
+          <app-post-card [post]="post" />
+        }
+      </div>
+    } @else {
+      <p class="empty mono muted">Todavía no hay muestras registradas.</p>
     }
+
+    <section style="margin-top: 3rem">
+      <details>
+        <summary class="mono" style="cursor:pointer">Registro de observaciones</summary>
+        <ul class="mono muted" style="margin-top: .8rem; padding-left: 1.1rem; line-height: 2">
+          <li>El diseño no necesita sombras para tener profundidad.</li>
+          <li>
+            <span class="egg" tabindex="0">
+              hay una sala de experimentos
+              <span class="egg-note">Shift + L, o «experimentos» en el pie.</span>
+            </span>
+            escondida en esta página.
+          </li>
+          <li>Todo lo que lees se puede leer sin JavaScript en <a routerLink="/texto">/texto</a>.</li>
+        </ul>
+      </details>
+    </section>
   `,
 })
 export class HomeComponent implements OnInit {
   protected readonly site = inject(SiteService);
+  protected readonly year = new Date().getFullYear();
+
   private readonly api = inject(ApiService);
   private readonly seo = inject(SeoService);
 

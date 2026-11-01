@@ -6,35 +6,37 @@ import { absoluteUrl, plainText } from '../../core/format';
 import { Page } from '../../core/models';
 import { SeoService } from '../../core/seo.service';
 import { SiteService } from '../../core/site.service';
-import { SafeHtmlPipe } from '../../shared/safe-html.pipe';
+import { ContentPipe } from '../../shared/content.pipe';
 
 @Component({
   selector: 'app-page',
-  imports: [RouterLink, SafeHtmlPipe],
+  imports: [RouterLink, ContentPipe],
   template: `
     @if (loading()) {
-      <div class="container section">
-        <div class="skeleton skeleton-title"></div>
-        <div class="skeleton skeleton-line"></div>
-        <div class="skeleton skeleton-line"></div>
-      </div>
+      <div class="article"><div class="skeleton" style="height: 280px"></div></div>
     } @else if (page(); as current) {
-      <article class="container section page-view" [class.page-wide]="current.template === 'wide'">
-        <header class="page-header">
-          <p class="eyebrow">Página</p>
+      <article class="article" [style.max-width]="current.template === 'wide' ? '100%' : null">
+        <header class="article-head">
+          <p class="kicker">página · {{ current.template }}</p>
           <h1>{{ current.title }}</h1>
           @if (current.excerpt) {
             <p class="lede">{{ current.excerpt }}</p>
           }
         </header>
 
-        <div class="prose" [innerHTML]="current.body | safeHtml"></div>
+        <div class="prose" [innerHTML]="current.body | content"></div>
+
+        <footer class="article-foot">
+          <a class="link-arrow" routerLink="/">← inicio</a>
+          <span class="mono muted">MilioLab</span>
+        </footer>
       </article>
     } @else {
-      <section class="container section empty-state">
-        <h1>Página no encontrada</h1>
-        <p class="muted">Puede que el enlace esté mal escrito o que la página ya no exista.</p>
-        <a class="button" routerLink="/">Volver al inicio</a>
+      <section class="empty">
+        <p class="kicker">404</p>
+        <h1>Esta página no existe</h1>
+        <p class="mono muted">Puede que el enlace esté mal escrito o que ya no esté publicada.</p>
+        <a class="btn" routerLink="/">Volver al inicio</a>
       </section>
     }
   `,

@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /milio/
+
+Sitemap: https://miliolab.com/sitemap.xml

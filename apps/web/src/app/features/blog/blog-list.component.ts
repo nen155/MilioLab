@@ -13,74 +13,68 @@ import { PostCardComponent } from '../../shared/post-card.component';
   selector: 'app-blog-list',
   imports: [RouterLink, PostCardComponent],
   template: `
-    <section class="container section">
-      <header class="blog-header">
-        <p class="eyebrow">Blog</p>
-        <h1>{{ heading() }}</h1>
-        @if (intro()) {
-          <p class="lede">{{ intro() }}</p>
-        }
-      </header>
+    <header class="article-head" style="margin-top: 2rem">
+      <p class="kicker">índice de muestras</p>
+      <h1>{{ heading() }}</h1>
+      @if (intro()) {
+        <p class="lede">{{ intro() }}</p>
+      }
+      <p class="mono muted" style="margin-top: .6rem">
+        {{ total() }} {{ total() === 1 ? 'registro' : 'registros' }} · página {{ page() }} de {{ lastPage() }}
+      </p>
+    </header>
 
-      @if (categories().length) {
-        <nav class="chips" aria-label="Categorías">
-          <a class="chip" routerLink="/blog" [class.chip-active]="!activeCategory()">Todas</a>
-          @for (category of categories(); track category.id) {
-            <a
-              class="chip"
-              [routerLink]="['/blog/categoria', category.slug]"
-              [class.chip-active]="activeCategory() === category.slug"
-            >
-              {{ category.name }}
-            </a>
-          }
+    @if (categories().length) {
+      <nav class="chips" aria-label="Categorías">
+        <a class="chip" routerLink="/blog" [class.chip-active]="!activeCategory()">todas</a>
+        @for (category of categories(); track category.id) {
+          <a
+            class="chip"
+            [routerLink]="['/blog/categoria', category.slug]"
+            [class.chip-active]="activeCategory() === category.slug"
+          >
+            {{ category.name }}
+          </a>
+        }
+      </nav>
+    }
+
+    @if (loading()) {
+      <div class="samples">
+        @for (item of [1, 2, 3]; track item) {
+          <div class="skeleton"></div>
+        }
+      </div>
+    } @else if (posts().length) {
+      <div class="samples">
+        @for (post of posts(); track post.id) {
+          <app-post-card [post]="post" />
+        }
+      </div>
+
+      @if (lastPage() > 1) {
+        <nav class="article-foot" aria-label="Paginación">
+          <button class="btn btn-ghost" type="button" [disabled]="page() <= 1" (click)="goToPage(page() - 1)">
+            ← anterior
+          </button>
+          <span class="mono muted">página {{ page() }} / {{ lastPage() }}</span>
+          <button
+            class="btn btn-ghost"
+            type="button"
+            [disabled]="page() >= lastPage()"
+            (click)="goToPage(page() + 1)"
+          >
+            siguiente →
+          </button>
         </nav>
       }
-
-      @if (loading()) {
-        <div class="post-grid">
-          @for (item of [1, 2, 3]; track item) {
-            <div class="skeleton skeleton-card"></div>
-          }
-        </div>
-      } @else if (posts().length) {
-        <div class="post-grid">
-          @for (post of posts(); track post.id) {
-            <app-post-card [post]="post" />
-          }
-        </div>
-
-        @if (meta(); as pagination) {
-          @if (pagination.last_page > 1) {
-            <nav class="pagination" aria-label="Paginación">
-              <button
-                type="button"
-                class="button button-ghost"
-                [disabled]="pagination.current_page <= 1"
-                (click)="goToPage(pagination.current_page - 1)"
-              >
-                ← Anterior
-              </button>
-              <span class="muted">Página {{ pagination.current_page }} de {{ pagination.last_page }}</span>
-              <button
-                type="button"
-                class="button button-ghost"
-                [disabled]="pagination.current_page >= pagination.last_page"
-                (click)="goToPage(pagination.current_page + 1)"
-              >
-                Siguiente →
-              </button>
-            </nav>
-          }
-        }
-      } @else {
-        <div class="empty-state">
-          <h2>No hay entradas todavía</h2>
-          <p class="muted">Cuando publique algo aparecerá aquí.</p>
-          <a class="button" routerLink="/">Volver al inicio</a>
-        </div>
-      }
-    </section>
+    } @else {
+      <div class="empty">
+        <h2>Sin muestras</h2>
+        <p class="mono muted">No hay registros con ese filtro.</p>
+        <a class="btn" routerLink="/blog">Ver todas</a>
+      </div>
+    }
   `,
 })
 export class BlogListComponent implements OnInit {
@@ -97,32 +91,25 @@ export class BlogListComponent implements OnInit {
   protected readonly heading = signal<string>('Blog');
   protected readonly intro = computed(() => this.site.setting<string>('blog_intro', ''));
   protected readonly activeCategory = signal<string | null>(null);
-
-  private currentQuery = '';
+  protected readonly page = signal(1);
+  protected readonly lastPage = signal(1);
+  protected readonly total = signal(0);
 
   ngOnInit(): void {
     this.api.getCategories().subscribe((categories) => this.categories.set(categories));
 
-    combineLatest([this.route.paramMap, this.route.queryParamMap]).subscribe(
-      ([params, query]) => {
-        const category = params.get('category') ?? undefined;
-        const tag = params.get('tag') ?? undefined;
-        const page = Number(query.get('page') ?? '1') || 1;
-        const q = (query.get('q') ?? '').trim();
+    combineLatest([this.route.paramMap, this.route.queryParamMap]).subscribe(([params, query]) => {
+      const category = params.get('category') ?? undefined;
+      const tag = params.get('tag') ?? undefined;
+      const page = Number(query.get('page') ?? '1') || 1;
+      const q = (query.get('q') ?? '').trim();
 
-        this.currentQuery = q;
-        this.activeCategory.set(category ?? null);
-        this.load({ page, q, category, tag });
-      },
-    );
+      this.activeCategory.set(category ?? null);
+      this.load({ page, q, category, tag });
+    });
   }
 
-  private load(options: {
-    page: number;
-    q: string;
-    category?: string;
-    tag?: string;
-  }): void {
+  private load(options: { page: number; q: string; category?: string; tag?: string }): void {
     this.loading.set(true);
 
     this.api
@@ -137,12 +124,14 @@ export class BlogListComponent implements OnInit {
         next: (response) => {
           this.posts.set(response.data);
           this.meta.set(response.meta);
+          this.page.set(response.meta.current_page);
+          this.lastPage.set(response.meta.last_page);
+          this.total.set(response.meta.total);
           this.loading.set(false);
           this.updateSeo(options);
         },
         error: () => {
           this.posts.set([]);
-          this.meta.set(null);
           this.loading.set(false);
         },
       });

@@ -60,6 +60,7 @@ docs/       Arquitectura, modelo de datos, API y guía de despliegue
 - [`docs/02-modelo-datos.md`](docs/02-modelo-datos.md)
 - [`docs/03-api.md`](docs/03-api.md)
 - [`docs/04-despliegue.md`](docs/04-despliegue.md)
+- [`docs/08-diseno-laboratorio.md`](docs/08-diseno-laboratorio.md) — sistema visual de la web
 
 ## Comandos útiles
 

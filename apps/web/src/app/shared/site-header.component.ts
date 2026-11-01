@@ -7,44 +7,44 @@ import { SiteService } from '../core/site.service';
   selector: 'app-site-header',
   imports: [RouterLink],
   template: `
-    <header class="site-header">
-      <div class="container header-inner">
-        <a class="brand" routerLink="/" aria-label="Inicio">
-          <span class="brand-mark">M</span>
-          <span class="brand-name">{{ site.siteName() }}</span>
-        </a>
+    <header class="lab-header">
+      <a class="brand" routerLink="/" aria-label="MilioLab, inicio">
+        <span class="brand-mark" aria-hidden="true">M</span>
+        <span>{{ site.siteName() }}</span>
+      </a>
+      <span class="brand-badge">LAB-01</span>
 
-        <button
-          class="nav-toggle"
-          type="button"
-          [attr.aria-expanded]="open()"
-          aria-label="Abrir menú"
-          (click)="open.set(!open())"
-        >
-          <span></span><span></span><span></span>
-        </button>
+      <button
+        class="nav-toggle"
+        type="button"
+        [attr.aria-expanded]="open()"
+        aria-controls="nav-principal"
+        (click)="open.set(!open())"
+      >
+        índice
+      </button>
 
-        <nav class="nav" [class.nav-open]="open()" aria-label="Principal">
-          @for (item of site.menu(); track item.id) {
-            @if (isExternal(item.url)) {
-              <a [href]="item.url" [attr.target]="item.target" rel="noopener">{{ item.label }}</a>
-            } @else {
-              <a [routerLink]="item.url" (click)="open.set(false)">{{ item.label }}</a>
-            }
+      <nav class="nav" id="nav-principal" [class.nav-open]="open()" aria-label="Principal">
+        @for (item of site.menu(); track item.id) {
+          @if (isExternal(item.url)) {
+            <a [href]="item.url" [attr.target]="item.target" rel="noopener">{{ item.label }}</a>
+          } @else {
+            <a [routerLink]="item.url" (click)="open.set(false)">{{ item.label }}</a>
           }
-        </nav>
+        }
+      </nav>
 
-        <form class="search" role="search" (submit)="search($event)">
-          <input
-            type="search"
-            name="q"
-            placeholder="Buscar…"
-            aria-label="Buscar en el blog"
-            [value]="query()"
-            (input)="query.set($any($event.target).value)"
-          />
-        </form>
-      </div>
+      <form class="search" role="search" (submit)="search($event)">
+        <label class="mono muted" for="q">buscar</label>
+        <input
+          id="q"
+          type="search"
+          name="q"
+          placeholder="término…"
+          [value]="query()"
+          (input)="query.set($any($event.target).value)"
+        />
+      </form>
     </header>
   `,
 })

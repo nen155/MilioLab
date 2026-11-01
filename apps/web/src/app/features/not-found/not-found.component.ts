@@ -9,15 +9,16 @@ import { SiteService } from '../../core/site.service';
   selector: 'app-not-found',
   imports: [RouterLink],
   template: `
-    <section class="container section empty-state">
-      <p class="eyebrow">Error 404</p>
-      <h1>Esta página no existe</h1>
-      <p class="muted">
-        El enlace puede estar mal escrito o el contenido ya no está publicado.
+    <section class="empty">
+      <p class="kicker">error 404</p>
+      <h1 class="display" style="font-size: clamp(2rem, 5vw, 3.4rem)">Nada en este tubo de ensayo</h1>
+      <p class="lede" style="margin-inline: auto">
+        La muestra que buscas no está aquí. Puede que el enlace esté mal escrito o que el
+        experimento se haya archivado.
       </p>
-      <div class="hero-actions">
-        <a class="button" routerLink="/">Ir al inicio</a>
-        <a class="button button-ghost" routerLink="/blog">Ver el blog</a>
+      <div class="hero-actions" style="justify-content: center">
+        <a class="btn" routerLink="/">Ir al inicio</a>
+        <a class="btn btn-ghost" routerLink="/blog">Ver el índice</a>
       </div>
     </section>
   `,

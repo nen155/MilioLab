@@ -6,35 +6,30 @@ import { absoluteUrl, formatDate, plainText } from '../../core/format';
 import { Post } from '../../core/models';
 import { SeoService } from '../../core/seo.service';
 import { SiteService } from '../../core/site.service';
-import { SafeHtmlPipe } from '../../shared/safe-html.pipe';
+import { ContentPipe } from '../../shared/content.pipe';
 
 @Component({
   selector: 'app-post-detail',
-  imports: [RouterLink, SafeHtmlPipe],
+  imports: [RouterLink, ContentPipe],
   template: `
     @if (loading()) {
-      <div class="container section">
-        <div class="skeleton skeleton-title"></div>
-        <div class="skeleton skeleton-line"></div>
-        <div class="skeleton skeleton-line"></div>
-      </div>
+      <div class="article"><div class="skeleton" style="height: 320px"></div></div>
     } @else if (post(); as current) {
-      <article class="container section post-detail">
-        <header class="post-header">
-          @if (current.category; as category) {
-            <a class="chip" [routerLink]="['/blog/categoria', category.slug]">{{ category.name }}</a>
-          }
-
+      <article class="article">
+        <header class="article-head">
+          <p class="kicker">
+            muestra ML-{{ id() }} · {{ current.category?.name || 'sin clasificar' }}
+          </p>
           <h1>{{ current.title }}</h1>
 
           @if (current.excerpt) {
             <p class="lede">{{ current.excerpt }}</p>
           }
 
-          <p class="post-meta">
+          <p class="article-meta">
             <time [attr.datetime]="current.published_at">{{ date(current.published_at) }}</time>
             <span aria-hidden="true">·</span>
-            <span>{{ current.reading_minutes }} min de lectura</span>
+            <span>{{ current.reading_minutes }} min</span>
             @if (showAuthor() && current.author; as author) {
               <span aria-hidden="true">·</span>
               <span>{{ author.name }}</span>
@@ -43,30 +38,32 @@ import { SafeHtmlPipe } from '../../shared/safe-html.pipe';
         </header>
 
         @if (current.cover?.url) {
-          <figure class="post-cover">
+          <figure class="article-cover">
             <img [src]="current.cover!.url" [alt]="current.cover!.alt || current.title" />
           </figure>
         }
 
-        <div class="prose" [innerHTML]="current.body | safeHtml"></div>
+        <div class="prose" [innerHTML]="current.body | content"></div>
 
         @if (current.tags?.length) {
-          <footer class="post-tags">
+          <div class="tags" style="margin-top: 2rem">
             @for (tag of current.tags; track tag.id) {
               <a class="chip" [routerLink]="['/blog/etiqueta', tag.slug]">#{{ tag.name }}</a>
             }
-          </footer>
+          </div>
         }
 
-        <nav class="post-nav">
-          <a class="link-arrow" routerLink="/blog">← Volver al blog</a>
-        </nav>
+        <footer class="article-foot">
+          <a class="link-arrow" routerLink="/blog">← volver al índice</a>
+          <span class="mono muted">fin del registro ML-{{ id() }}</span>
+        </footer>
       </article>
     } @else {
-      <section class="container section empty-state">
-        <h1>Entrada no encontrada</h1>
-        <p class="muted">Puede que el enlace esté mal escrito o que la entrada ya no esté publicada.</p>
-        <a class="button" routerLink="/blog">Ir al blog</a>
+      <section class="empty">
+        <p class="kicker">registro no encontrado</p>
+        <h1>Esta muestra no existe</h1>
+        <p class="mono muted">Puede que el enlace esté mal o que ya no esté publicada.</p>
+        <a class="btn" routerLink="/blog">Ir al índice</a>
       </section>
     }
   `,
@@ -119,13 +116,15 @@ export class PostDetailComponent {
           this.post.set(null);
           this.loading.set(false);
           this.seo.set({
-            title: `Entrada no encontrada · ${this.site.siteName()}`,
+            title: `Registro no encontrado · ${this.site.siteName()}`,
             url: absoluteUrl(`/blog/${slug}`),
           });
         },
       });
     });
   }
+
+  protected readonly id = () => String(this.post()?.id ?? 0).padStart(3, '0');
 
   protected date(value?: string | null): string {
     return formatDate(value);
