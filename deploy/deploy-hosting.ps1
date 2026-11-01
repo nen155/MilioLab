@@ -110,7 +110,7 @@ if ($Env) {
         '__DB_DATABASE__'     = $cfg['DEPLOY_DB_DATABASE']
         '__DB_USERNAME__'     = $cfg['DEPLOY_DB_USERNAME']
         '__DB_PASSWORD__'     = $cfg['DEPLOY_DB_PASSWORD']
-        '__MEDIA_ROOT__'      = "$apiPublicDir/media"
+        '__MEDIA_ROOT__'      = if ($cfg['DEPLOY_MEDIA_ROOT']) { $cfg['DEPLOY_MEDIA_ROOT'] } else { "$apiPublicDir/media" }
         '__ADMIN_NAME__'      = $cfg['DEPLOY_ADMIN_NAME']
         '__ADMIN_EMAIL__'     = $cfg['DEPLOY_ADMIN_EMAIL']
         '__ADMIN_PASSWORD__'  = $cfg['DEPLOY_ADMIN_PASSWORD']
