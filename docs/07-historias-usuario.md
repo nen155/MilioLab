@@ -63,6 +63,7 @@ Estado: ✅ Hecha · ⏳ Pendiente · 🧩 Parcial.
 | US-11.2 | Nodos con vídeo generado (retirada) | EP-10 | — | 🗑️ | [`US-11.2`](historias-usuario/US-11.2-nodos-video-generado.md) |
 | US-11.3 | Mapa de nodos: navegación, rendimiento y ramas | EP-10 | RF-10.3, RNF-10 | ✅ | [`US-11.3`](historias-usuario/US-11.3-mapa-nodos-afinado.md) |
 | US-12.1 | Contenido del portfolio (CV, proyectos y contacto) | EP-11 | RF-11.1 | ✅ | [`US-12.1`](historias-usuario/US-12.1-contenido-portfolio.md) |
+| US-12.2 | SEO estático, imagen social y enlaces verificados | EP-11 | RF-12.1, RF-12.2 | ✅ | [`US-12.2`](historias-usuario/US-12.2-seo-enlaces.md) |
 
 ## Pendientes (backlog)
 
