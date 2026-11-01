@@ -6,6 +6,7 @@ import { ApiService } from '../../core/api.service';
 import { absoluteUrl } from '../../core/format';
 import { Category, PaginationMeta, PostSummary } from '../../core/models';
 import { SeoService } from '../../core/seo.service';
+import { I18nService } from '../../core/i18n';
 import { SiteService } from '../../core/site.service';
 import { PostCardComponent } from '../../shared/post-card.component';
 
@@ -14,7 +15,7 @@ import { PostCardComponent } from '../../shared/post-card.component';
   imports: [RouterLink, PostCardComponent],
   template: `
     <header class="article-head" style="margin-top: 2rem">
-      <p class="kicker">índice de muestras</p>
+      <p class="kicker">{{ i18n.t('blog.index') }}</p>
       <h1>{{ heading() }}</h1>
       @if (intro()) {
         <p class="lede">{{ intro() }}</p>
@@ -26,7 +27,7 @@ import { PostCardComponent } from '../../shared/post-card.component';
 
     @if (categories().length) {
       <nav class="chips" aria-label="Categorías">
-        <a class="chip" routerLink="/blog" [class.chip-active]="!activeCategory()">todas</a>
+        <a class="chip" routerLink="/blog" [class.chip-active]="!activeCategory()">{{ i18n.t('blog.all') }}</a>
         @for (category of categories(); track category.id) {
           <a
             class="chip"
@@ -55,7 +56,7 @@ import { PostCardComponent } from '../../shared/post-card.component';
       @if (lastPage() > 1) {
         <nav class="article-foot" aria-label="Paginación">
           <button class="btn btn-ghost" type="button" [disabled]="page() <= 1" (click)="goToPage(page() - 1)">
-            ← anterior
+            {{ i18n.t('blog.prev') }}
           </button>
           <span class="mono muted">página {{ page() }} / {{ lastPage() }}</span>
           <button
@@ -64,15 +65,15 @@ import { PostCardComponent } from '../../shared/post-card.component';
             [disabled]="page() >= lastPage()"
             (click)="goToPage(page() + 1)"
           >
-            siguiente →
+            {{ i18n.t('blog.next') }}
           </button>
         </nav>
       }
     } @else {
       <div class="empty">
-        <h2>Sin muestras</h2>
+        <h2>{{ i18n.t('blog.empty') }}</h2>
         <p class="mono muted">No hay registros con ese filtro.</p>
-        <a class="btn" routerLink="/blog">Ver todas</a>
+        <a class="btn" routerLink="/blog">{{ i18n.t('blog.seeAll') }}</a>
       </div>
     }
   `,
@@ -82,6 +83,7 @@ export class BlogListComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly site = inject(SiteService);
+  protected readonly i18n = inject(I18nService);
   private readonly seo = inject(SeoService);
 
   protected readonly posts = signal<PostSummary[]>([]);
