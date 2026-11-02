@@ -2,11 +2,13 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { Observable, of, shareReplay, tap } from 'rxjs';
 
 import { ApiService } from './api.service';
+import { I18nService } from './i18n';
 import { MenuItem, SettingValue, Site, SiteSettings } from './models';
 
 @Injectable({ providedIn: 'root' })
 export class SiteService {
   private readonly api = inject(ApiService);
+  private readonly i18n = inject(I18nService);
   private readonly state = signal<Site | null>(null);
   private request?: Observable<Site>;
 
@@ -17,8 +19,8 @@ export class SiteService {
   readonly homeSlug = computed(() => this.state()?.home ?? null);
   readonly latestPosts = computed(() => this.state()?.latest_posts ?? []);
 
-  readonly siteName = computed(() => this.setting('site_name', 'MilioLab'));
-  readonly tagline = computed(() => this.setting('site_tagline', ''));
+  readonly siteName = computed(() => this.settingLocalized('site_name', 'MilioLab'));
+  readonly tagline = computed(() => this.settingLocalized('site_tagline', ''));
 
   load(): Observable<Site> {
     if (this.state() !== null) {
@@ -37,5 +39,21 @@ export class SiteService {
     const value = this.settings()[key];
 
     return (value ?? fallback) as T;
+  }
+
+  /**
+   * Ajuste traducido: en inglés usa `<clave>_en` y cae al español si está vacío.
+   */
+  settingLocalized(key: string, fallback = ''): string {
+    const settings = this.settings();
+    const value = this.i18n.locale() === 'en' ? settings[`${key}_en`] : settings[key];
+
+    if (value !== undefined && value !== null && value !== '') {
+      return String(value);
+    }
+
+    const base = settings[key];
+
+    return base === undefined || base === null ? fallback : String(base);
   }
 }

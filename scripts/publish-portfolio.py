@@ -40,7 +40,8 @@ def main():
         {'key': 'social_github', 'value': 'https://github.com/nen155', 'type': 'string', 'group': 'social'},
         {'key': 'blog_title', 'value': 'Cuaderno', 'type': 'string', 'group': 'blog'},
         {'key': 'blog_intro', 'value': 'Notas de ingeniería: lo que construyo, lo que rompo y lo que aprendo por el camino.', 'type': 'text', 'group': 'blog'},
-        {'key': 'footer_text', 'value': 'Hecho a mano con Angular y Laravel.', 'type': 'string', 'group': 'general'},
+        {'key': 'footer_text', 'value': 'Desarrollado con IA · Angular y Laravel.', 'type': 'string', 'group': 'general'},
+        {'key': 'footer_text_en', 'value': 'Developed with AI · Angular and Laravel.', 'type': 'string', 'group': 'general'},
     ]}, token)
 
     pages = [

@@ -21,7 +21,11 @@ class PostController extends Controller
             ->with(['category', 'cover', 'tags', 'author'])
             ->when($request->filled('q'), function ($query) use ($request): void {
                 $term = '%'.$request->string('q').'%';
-                $query->where(fn ($q) => $q->where('title', 'like', $term)->orWhere('excerpt', 'like', $term));
+                $query->where(fn ($q) => $q
+                    ->where('title', 'like', $term)
+                    ->orWhere('title_en', 'like', $term)
+                    ->orWhere('excerpt', 'like', $term)
+                    ->orWhere('excerpt_en', 'like', $term));
             })
             ->when($request->filled('status'), fn ($query) => $query->where('status', (string) $request->string('status')))
             ->when($request->filled('category'), fn ($query) => $query->where('category_id', $request->integer('category')))
@@ -73,6 +77,7 @@ class PostController extends Controller
         $data = $request->safe()->except('tags');
 
         $data['body'] = $this->sanitizer->clean($data['body'] ?? null);
+        $data['body_en'] = $this->sanitizer->clean($data['body_en'] ?? null);
         $data['status'] ??= Post::STATUS_DRAFT;
 
         if ($data['status'] === Post::STATUS_PUBLISHED && empty($data['published_at'])) {

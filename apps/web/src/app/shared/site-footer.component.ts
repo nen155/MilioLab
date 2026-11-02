@@ -14,11 +14,11 @@ import { SiteService } from '../core/site.service';
       <div class="footer-grid">
         <div>
           <h3>MilioLab</h3>
-          <p class="mono muted">{{ site.setting('footer_text', '') }}</p>
+          <p class="mono muted">{{ site.settingLocalized('footer_text') }}</p>
           <p class="mono">
             <span class="egg" tabindex="0">
-              <span class="muted">registro</span> {{ year }} · ML-01
-              <span class="egg-note">Haz clic en «experimentos» (o pulsa Shift + L).</span>
+              <span class="muted">{{ i18n.t('footer.record') }}</span> {{ year }} · ML-01
+              <span class="egg-note">{{ i18n.t('footer.eggNote') }}</span>
             </span>
           </p>
         </div>
@@ -28,9 +28,9 @@ import { SiteService } from '../core/site.service';
           <ul>
             @for (item of navigation(); track item.id) {
               @if (isExternal(item.url)) {
-                <li><a [href]="item.url" [attr.target]="item.target" rel="noopener">{{ item.label }}</a></li>
+                <li><a [href]="item.url" [attr.target]="item.target" rel="noopener">{{ i18n.content(item.label, item.label_en) }}</a></li>
               } @else {
-                <li><a [routerLink]="item.url">{{ item.label }}</a></li>
+                <li><a [routerLink]="item.url">{{ i18n.content(item.label, item.label_en) }}</a></li>
               }
             }
             <li><a routerLink="/texto">{{ i18n.t('footer.plain') }}</a></li>
@@ -50,7 +50,7 @@ import { SiteService } from '../core/site.service';
               <li><a [href]="x" target="_blank" rel="noopener">X</a></li>
             }
             @if (email()) {
-              <li><a [href]="'mailto:' + email()">Correo</a></li>
+              <li><a [href]="'mailto:' + email()">{{ i18n.t('footer.email') }}</a></li>
             }
             <li><a href="/feed.xml">RSS</a></li>
             <li><a href="/llms.txt">llms.txt</a></li>

@@ -9,14 +9,17 @@ export interface AdminUser {
 export interface Category {
   id: number;
   name: string;
+  name_en?: string | null;
   slug: string;
   description?: string | null;
+  description_en?: string | null;
   posts_count?: number;
 }
 
 export interface Tag {
   id: number;
   name: string;
+  name_en?: string | null;
   slug: string;
   posts_count?: number;
 }
@@ -43,9 +46,12 @@ export interface Author {
 export interface Post {
   id: number;
   title: string;
+  title_en?: string | null;
   slug: string;
   excerpt?: string | null;
+  excerpt_en?: string | null;
   body: string | null;
+  body_en?: string | null;
   status: 'draft' | 'published';
   published_at?: string | null;
   category?: Category | null;
@@ -53,8 +59,11 @@ export interface Post {
   tags?: Tag[];
   author?: Author | null;
   reading_minutes: number;
+  reading_minutes_en?: number;
   meta_title?: string | null;
+  meta_title_en?: string | null;
   meta_description?: string | null;
+  meta_description_en?: string | null;
   created_at?: string | null;
   updated_at?: string | null;
 }
@@ -62,14 +71,19 @@ export interface Post {
 export interface Page {
   id: number;
   title: string;
+  title_en?: string | null;
   slug: string;
   excerpt?: string | null;
+  excerpt_en?: string | null;
   body: string | null;
+  body_en?: string | null;
   template: 'default' | 'wide' | 'landing';
   status: 'draft' | 'published';
   published_at?: string | null;
   meta_title?: string | null;
+  meta_title_en?: string | null;
   meta_description?: string | null;
+  meta_description_en?: string | null;
   created_at?: string | null;
   updated_at?: string | null;
 }
@@ -77,6 +91,7 @@ export interface Page {
 export interface MenuItem {
   id: number;
   label: string;
+  label_en?: string | null;
   url: string;
   raw_url?: string | null;
   page_id?: number | null;
@@ -98,29 +113,39 @@ export interface SettingItem {
 /** Cuerpo que se envía a la API al guardar una entrada. */
 export interface PostPayload {
   title: string;
+  title_en: string | null;
   slug: string;
   excerpt: string | null;
+  excerpt_en: string | null;
   body: string | null;
+  body_en: string | null;
   status: 'draft' | 'published';
   published_at: string | null;
   category_id: number | null;
   cover_media_id: number | null;
   meta_title: string | null;
+  meta_title_en: string | null;
   meta_description: string | null;
+  meta_description_en: string | null;
   tags: number[];
 }
 
 /** Cuerpo que se envía a la API al guardar una página. */
 export interface PagePayload {
   title: string;
+  title_en: string | null;
   slug: string;
   excerpt: string | null;
+  excerpt_en: string | null;
   body: string | null;
+  body_en: string | null;
   template: 'default' | 'wide' | 'landing';
   status: 'draft' | 'published';
   published_at: string | null;
   meta_title: string | null;
+  meta_title_en: string | null;
   meta_description: string | null;
+  meta_description_en: string | null;
 }
 
 export interface Theme {

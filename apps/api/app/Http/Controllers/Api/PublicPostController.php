@@ -26,8 +26,11 @@ class PublicPostController extends Controller
                 $term = '%'.$request->string('q').'%';
                 $query->where(fn ($q) => $q
                     ->where('title', 'like', $term)
+                    ->orWhere('title_en', 'like', $term)
                     ->orWhere('excerpt', 'like', $term)
-                    ->orWhere('body', 'like', $term));
+                    ->orWhere('excerpt_en', 'like', $term)
+                    ->orWhere('body', 'like', $term)
+                    ->orWhere('body_en', 'like', $term));
             })
             ->orderByDesc('published_at')
             ->orderByDesc('id')

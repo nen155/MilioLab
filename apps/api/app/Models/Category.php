@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['name', 'slug', 'description'])]
+#[Fillable(['name', 'name_en', 'slug', 'description', 'description_en'])]
 class Category extends Model
 {
     use HasSlug;

@@ -27,12 +27,14 @@ class SettingsTest extends TestCase
         $this->actingAs($admin)->putJson('/api/v1/admin/settings', [
             'settings' => [
                 ['key' => 'site_name', 'value' => 'MilioLab', 'type' => 'string'],
+                ['key' => 'site_tagline_en', 'value' => 'Ideas, code and things I keep learning', 'type' => 'string'],
                 ['key' => 'posts_per_page', 'value' => 12, 'type' => 'int'],
                 ['key' => 'show_author', 'value' => false, 'type' => 'bool'],
             ],
         ])->assertOk()->assertJsonPath('settings.posts_per_page', 12);
 
         $this->assertSame('MilioLab', Setting::value('site_name'));
+        $this->assertSame('Ideas, code and things I keep learning', Setting::value('site_tagline_en'));
         $this->assertSame(12, Setting::value('posts_per_page'));
         $this->assertFalse(Setting::value('show_author'));
     }

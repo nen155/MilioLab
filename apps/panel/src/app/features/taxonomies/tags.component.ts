@@ -28,6 +28,10 @@ import { Tag } from '../../core/models';
             <label for="name">Nombre</label>
             <input id="name" class="input" formControlName="name" placeholder="Angular" />
           </div>
+          <div class="field">
+            <label for="name_en">Nombre en inglés</label>
+            <input id="name_en" class="input" formControlName="name_en" placeholder="Design" />
+          </div>
           <button class="btn btn-primary" type="submit" [disabled]="saving()">Añadir</button>
         </form>
       </div>
@@ -43,8 +47,13 @@ import { Tag } from '../../core/models';
           <div class="row">
             @for (tag of tags(); track tag.id) {
               <span class="badge badge-admin">
-                #{{ tag.name }} ({{ tag.posts_count ?? 0 }})
+                #{{ tag.name }}
+                @if (tag.name_en) {
+                  <span class="muted small">· {{ tag.name_en }}</span>
+                }
+                ({{ tag.posts_count ?? 0 }})
                 <button class="btn btn-sm" type="button" style="margin-left: .35rem" (click)="rename(tag)">✎</button>
+                <button class="btn btn-sm" type="button" (click)="renameEn(tag)">EN</button>
                 <button class="btn btn-sm btn-danger" type="button" (click)="remove(tag)">✕</button>
               </span>
             }
@@ -63,7 +72,7 @@ export class TagsComponent implements OnInit {
   protected readonly saving = signal(false);
   protected readonly error = signal<string | null>(null);
 
-  protected readonly form = this.fb.nonNullable.group({ name: ['', Validators.required] });
+  protected readonly form = this.fb.nonNullable.group({ name: ['', Validators.required], name_en: [''] });
 
   ngOnInit(): void {
     this.load();
@@ -79,7 +88,7 @@ export class TagsComponent implements OnInit {
     this.api.createTag(this.form.getRawValue()).subscribe({
       next: (tag) => {
         this.tags.update((items) => [...items, tag].sort((a, b) => a.name.localeCompare(b.name)));
-        this.form.reset({ name: '' });
+        this.form.reset({ name: '', name_en: '' });
         this.saving.set(false);
       },
       error: (error) => {
@@ -97,6 +106,19 @@ export class TagsComponent implements OnInit {
     }
 
     this.api.updateTag(tag.id, { name }).subscribe({
+      next: (updated) => this.tags.update((items) => items.map((item) => (item.id === updated.id ? updated : item))),
+      error: (error) => this.error.set(errorMessage(error)),
+    });
+  }
+
+  protected renameEn(tag: Tag): void {
+    const nameEn = window.prompt('Nombre en inglés', tag.name_en ?? '');
+
+    if (nameEn === null || nameEn === (tag.name_en ?? '')) {
+      return;
+    }
+
+    this.api.updateTag(tag.id, { name_en: nameEn || null }).subscribe({
       next: (updated) => this.tags.update((items) => items.map((item) => (item.id === updated.id ? updated : item))),
       error: (error) => this.error.set(errorMessage(error)),
     });

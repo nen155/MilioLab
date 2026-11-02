@@ -57,17 +57,17 @@ class DatabaseSeeder extends Seeder
     private function categories(): array
     {
         $names = [
-            'noticias' => 'Noticias',
-            'tutoriales' => 'Tutoriales',
-            'proyectos' => 'Proyectos',
+            'noticias' => ['Noticias', 'News'],
+            'tutoriales' => ['Tutoriales', 'Tutorials'],
+            'proyectos' => ['Proyectos', 'Projects'],
         ];
 
         $categories = [];
 
-        foreach ($names as $slug => $name) {
+        foreach ($names as $slug => [$name, $nameEn]) {
             $categories[$slug] = Category::query()->updateOrCreate(
                 ['slug' => $slug],
-                ['name' => $name],
+                ['name' => $name, 'name_en' => $nameEn],
             );
         }
 
@@ -81,12 +81,19 @@ class DatabaseSeeder extends Seeder
     {
         $tags = [];
 
-        foreach (['Angular', 'Laravel', 'Diseño', 'Producto'] as $name) {
+        $names = [
+            'Angular' => 'Angular',
+            'Laravel' => 'Laravel',
+            'Diseño' => 'Design',
+            'Producto' => 'Product',
+        ];
+
+        foreach ($names as $name => $nameEn) {
             $slug = Str::slug($name);
 
             $tags[$slug] = Tag::query()->updateOrCreate(
                 ['slug' => $slug],
-                ['name' => $name],
+                ['name' => $name, 'name_en' => $nameEn],
             );
         }
 
@@ -101,7 +108,9 @@ class DatabaseSeeder extends Seeder
         $pages = [
             'inicio' => [
                 'title' => 'Inicio',
+                'title_en' => 'Home',
                 'excerpt' => 'Un rincón para contar lo que construyo y lo que aprendo por el camino.',
+                'excerpt_en' => 'A corner to share what I build and what I learn along the way.',
                 'body' => <<<'HTML'
                     <h2>Hola, bienvenido a MilioLab</h2>
                     <p>Este es mi espacio personal: aquí escribo sobre desarrollo web, producto y las
@@ -114,12 +123,26 @@ class DatabaseSeeder extends Seeder
                     <p>Puedes leer las últimas entradas en el <a href="/blog">blog</a> o escribirme desde la
                     página de <a href="/contacto">contacto</a>.</p>
                     HTML,
+                'body_en' => <<<'HTML'
+                    <h2>Hello, welcome to MilioLab</h2>
+                    <p>This is my personal space: I write about web development, product and the small
+                    obsessions that show up when you try to do things properly.</p>
+                    <p>You are looking at a site I built from scratch: <strong>Angular</strong> for the
+                    public side, another <strong>Angular</strong> app for the editing panel and a
+                    <strong>Laravel API</strong>. No magic templates or third-party plugins: just the
+                    content and me.</p>
+                    <blockquote>If something does not exist and I need it, I build it. That is how this CMS was born.</blockquote>
+                    <p>You can read the latest posts on the <a href="/blog">blog</a> or write to me from the
+                    <a href="/contacto">contact</a> page.</p>
+                    HTML,
                 'status' => Page::STATUS_PUBLISHED,
                 'template' => 'landing',
             ],
             'sobre-mi' => [
                 'title' => 'Sobre mí',
+                'title_en' => 'About me',
                 'excerpt' => 'Desarrollador de software. Me gusta construir cosas que se usen.',
+                'excerpt_en' => 'Software developer. I like building things people actually use.',
                 'body' => <<<'HTML'
                     <h2>Quién está detrás</h2>
                     <p>Soy Emilio, desarrollador de software. Trabajo sobre todo con Angular, Laravel y
@@ -135,16 +158,39 @@ class DatabaseSeeder extends Seeder
                     <p>Si quieres hablar de un proyecto, escríbeme a
                     <a href="mailto:hola@miliolab.com">hola@miliolab.com</a>.</p>
                     HTML,
+                'body_en' => <<<'HTML'
+                    <h2>Who is behind this</h2>
+                    <p>I am Emilio, a software developer. I mostly work with Angular, Laravel and whatever
+                    it takes to get an idea into production.</p>
+                    <p>MilioLab is my laboratory: a place to try ideas, write about what I learn and show
+                    the projects I am working on.</p>
+                    <h3>What I work with</h3>
+                    <ul>
+                      <li>Frontend with Angular and TypeScript.</li>
+                      <li>Backend with Laravel and PHP.</li>
+                      <li>MySQL/MariaDB databases and deployments on shared hosting.</li>
+                    </ul>
+                    <p>If you want to talk about a project, write to me at
+                    <a href="mailto:hola@miliolab.com">hola@miliolab.com</a>.</p>
+                    HTML,
                 'status' => Page::STATUS_PUBLISHED,
             ],
             'contacto' => [
                 'title' => 'Contacto',
+                'title_en' => 'Contact',
                 'excerpt' => '¿Tienes una idea o una pregunta? Escríbeme.',
+                'excerpt_en' => 'Do you have an idea or a question? Write to me.',
                 'body' => <<<'HTML'
                     <h2>Hablemos</h2>
                     <p>La forma más rápida de contactar conmigo es por correo:</p>
                     <p><strong><a href="mailto:hola@miliolab.com">hola@miliolab.com</a></strong></p>
                     <p>También puedes encontrarme en <a href="https://github.com/nen155" target="_blank" rel="noopener">GitHub</a>.</p>
+                    HTML,
+                'body_en' => <<<'HTML'
+                    <h2>Let's talk</h2>
+                    <p>The fastest way to reach me is by email:</p>
+                    <p><strong><a href="mailto:hola@miliolab.com">hola@miliolab.com</a></strong></p>
+                    <p>You can also find me on <a href="https://github.com/nen155" target="_blank" rel="noopener">GitHub</a>.</p>
                     HTML,
                 'status' => Page::STATUS_PUBLISHED,
             ],
@@ -175,7 +221,9 @@ class DatabaseSeeder extends Seeder
             [
                 'slug' => 'por-que-mi-propio-cms',
                 'title' => 'Por qué he construido mi propio CMS',
+                'title_en' => 'Why I built my own CMS',
                 'excerpt' => 'WordPress funciona, pero quería entender cada línea de lo que publico. Este es el resultado.',
+                'excerpt_en' => 'WordPress works, but I wanted to understand every line I publish. This is the result.',
                 'category' => 'noticias',
                 'tags' => ['producto', 'laravel', 'angular'],
                 'published_at' => now()->subDays(2),
@@ -198,11 +246,32 @@ class DatabaseSeeder extends Seeder
                     <p>No hay magia: si quiero una funcionalidad nueva, la programo. Y eso, para un
                     laboratorio personal, es exactamente lo que buscaba.</p>
                     HTML,
+                'body_en' => <<<'HTML'
+                    <p>For years I used WordPress for small projects. It works, there is a plugin for
+                    everything and you can have a blog running in an afternoon. But every time I wanted
+                    to change something I ended up fighting an ecosystem I did not control.</p>
+                    <p>So I did what any reasonable person would do: build it from scratch.</p>
+                    <h2>What I wanted</h2>
+                    <ul>
+                      <li>A comfortable editor without distractions.</li>
+                      <li>Pages and posts with the same importance.</li>
+                      <li>Full control over the HTML that gets published.</li>
+                      <li>A fast site, without plugins loading things I do not use.</li>
+                    </ul>
+                    <h2>How it is built</h2>
+                    <p>The public side is an Angular application that consumes a Laravel API. The admin
+                    panel is another independent Angular app. The database is MariaDB and everything runs
+                    on shared hosting.</p>
+                    <p>There is no magic: if I want a new feature, I code it. And for a personal
+                    laboratory, that is exactly what I was looking for.</p>
+                    HTML,
             ],
             [
                 'slug' => 'angular-22-lo-que-mas-me-gusta',
                 'title' => 'Angular 22: lo que más me gusta',
+                'title_en' => 'Angular 22: what I like the most',
                 'excerpt' => 'Signals, componentes standalone y un modo zoneless que por fin se siente natural.',
+                'excerpt_en' => 'Signals, standalone components and a zoneless mode that finally feels natural.',
                 'category' => 'tutoriales',
                 'tags' => ['angular', 'producto'],
                 'published_at' => now()->subDays(6),
@@ -223,11 +292,29 @@ class DatabaseSeeder extends Seeder
                     <p>Si vienes de versiones anteriores, el salto más grande es mental: deja de pensar en
                     módulos y empieza a pensar en funcionalidades.</p>
                     HTML,
+                'body_en' => <<<'HTML'
+                    <p>Angular has changed a lot in recent years. Version 22 consolidates a way of working
+                    that looks a lot like what I always wanted: less ceremony and more direct code.</p>
+                    <h2>Signals everywhere</h2>
+                    <p>Reactive state with <code>signal()</code> and <code>computed()</code> makes
+                    components easier to read. You no longer have to think about subscriptions that must
+                    be closed by hand.</p>
+                    <h2>Zoneless</h2>
+                    <p>Removing <code>zone.js</code> reduces the bundle size and makes change detection
+                    explicit. It takes some getting used to, but the result is more predictable.</p>
+                    <h2>Standalone components</h2>
+                    <p>Modules still exist, but they are no longer the centre of the universe. Each
+                    component declares what it needs and that is it.</p>
+                    <p>If you come from older versions, the biggest leap is mental: stop thinking in
+                    modules and start thinking in features.</p>
+                    HTML,
             ],
             [
                 'slug' => 'disenar-un-blog-que-no-parezca-una-plantilla',
                 'title' => 'Diseñar un blog que no parezca una plantilla',
+                'title_en' => 'Designing a blog that does not look like a template',
                 'excerpt' => 'Cuatro decisiones pequeñas que cambian por completo la sensación de un sitio.',
+                'excerpt_en' => 'Four small decisions that completely change how a site feels.',
                 'category' => 'proyectos',
                 'tags' => ['diseno', 'producto'],
                 'published_at' => now()->subDays(12),
@@ -247,6 +334,22 @@ class DatabaseSeeder extends Seeder
                     <p>Transiciones cortas, estados de foco visibles, imágenes que no saltan al cargar. Son
                     cosas que nadie comenta, pero todo el mundo nota cuando faltan.</p>
                     HTML,
+                'body_en' => <<<'HTML'
+                    <p>There is something comforting about templates: everything fits and you do not have
+                    to decide anything. But they also make every site look the same.</p>
+                    <h2>1. One typeface, well chosen</h2>
+                    <p>You do not need three fonts. A family with good weights and a generous line height
+                    already gets you 80% of the way.</p>
+                    <h2>2. Real white space</h2>
+                    <p>Content breathes when there is margin. If you have to choose between adding one
+                    more thing or leaving air, leave air.</p>
+                    <h2>3. One accent colour and nothing else</h2>
+                    <p>A strong accent used sparingly guides the eye. Five competing colours guide
+                    nothing.</p>
+                    <h2>4. Details you do not see</h2>
+                    <p>Short transitions, visible focus states, images that do not jump while loading.
+                    Nobody comments on them, but everyone notices when they are missing.</p>
+                    HTML,
             ],
         ];
 
@@ -255,8 +358,11 @@ class DatabaseSeeder extends Seeder
                 ['slug' => $data['slug']],
                 [
                     'title' => $data['title'],
+                    'title_en' => $data['title_en'],
                     'excerpt' => $data['excerpt'],
+                    'excerpt_en' => $data['excerpt_en'],
                     'body' => $data['body'],
+                    'body_en' => $data['body_en'],
                     'category_id' => $categories[$data['category']]->id,
                     'status' => Post::STATUS_PUBLISHED,
                     'published_at' => $data['published_at'],
@@ -275,15 +381,20 @@ class DatabaseSeeder extends Seeder
         $settings = [
             ['key' => 'site_name', 'value' => 'MilioLab', 'type' => Setting::TYPE_STRING, 'group' => 'general'],
             ['key' => 'site_tagline', 'value' => 'Ideas, código y cosas que voy aprendiendo', 'type' => Setting::TYPE_STRING, 'group' => 'general'],
+            ['key' => 'site_tagline_en', 'value' => 'Ideas, code and things I keep learning', 'type' => Setting::TYPE_STRING, 'group' => 'general'],
             ['key' => 'site_description', 'value' => 'Blog personal de Emilio: desarrollo web, producto y proyectos propios.', 'type' => Setting::TYPE_TEXT, 'group' => 'general'],
+            ['key' => 'site_description_en', 'value' => 'Emilio\'s personal blog: web development, product and personal projects.', 'type' => Setting::TYPE_TEXT, 'group' => 'general'],
             ['key' => 'site_url', 'value' => env('APP_URL', 'https://miliolab.com'), 'type' => Setting::TYPE_STRING, 'group' => 'general'],
             ['key' => 'accent_color', 'value' => '#6366f1', 'type' => Setting::TYPE_STRING, 'group' => 'apariencia'],
             ['key' => 'home_page_id', 'value' => (string) $home->id, 'type' => Setting::TYPE_INT, 'group' => 'general'],
             ['key' => 'posts_per_page', 'value' => '9', 'type' => Setting::TYPE_INT, 'group' => 'blog'],
             ['key' => 'blog_title', 'value' => 'Blog', 'type' => Setting::TYPE_STRING, 'group' => 'blog'],
+            ['key' => 'blog_title_en', 'value' => 'Blog', 'type' => Setting::TYPE_STRING, 'group' => 'blog'],
             ['key' => 'blog_intro', 'value' => 'Lo que voy aprendiendo, contado sin prisa.', 'type' => Setting::TYPE_TEXT, 'group' => 'blog'],
+            ['key' => 'blog_intro_en', 'value' => 'What I keep learning, told without hurry.', 'type' => Setting::TYPE_TEXT, 'group' => 'blog'],
             ['key' => 'contact_email', 'value' => 'hola@miliolab.com', 'type' => Setting::TYPE_STRING, 'group' => 'contacto'],
-            ['key' => 'footer_text', 'value' => 'Hecho a mano con Angular y Laravel.', 'type' => Setting::TYPE_STRING, 'group' => 'general'],
+            ['key' => 'footer_text', 'value' => 'Desarrollado con IA · Angular y Laravel.', 'type' => Setting::TYPE_STRING, 'group' => 'general'],
+            ['key' => 'footer_text_en', 'value' => 'Developed with AI · Angular and Laravel.', 'type' => Setting::TYPE_STRING, 'group' => 'general'],
             ['key' => 'social_github', 'value' => 'https://github.com/nen155', 'type' => Setting::TYPE_STRING, 'group' => 'social'],
             ['key' => 'social_linkedin', 'value' => '', 'type' => Setting::TYPE_STRING, 'group' => 'social'],
             ['key' => 'social_x', 'value' => '', 'type' => Setting::TYPE_STRING, 'group' => 'social'],
@@ -341,6 +452,72 @@ class DatabaseSeeder extends Seeder
             ],
         );
 
+        Theme::query()->updateOrCreate(
+            ['slug' => 'granito'],
+            [
+                'name' => 'Granito',
+                'layout' => 'sketch',
+                'tokens' => [
+                    '--paper' => '#e9e4d8',
+                    '--paper-2' => '#ded7c7',
+                    '--ink' => '#24211c',
+                    '--ink-soft' => '#4a443b',
+                    '--ink-mute' => '#7a7264',
+                    '--line' => '#c9c0ae',
+                    '--line-strong' => '#a89d88',
+                    '--accent' => '#b45309',
+                    '--accent-ink' => '#ffffff',
+                    '--accent-soft' => '#f3e3cf',
+                    '--grid' => 'rgb(36 33 28 / 5%)',
+                    '--grid-size' => '28px',
+                ],
+            ],
+        );
+
+        Theme::query()->updateOrCreate(
+            ['slug' => 'marco-dorado'],
+            [
+                'name' => 'Marco dorado',
+                'layout' => 'cards',
+                'tokens' => [
+                    '--paper' => '#171310',
+                    '--paper-2' => '#211a14',
+                    '--ink' => '#f3e8cf',
+                    '--ink-soft' => '#d6c6a5',
+                    '--ink-mute' => '#9c8d72',
+                    '--line' => '#3a2f22',
+                    '--line-strong' => '#5a4830',
+                    '--accent' => '#d4a13a',
+                    '--accent-ink' => '#1a1208',
+                    '--accent-soft' => '#2e2417',
+                    '--grid' => 'rgb(212 161 58 / 8%)',
+                    '--grid-size' => '32px',
+                ],
+            ],
+        );
+
+        Theme::query()->updateOrCreate(
+            ['slug' => 'consola'],
+            [
+                'name' => 'Consola',
+                'layout' => 'hud',
+                'tokens' => [
+                    '--paper' => '#0b0f0d',
+                    '--paper-2' => '#121a16',
+                    '--ink' => '#d7ffe6',
+                    '--ink-soft' => '#9fe0b8',
+                    '--ink-mute' => '#6a9c7f',
+                    '--line' => '#1e3328',
+                    '--line-strong' => '#2f5a42',
+                    '--accent' => '#22c55e',
+                    '--accent-ink' => '#04120a',
+                    '--accent-soft' => '#0f2a1b',
+                    '--grid' => 'rgb(34 197 94 / 7%)',
+                    '--grid-size' => '40px',
+                ],
+            ],
+        );
+
         // El tema de nodos es el que se quiere enseñar por defecto.
         $nodos->activate();
     }
@@ -351,10 +528,12 @@ class DatabaseSeeder extends Seeder
     private function menu(array $pages): void
     {
         $items = [
-            ['label' => 'Inicio', 'page_id' => $pages['inicio']->id, 'position' => 0],
-            ['label' => 'Blog', 'url' => '/blog', 'position' => 1],
-            ['label' => 'Sobre mí', 'page_id' => $pages['sobre-mi']->id, 'position' => 2],
-            ['label' => 'Contacto', 'page_id' => $pages['contacto']->id, 'position' => 3],
+            ['label' => 'Inicio', 'label_en' => 'Home', 'page_id' => $pages['inicio']->id, 'position' => 0],
+            ['label' => 'Blog', 'label_en' => 'Blog', 'url' => '/blog', 'position' => 1],
+            ['label' => 'Proyectos', 'label_en' => 'Projects', 'url' => '/proyectos', 'position' => 2],
+            ['label' => 'Habilidades', 'label_en' => 'Skills', 'url' => '/habilidades', 'position' => 3],
+            ['label' => 'Sobre mí', 'label_en' => 'About me', 'page_id' => $pages['sobre-mi']->id, 'position' => 4],
+            ['label' => 'Contacto', 'label_en' => 'Contact', 'page_id' => $pages['contacto']->id, 'position' => 5],
         ];
 
         foreach ($items as $item) {

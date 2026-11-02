@@ -83,6 +83,29 @@ class ThemeTest extends TestCase
             ->assertJsonPath('theme.tokens.--accent', '#ff0000');
     }
 
+    public function test_the_active_theme_exposes_its_layout(): void
+    {
+        Theme::query()->create([
+            'name' => 'Cartas',
+            'tokens' => ['--accent' => '#d4a13a'],
+            'layout' => 'cards',
+            'is_active' => true,
+        ]);
+
+        $this->getJson('/api/v1/site')
+            ->assertOk()
+            ->assertJsonPath('theme.layout', 'cards');
+    }
+
+    public function test_an_unknown_layout_is_rejected(): void
+    {
+        $this->actingAs($this->admin())->postJson('/api/v1/admin/themes', [
+            'name' => 'Raro',
+            'tokens' => ['--ink' => '#000'],
+            'layout' => 'cyberpunk',
+        ])->assertStatus(422)->assertJsonValidationErrors('layout');
+    }
+
     public function test_the_active_theme_cannot_be_deleted(): void
     {
         $theme = Theme::query()->create(['name' => 'Activo', 'tokens' => ['--ink' => '#000'], 'is_active' => true]);

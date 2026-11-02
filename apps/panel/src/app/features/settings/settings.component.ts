@@ -28,10 +28,13 @@ const GROUPS: Group[] = [
     fields: [
       { key: 'site_name', label: 'Nombre del sitio', type: 'string' },
       { key: 'site_tagline', label: 'Lema', type: 'string', help: 'Aparece bajo el nombre en la portada.' },
+      { key: 'site_tagline_en', label: 'Lema (inglés)', type: 'string' },
       { key: 'site_description', label: 'Descripción', type: 'text', help: 'Se usa como meta description por defecto.' },
+      { key: 'site_description_en', label: 'Descripción (inglés)', type: 'text' },
       { key: 'site_url', label: 'URL pública', type: 'string', help: 'https://miliolab.com' },
       { key: 'home_page_id', label: 'Página de inicio', type: 'int', options: 'pages' },
       { key: 'footer_text', label: 'Texto del pie', type: 'string' },
+      { key: 'footer_text_en', label: 'Texto del pie (inglés)', type: 'string' },
     ],
   },
   {
@@ -40,7 +43,9 @@ const GROUPS: Group[] = [
     description: 'Cómo se presenta el listado de entradas.',
     fields: [
       { key: 'blog_title', label: 'Título del blog', type: 'string' },
+      { key: 'blog_title_en', label: 'Título del blog (inglés)', type: 'string' },
       { key: 'blog_intro', label: 'Introducción', type: 'text' },
+      { key: 'blog_intro_en', label: 'Introducción (inglés)', type: 'text' },
       { key: 'posts_per_page', label: 'Entradas por página', type: 'int' },
       { key: 'show_author', label: 'Mostrar el autor en las entradas', type: 'bool' },
     ],

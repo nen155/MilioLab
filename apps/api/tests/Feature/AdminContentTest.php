@@ -144,6 +144,59 @@ class AdminContentTest extends TestCase
         $this->assertDatabaseHas('menu_items', ['id' => $item['id'], 'position' => 3]);
     }
 
+    public function test_english_content_is_saved_and_sanitized(): void
+    {
+        $admin = $this->admin();
+        $category = Category::query()->create(['name' => 'Noticias', 'name_en' => 'News']);
+        $tag = Tag::query()->create(['name' => 'Diseño', 'name_en' => 'Design']);
+
+        $response = $this->actingAs($admin)->postJson('/api/v1/admin/posts', [
+            'title' => 'Entrada bilingüe',
+            'title_en' => 'Bilingual post',
+            'excerpt' => 'Resumen',
+            'excerpt_en' => 'Summary',
+            'body' => '<p>Hola</p>',
+            'body_en' => '<p>Hello</p><script>alert(1)</script>',
+            'category_id' => $category->id,
+            'tags' => [$tag->id],
+            'status' => 'published',
+            'meta_title_en' => 'Bilingual post',
+            'meta_description_en' => 'English description',
+        ]);
+
+        $response->assertCreated()
+            ->assertJsonPath('data.title_en', 'Bilingual post')
+            ->assertJsonPath('data.excerpt_en', 'Summary')
+            ->assertJsonPath('data.meta_title_en', 'Bilingual post')
+            ->assertJsonPath('data.meta_description_en', 'English description')
+            ->assertJsonPath('data.category.name_en', 'News')
+            ->assertJsonPath('data.tags.0.name_en', 'Design');
+
+        $this->assertStringNotContainsString('<script', (string) $response->json('data.body_en'));
+    }
+
+    public function test_page_and_menu_english_fields_are_saved(): void
+    {
+        $admin = $this->admin();
+
+        $page = $this->actingAs($admin)->postJson('/api/v1/admin/pages', [
+            'title' => 'Sobre mí',
+            'title_en' => 'About me',
+            'excerpt_en' => 'Who is behind this',
+            'body_en' => '<p>Bio in English</p>',
+            'status' => 'published',
+        ])->assertCreated()
+            ->assertJsonPath('data.title_en', 'About me')
+            ->assertJsonPath('data.body_en', '<p>Bio in English</p>')
+            ->json('data');
+
+        $this->actingAs($admin)->postJson('/api/v1/admin/menu-items', [
+            'label' => 'Sobre mí',
+            'label_en' => 'About me',
+            'page_id' => $page['id'],
+        ])->assertCreated()->assertJsonPath('data.label_en', 'About me');
+    }
+
     public function test_stats_returns_counts(): void
     {
         Post::query()->create(['title' => 'Una', 'status' => Post::STATUS_PUBLISHED]);

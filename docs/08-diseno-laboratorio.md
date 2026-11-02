@@ -56,8 +56,9 @@ Modo oscuro automático con `prefers-color-scheme`; el acento sale de
 ## Temas
 
 Los tokens viven en la tabla `themes` y se gestionan en el panel (**Temas**). El tema
-activo se sirve en `GET /api/v1/site` (`theme.tokens`) y la web los aplica como
-variables CSS en `:root`. Se pueden **exportar e importar** como JSON:
+activo se sirve en `GET /api/v1/site` (`theme.tokens` y `theme.layout`) y la web los
+aplica como variables CSS en `:root` y como `data-layout` en `<html>`. Se pueden
+**exportar e importar** como JSON:
 
 ```json
 { "name": "Papel viejo", "tokens": { "--paper": "#f4efe3", "--ink": "#1b1a17", "--accent": "#8b5e34" } }
@@ -66,14 +67,39 @@ variables CSS en `:root`. Se pueden **exportar e importar** como JSON:
 Solo se aceptan las claves de `Theme::ALLOWED_TOKENS`; los valores con `{}`, `;`, `<` o
 `>` se descartan (un tema importado no puede inyectar CSS).
 
+## Diseños (layout)
+
+Un tema no es solo una paleta. El campo `layout` elige uno de los cuatro sistemas de
+diseño de `apps/web/src/layouts.css`; cada uno cambia la **estructura** de la página,
+no solo los colores. Los tokens del tema siguen mandando en el color, así que cualquier
+tema se puede combinar con cualquier diseño.
+
+| `layout` | Escenario | Raíl | Nodos | Línea de tiempo |
+|---|---|---|---|---|
+| `notebook` | Papel milimetrado | Datos de la libreta | Grafo con puertos | Regla con hitos |
+| `sketch` | Roca, cordillera y sol | Datos del proyecto con cordada de fondo | **Presas de roca** orgánicas, con tornillo y cinta | **Cuerda** trenzada con mosquetones |
+| `cards` | Mesa de fieltro y cartas al fondo | Ficha de autor con marco dorado | **Mano de cartas** superpuestas, con pips y línea de tipo | Edición con joyas romboidales |
+| `hud` | Consola táctica, rejilla y líneas de escaneo | Panel de proyecto con estado | Objetivos con esquinas recortadas y radar | Registro de proyecto con marcas |
+
+- `LayoutService` expone el diseño activo a los componentes; `SceneryComponent`
+  dibuja el escenario (montaña, mesa o HUD) y el raíl se elige en `app.ts`.
+- Las tarjetas y los nodos añaden marcado específico (pips, línea de tipo,
+  cinta de papel, tornillo) que solo se muestra en su diseño.
+- La línea de tiempo es la misma en todas las páginas; el CSS la convierte en cuerda,
+  edición o registro según `data-layout`.
+
+Temas de ejemplo del seeder: *Cuaderno de laboratorio* (`notebook`), *Nodos* y
+*Granito* (`sketch`), *Marco dorado* (`cards`) y *Consola* (`hud`).
+
 ## Tema «Nodos»
 
-Tema morado con estética de grafo: rejilla de puntos, nodos con puertos,
-conectores, nodo origen y navegación con teclado. Cada nodo muestra la **portada**
-de la entrada cuando existe. El vídeo sintetizado por nodo se retiró (US-11.2);
-el hueco está preparado para un clip generado por IA en el futuro.
+Tema morado de noche: la misma estructura de roca que *Granito*, pero con
+roca oscura y tiza violeta. Los nodos muestran la **portada** de la entrada cuando
+existe. El vídeo sintetizado por nodo se retiró (US-11.2); el hueco está preparado
+para un clip generado por IA en el futuro.
 
 ## Rendimiento
 
-Build de producción: **95,6 KB** de transferencia inicial (antes 78 KB; el
-incremento es `marked`, que solo se carga en las páginas de contenido).
+Build de producción: **121,6 KB** de transferencia inicial. El sistema de layouts
+(`layouts.css`) añade unos 7 KB de CSS; `marked` solo se carga en las páginas de
+contenido.

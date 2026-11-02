@@ -1,5 +1,6 @@
-import { Component, ElementRef, OnDestroy, computed, inject, signal, viewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, inject, signal, viewChild } from '@angular/core';
 
+import { I18nService } from '../../core/i18n';
 import { LabService } from '../../core/lab.service';
 
 @Component({
@@ -16,19 +17,19 @@ import { LabService } from '../../core/lab.service';
         #dialog
       >
         <div class="modal-head">
-          <h2 id="lab-title">Sala de experimentos</h2>
-          <button class="btn btn-ghost" type="button" (click)="close()">Cerrar (Esc)</button>
+          <h2 id="lab-title">{{ i18n.t('lab.title') }}</h2>
+          <button class="btn btn-ghost" type="button" (click)="close()">{{ i18n.t('lab.close') }}</button>
         </div>
 
         <div class="modal-body">
-          <div class="lab-tabs" role="tablist" aria-label="Experimentos">
+          <div class="lab-tabs" role="tablist" [attr.aria-label]="i18n.t('lab.tabsAria')">
             <button
               type="button"
               role="tab"
               [attr.aria-selected]="lab.tab() === 'reaction'"
               (click)="lab.tab.set('reaction')"
             >
-              Reflejos
+              {{ i18n.t('lab.reaction') }}
             </button>
             <button
               type="button"
@@ -36,26 +37,25 @@ import { LabService } from '../../core/lab.service';
               [attr.aria-selected]="lab.tab() === 'sequence'"
               (click)="lab.tab.set('sequence')"
             >
-              Secuencia
+              {{ i18n.t('lab.sequence') }}
             </button>
           </div>
 
           @if (lab.tab() === 'reaction') {
-            <section aria-label="Prueba de reflejos">
+            <section [attr.aria-label]="i18n.t('lab.reactionAria')">
               <p class="mono muted">
-                Pulsa «Empezar» y, cuando el círculo se ilumine, pulsa el botón (o la barra
-                espaciadora) lo antes posible.
+                {{ i18n.t('lab.reactionHelp') }}
               </p>
 
               <div class="game-pad">
                 @if (!running()) {
-                  <button class="btn" type="button" (click)="startReaction()">Empezar</button>
+                  <button class="btn" type="button" (click)="startReaction()">{{ i18n.t('lab.start') }}</button>
                 } @else {
                   <button
                     class="game-target"
                     type="button"
                     [class.ready]="ready()"
-                    [attr.aria-label]="ready() ? '¡Ahora!' : 'Espera…'"
+                    [attr.aria-label]="ready() ? i18n.t('lab.now') : i18n.t('lab.wait')"
                     (click)="hit()"
                   ></button>
                 }
@@ -64,18 +64,18 @@ import { LabService } from '../../core/lab.service';
               <p class="game-score" aria-live="polite">{{ reactionText() }}</p>
             </section>
           } @else {
-            <section aria-label="Juego de secuencia">
+            <section [attr.aria-label]="i18n.t('lab.sequenceAria')">
               <p class="mono muted">
-                Repite la secuencia. Puedes usar los botones o las teclas 1, 2, 3 y 4.
+                {{ i18n.t('lab.sequenceHelp') }}
               </p>
 
               <div class="game-pad">
-                <div class="simon" role="group" aria-label="Cuatro botones de secuencia">
+                <div class="simon" role="group" [attr.aria-label]="i18n.t('lab.buttonsAria')">
                   @for (pad of [0, 1, 2, 3]; track pad) {
                     <button
                       type="button"
                       [class.lit]="lit() === pad"
-                      [attr.aria-label]="'Botón ' + (pad + 1)"
+                      [attr.aria-label]="i18n.t('lab.buttonAria', { n: pad + 1 })"
                       (click)="press(pad)"
                     >
                       {{ pad + 1 }}
@@ -86,7 +86,7 @@ import { LabService } from '../../core/lab.service';
 
               <p class="game-score" aria-live="polite">{{ sequenceText() }}</p>
               <button class="btn btn-ghost" type="button" style="margin-top: .6rem" (click)="startSequence()">
-                Reiniciar
+                {{ i18n.t('lab.restart') }}
               </button>
             </section>
           }
@@ -97,23 +97,26 @@ import { LabService } from '../../core/lab.service';
 })
 export class LabPanelComponent implements OnDestroy {
   protected readonly lab = inject(LabService);
+  protected readonly i18n = inject(I18nService);
   private readonly dialog = viewChild<ElementRef<HTMLElement>>('dialog');
 
   // --- Reflejos ------------------------------------------------------------
   protected readonly running = signal(false);
   protected readonly ready = signal(false);
-  protected readonly reactionText = signal('Sin datos todavía.');
+  protected readonly reactionText = signal('');
   private reactionTimer?: ReturnType<typeof setTimeout>;
   private readyAt = 0;
 
   // --- Secuencia -----------------------------------------------------------
   protected readonly lit = signal<number | null>(null);
-  protected readonly sequenceText = signal('Pulsa «Reiniciar» para empezar.');
+  protected readonly sequenceText = signal('');
   private sequence: number[] = [];
   private input: number[] = [];
   private timers: Array<ReturnType<typeof setTimeout>> = [];
 
   constructor() {
+    this.reactionText.set(this.i18n.t('lab.noData'));
+    this.sequenceText.set(this.i18n.t('lab.sequenceStart'));
     setTimeout(() => this.dialog()?.nativeElement.focus(), 0);
     document.addEventListener('keydown', this.onKey);
   }
@@ -132,7 +135,7 @@ export class LabPanelComponent implements OnDestroy {
   protected startReaction(): void {
     this.running.set(true);
     this.ready.set(false);
-    this.reactionText.set('Espera al círculo…');
+    this.reactionText.set(this.i18n.t('lab.waitCircle'));
 
     this.reactionTimer = setTimeout(() => {
       this.ready.set(true);
@@ -142,7 +145,7 @@ export class LabPanelComponent implements OnDestroy {
 
   protected hit(): void {
     if (!this.ready()) {
-      this.reactionText.set('Te has adelantado. Vuelve a intentarlo.');
+      this.reactionText.set(this.i18n.t('lab.early'));
       this.running.set(false);
       this.ready.set(false);
       return;
@@ -151,14 +154,14 @@ export class LabPanelComponent implements OnDestroy {
     const ms = Math.round(performance.now() - this.readyAt);
     this.running.set(false);
     this.ready.set(false);
-    this.reactionText.set(`${ms} ms. ${this.reactionVerdict(ms)}`);
+    this.reactionText.set(this.i18n.t('lab.result', { ms, verdict: this.reactionVerdict(ms) }));
   }
 
   protected startSequence(): void {
     this.clearTimers();
     this.sequence = [];
     this.input = [];
-    this.sequenceText.set('Observa la secuencia…');
+    this.sequenceText.set(this.i18n.t('lab.observe'));
     this.nextRound();
   }
 
@@ -174,14 +177,14 @@ export class LabPanelComponent implements OnDestroy {
     const index = this.input.length - 1;
 
     if (this.input[index] !== this.sequence[index]) {
-      this.sequenceText.set(`Fallaste en el paso ${index + 1}. Longitud alcanzada: ${this.sequence.length}.`);
+      this.sequenceText.set(this.i18n.t('lab.failStep', { step: index + 1, length: this.sequence.length }));
       this.sequence = [];
       this.input = [];
       return;
     }
 
     if (this.input.length === this.sequence.length) {
-      this.sequenceText.set(`Bien. Siguiente ronda (${this.sequence.length + 1}).`);
+      this.sequenceText.set(this.i18n.t('lab.nextRound', { round: this.sequence.length + 1 }));
       this.timers.push(setTimeout(() => this.nextRound(), 700));
     }
   }
@@ -193,7 +196,11 @@ export class LabPanelComponent implements OnDestroy {
   }
 
   private playSequence(): void {
-    this.sequenceText.set(`Observa: ${this.sequence.length} ${this.sequence.length === 1 ? 'paso' : 'pasos'}.`);
+    this.sequenceText.set(
+      this.sequence.length === 1
+        ? this.i18n.t('lab.observeOne', { count: this.sequence.length })
+        : this.i18n.t('lab.observeMany', { count: this.sequence.length }),
+    );
 
     this.sequence.forEach((pad, index) => {
       this.timers.push(
@@ -207,16 +214,16 @@ export class LabPanelComponent implements OnDestroy {
 
   private reactionVerdict(ms: number): string {
     if (ms < 220) {
-      return 'Nivel laboratorio.';
+      return this.i18n.t('lab.verdictLab');
     }
     if (ms < 320) {
-      return 'Buen reflejo.';
+      return this.i18n.t('lab.verdictGood');
     }
     if (ms < 450) {
-      return 'Aceptable.';
+      return this.i18n.t('lab.verdictOk');
     }
 
-    return 'Café pendiente.';
+    return this.i18n.t('lab.verdictCoffee');
   }
 
   private clearTimers(): void {
@@ -243,6 +250,4 @@ export class LabPanelComponent implements OnDestroy {
       this.press(Number(event.key) - 1);
     }
   };
-
-  protected readonly title = computed(() => (this.lab.tab() === 'reaction' ? 'Reflejos' : 'Secuencia'));
 }

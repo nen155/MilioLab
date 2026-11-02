@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, effect, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { ApiService } from '../../core/api.service';
@@ -22,10 +22,7 @@ import { NodeMapComponent } from './node-map.component';
           {{ site.siteName() }}<br />
           <em>{{ site.tagline() }}</em>
         </h1>
-        <p class="lede">
-          Desarrollo web, producto y experimentos que aún no tienen nombre. Escribo lo que
-          pruebo y publico lo que funciona.
-        </p>
+        <p class="lede">{{ i18n.t('home.lede') }}</p>
 
         <div class="hero-actions">
           <a class="btn" routerLink="/blog">{{ i18n.t('home.cta') }}</a>
@@ -33,41 +30,41 @@ import { NodeMapComponent } from './node-map.component';
         </div>
       </div>
 
-      <aside class="hero-aside" aria-label="Notas de la libreta">
+      <aside class="hero-aside" [attr.aria-label]="i18n.t('home.asideAria')">
         <p>
           <span class="egg" tabindex="0">
-            método
-            <span class="egg-note">Escribir, medir, corregir. Sin plantillas.</span>
+            {{ i18n.t('home.method') }}
+            <span class="egg-note">{{ i18n.t('home.methodNote') }}</span>
           </span>
-          — observación directa
+          — {{ i18n.t('rail.observation') }}
         </p>
         <p>
           <span class="egg" tabindex="0">
-            muestras
-            <span class="egg-note">Cada entrada es un experimento con fecha y número.</span>
+            {{ i18n.t('home.samples') }}
+            <span class="egg-note">{{ i18n.t('home.samplesNote') }}</span>
           </span>
-          — {{ site.latestPosts().length }} recientes
+          — {{ i18n.t('home.recentCount', { count: site.latestPosts().length }) }}
         </p>
         <p>
           <span class="egg" tabindex="0">
-            residuo
-            <span class="egg-note">Sin cookies, sin analítica, sin rastreadores.</span>
+            {{ i18n.t('home.residue') }}
+            <span class="egg-note">{{ i18n.t('home.residueNote') }}</span>
           </span>
-          — ninguno
+          — {{ i18n.t('home.none') }}
         </p>
       </aside>
     </section>
 
     @if (homePage(); as page) {
       @if (page.body) {
-        <section class="prose" style="margin-top: 2.5rem" [innerHTML]="page.body | content"></section>
+        <section class="prose" style="margin-top: 2.5rem" [innerHTML]="i18n.content(page.body, page.body_en) | content"></section>
       }
     }
 
     @if (site.latestPosts().length) {
       <div class="section-head">
         <h2>{{ i18n.t('home.nodes') }}</h2>
-        <span class="mono muted">cada nodo genera su propio vídeo</span>
+        <span class="mono muted">{{ i18n.t('home.nodesHint') }}</span>
       </div>
 
       <app-node-map [posts]="site.latestPosts()" />
@@ -92,15 +89,15 @@ import { NodeMapComponent } from './node-map.component';
       <details>
         <summary class="mono" style="cursor:pointer">{{ i18n.t('home.observations') }}</summary>
         <ul class="mono muted" style="margin-top: .8rem; padding-left: 1.1rem; line-height: 2">
-          <li>El diseño no necesita sombras para tener profundidad.</li>
+          <li>{{ i18n.t('home.obs1') }}</li>
           <li>
             <span class="egg" tabindex="0">
-              hay una sala de experimentos
-              <span class="egg-note">Shift + L, o «experimentos» en el pie.</span>
+              {{ i18n.t('home.obs2a') }}
+              <span class="egg-note">{{ i18n.t('home.obs2Note') }}</span>
             </span>
-            escondida en esta página.
+            {{ i18n.t('home.obs2b') }}
           </li>
-          <li>Todo lo que lees se puede leer sin JavaScript en <a routerLink="/texto">/texto</a>.</li>
+          <li>{{ i18n.t('home.obs3') }} <a routerLink="/texto">/texto</a>.</li>
         </ul>
       </details>
     </section>
@@ -116,11 +113,18 @@ export class HomeComponent implements OnInit {
 
   protected readonly homePage = signal<Page | null>(null);
 
-  ngOnInit(): void {
-    this.site.load().subscribe((site) => {
-      const name = String(site.settings['site_name'] ?? 'MilioLab');
-      const tagline = String(site.settings['site_tagline'] ?? '');
-      const description = String(site.settings['site_description'] ?? tagline);
+  constructor() {
+    effect(() => {
+      if (!this.site.site()) {
+        return;
+      }
+
+      const name = this.site.siteName();
+      const tagline = this.site.tagline();
+      const page = this.homePage();
+      const description =
+        this.site.settingLocalized('site_description', tagline) ||
+        (page ? plainText(this.i18n.content(page.body, page.body_en)) : '');
 
       this.seo.set({
         title: tagline ? `${name} — ${tagline}` : name,
@@ -134,20 +138,14 @@ export class HomeComponent implements OnInit {
           url: absoluteUrl('/'),
         },
       });
+    });
+  }
 
+  ngOnInit(): void {
+    this.site.load().subscribe((site) => {
       if (site.home) {
         this.api.getPage(site.home).subscribe({
-          next: (page) => {
-            this.homePage.set(page);
-
-            if (!description && page.body) {
-              this.seo.set({
-                title: `${name} — ${page.title}`,
-                description: plainText(page.body),
-                url: absoluteUrl('/'),
-              });
-            }
-          },
+          next: (page) => this.homePage.set(page),
           error: () => this.homePage.set(null),
         });
       }

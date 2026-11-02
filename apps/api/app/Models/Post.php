@@ -10,8 +10,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 #[Fillable([
-    'title', 'slug', 'excerpt', 'body', 'category_id', 'cover_media_id',
-    'status', 'published_at', 'author_id', 'meta_title', 'meta_description',
+    'title', 'title_en', 'slug', 'excerpt', 'excerpt_en', 'body', 'body_en',
+    'category_id', 'cover_media_id', 'status', 'published_at', 'author_id',
+    'meta_title', 'meta_title_en', 'meta_description', 'meta_description_en',
 ])]
 class Post extends Model
 {
@@ -63,9 +64,9 @@ class Post extends Model
     /**
      * Tiempo de lectura aproximado (200 palabras por minuto).
      */
-    public function readingMinutes(): int
+    public function readingMinutes(?string $body = null): int
     {
-        $words = str_word_count(strip_tags((string) $this->body));
+        $words = str_word_count(strip_tags($body ?: (string) $this->body));
 
         return max(1, (int) ceil($words / 200));
     }

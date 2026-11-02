@@ -30,6 +30,11 @@ import { MenuItem, Page } from '../../core/models';
           </div>
 
           <div class="field">
+            <label for="label_en">Texto en inglés</label>
+            <input id="label_en" class="input" formControlName="label_en" placeholder="Blog" />
+          </div>
+
+          <div class="field">
             <label for="page_id">Página del sitio (opcional)</label>
             <select id="page_id" class="select" formControlName="page_id">
               <option [ngValue]="null">— Ninguna (usar URL) —</option>
@@ -76,7 +81,12 @@ import { MenuItem, Page } from '../../core/models';
               <tbody>
                 @for (item of items(); track item.id; let index = $index) {
                   <tr>
-                    <td>{{ item.label }}</td>
+                    <td>
+                      {{ item.label }}
+                      @if (item.label_en) {
+                        <span class="muted small">· {{ item.label_en }}</span>
+                      }
+                    </td>
                     <td class="muted small">{{ item.url }}</td>
                     <td class="actions">
                       <button class="btn btn-sm" type="button" [disabled]="index === 0" (click)="move(index, -1)">↑</button>
@@ -105,6 +115,7 @@ export class MenuComponent implements OnInit {
 
   protected readonly form = this.fb.nonNullable.group({
     label: ['', Validators.required],
+    label_en: [''],
     page_id: [null as number | null],
     url: [''],
     target: ['_self' as '_self' | '_blank'],
@@ -132,6 +143,7 @@ export class MenuComponent implements OnInit {
     this.api
       .createMenuItem({
         label: value.label,
+        label_en: value.label_en || null,
         page_id: value.page_id,
         url: value.url || undefined,
         target: value.target,
@@ -140,7 +152,7 @@ export class MenuComponent implements OnInit {
       .subscribe({
         next: (item) => {
           this.items.update((items) => [...items, item]);
-          this.form.reset({ label: '', page_id: null, url: '', target: '_self' });
+          this.form.reset({ label: '', label_en: '', page_id: null, url: '', target: '_self' });
           this.saving.set(false);
         },
         error: (error) => {

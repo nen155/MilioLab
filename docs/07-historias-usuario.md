@@ -57,6 +57,7 @@ Estado: ✅ Hecha · ⏳ Pendiente · 🧩 Parcial.
 | US-9.3 | Sala de experimentos (minijuegos) | EP-8 | RF-8.3, RNF-10 | ✅ | [`US-9.3`](historias-usuario/US-9.3-minijuegos.md) |
 | US-9.4 | Markdown, versión texto y lectura por máquinas | EP-8 | RF-8.4, RF-8.5 | ✅ | [`US-9.4`](historias-usuario/US-9.4-markdown-texto-maquinas.md) |
 | US-9.5 | Accesibilidad del nuevo diseño | EP-8 | RNF-10 | ✅ | [`US-9.5`](historias-usuario/US-9.5-accesibilidad.md) |
+| US-i18n-UI | Interfaz bilingüe (es/en) | EP-8 | RF-13.1 | ✅ | [`US-i18n-UI`](historias-usuario/US-i18n-UI.md) |
 | US-10.1 | Temas desde el panel | EP-9 | RF-9.1, RF-9.2 | ✅ | [`US-10.1`](historias-usuario/US-10.1-temas-panel.md) |
 | US-10.2 | Crear, exportar e importar temas | EP-9 | RF-9.3, RF-9.4 | ✅ | [`US-10.2`](historias-usuario/US-10.2-importar-temas.md) |
 | US-11.1 | Tema «Nodos» (grafos y morado) | EP-10 | RF-10.1 | ✅ | [`US-11.1`](historias-usuario/US-11.1-tema-nodos.md) |
@@ -64,6 +65,7 @@ Estado: ✅ Hecha · ⏳ Pendiente · 🧩 Parcial.
 | US-11.3 | Mapa de nodos: navegación, rendimiento y ramas | EP-10 | RF-10.3, RNF-10 | ✅ | [`US-11.3`](historias-usuario/US-11.3-mapa-nodos-afinado.md) |
 | US-12.1 | Contenido del portfolio (CV, proyectos y contacto) | EP-11 | RF-11.1 | ✅ | [`US-12.1`](historias-usuario/US-12.1-contenido-portfolio.md) |
 | US-12.2 | SEO estático, imagen social y enlaces verificados | EP-11 | RF-12.1, RF-12.2 | ✅ | [`US-12.2`](historias-usuario/US-12.2-seo-enlaces.md) |
+| US-i18n-contenido | Contenido bilingüe (es/en) | EP-11 | RF-13.2 | ✅ | [`US-i18n-contenido`](historias-usuario/US-i18n-contenido.md) |
 
 ## Pendientes (backlog)
 

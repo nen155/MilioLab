@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @mixin \App\Models\Tag */
+/** @mixin Tag */
 class TagResource extends JsonResource
 {
     /**
@@ -16,6 +17,7 @@ class TagResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'name_en' => $this->name_en,
             'slug' => $this->slug,
             'posts_count' => $this->whenCounted('posts'),
         ];

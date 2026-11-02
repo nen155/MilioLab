@@ -1,8 +1,9 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, effect, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { ApiService } from '../../core/api.service';
 import { absoluteUrl, formatDate } from '../../core/format';
+import { I18nService } from '../../core/i18n';
 import { PostSummary } from '../../core/models';
 import { SeoService } from '../../core/seo.service';
 import { SiteService } from '../../core/site.service';
@@ -16,11 +17,10 @@ import { SiteService } from '../../core/site.service';
   imports: [RouterLink],
   template: `
     <header class="article-head" style="margin-top: 2rem">
-      <p class="kicker">versión texto</p>
-      <h1>Índice legible por máquinas</h1>
+      <p class="kicker">{{ i18n.t('text.kicker') }}</p>
+      <h1>{{ i18n.t('text.title') }}</h1>
       <p class="lede">
-        Todo el contenido del sitio en un solo listado, sin animaciones ni scripts.
-        También disponible en <a href="/llms.txt">/llms.txt</a>.
+        {{ i18n.t('text.lede') }} <a href="/llms.txt">/llms.txt</a>.
       </p>
     </header>
 
@@ -28,47 +28,61 @@ import { SiteService } from '../../core/site.service';
 
 > {{ site.tagline() }}
 
-## Páginas
+## {{ i18n.t('text.pages') }}
 @for (item of site.menu(); track item.id) {
-- [{{ item.label }}]({{ item.url }})
+- [{{ i18n.content(item.label, item.label_en) }}]({{ item.url }})
 }
 
-## Entradas
+## {{ i18n.t('text.posts') }}
 @for (post of posts(); track post.id) {
-- [{{ post.title }}](/blog/{{ post.slug }}) — {{ date(post.published_at) }} · {{ post.reading_minutes }} min
+- [{{ title(post) }}](/blog/{{ post.slug }}) — {{ date(post.published_at) }} · {{ minutes(post) }} {{ i18n.t('common.min') }}
 }
 
-## Máquina
+## {{ i18n.t('text.machine') }}
 - [Sitemap](/sitemap.xml)
 - [RSS](/feed.xml)
 - [llms.txt](/llms.txt)
 </pre>
 
     <p class="mono muted" style="margin-top: 2rem">
-      <a routerLink="/">← volver a la versión con diseño</a>
+      <a routerLink="/">{{ i18n.t('text.back') }}</a>
     </p>
   `,
 })
 export class TextIndexComponent implements OnInit {
   protected readonly site = inject(SiteService);
+  protected readonly i18n = inject(I18nService);
   private readonly api = inject(ApiService);
   private readonly seo = inject(SeoService);
 
   protected readonly posts = signal<PostSummary[]>([]);
 
-  ngOnInit(): void {
-    this.site.load().subscribe((site) => {
+  constructor() {
+    effect(() => {
       this.seo.set({
-        title: `Versión texto · ${site.settings['site_name']}`,
-        description: 'Índice completo del sitio en texto plano.',
+        title: `${this.i18n.t('text.seoTitle')} · ${this.site.siteName()}`,
+        description: this.i18n.t('text.seoDescription'),
         url: absoluteUrl('/texto'),
       });
     });
+  }
 
+  ngOnInit(): void {
+    this.site.load().subscribe();
     this.api.getPosts({ per_page: 50 }).subscribe((response) => this.posts.set(response.data));
   }
 
+  protected title(post: PostSummary): string {
+    return this.i18n.content(post.title, post.title_en);
+  }
+
+  protected minutes(post: PostSummary): number {
+    return this.i18n.locale() === 'en'
+      ? post.reading_minutes_en ?? post.reading_minutes
+      : post.reading_minutes;
+  }
+
   protected date(value?: string | null): string {
-    return formatDate(value);
+    return formatDate(value, this.i18n.locale());
   }
 }

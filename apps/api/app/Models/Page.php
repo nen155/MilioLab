@@ -9,8 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable([
-    'title', 'slug', 'excerpt', 'body', 'template', 'status', 'published_at',
-    'author_id', 'meta_title', 'meta_description',
+    'title', 'title_en', 'slug', 'excerpt', 'excerpt_en', 'body', 'body_en',
+    'template', 'status', 'published_at', 'author_id',
+    'meta_title', 'meta_title_en', 'meta_description', 'meta_description_en',
 ])]
 class Page extends Model
 {

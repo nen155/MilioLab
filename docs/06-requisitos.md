@@ -113,6 +113,13 @@ Cada requisito enlaza las historias que lo cubren (ver
 | RF-12.1 | El HTML inicial incluye metadatos estáticos, Open Graph, imagen social y JSON-LD Person | US-12.2 |
 | RF-12.2 | Los enlaces a proyectos se revisan y solo se enlazan los que siguen online | US-12.2 |
 
+## RF-13 · Idiomas
+
+| ID | Requisito | Historias |
+|---|---|---|
+| RF-13.1 | La interfaz pública se muestra en español o inglés, con selector persistente y `<html lang>` correcto | US-i18n-UI |
+| RF-13.2 | El contenido editorial (entradas, páginas, taxonomías, menú, ajustes y portfolio) tiene versión inglesa con respaldo al español | US-i18n-contenido |
+
 ## RNF · Requisitos no funcionales
 
 | ID | Requisito | Historias |

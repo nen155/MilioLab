@@ -20,15 +20,20 @@ class PostRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:190'],
+            'title_en' => ['nullable', 'string', 'max:190'],
             'slug' => ['nullable', 'string', 'max:190'],
             'excerpt' => ['nullable', 'string', 'max:1000'],
+            'excerpt_en' => ['nullable', 'string', 'max:1000'],
             'body' => ['nullable', 'string'],
+            'body_en' => ['nullable', 'string'],
             'category_id' => ['nullable', 'integer', 'exists:categories,id'],
             'cover_media_id' => ['nullable', 'integer', 'exists:media,id'],
             'status' => ['nullable', Rule::in([Post::STATUS_DRAFT, Post::STATUS_PUBLISHED])],
             'published_at' => ['nullable', 'date'],
             'meta_title' => ['nullable', 'string', 'max:190'],
+            'meta_title_en' => ['nullable', 'string', 'max:190'],
             'meta_description' => ['nullable', 'string', 'max:500'],
+            'meta_description_en' => ['nullable', 'string', 'max:500'],
             'tags' => ['nullable', 'array'],
             'tags.*' => ['integer', 'exists:tags,id'],
         ];

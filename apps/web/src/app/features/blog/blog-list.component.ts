@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { combineLatest } from 'rxjs';
 
@@ -21,12 +21,13 @@ import { PostCardComponent } from '../../shared/post-card.component';
         <p class="lede">{{ intro() }}</p>
       }
       <p class="mono muted" style="margin-top: .6rem">
-        {{ total() }} {{ total() === 1 ? 'registro' : 'registros' }} · página {{ page() }} de {{ lastPage() }}
+        {{ total() }} {{ total() === 1 ? i18n.t('blog.record') : i18n.t('blog.records') }} ·
+        {{ i18n.t('blog.pageOf', { page: page(), last: lastPage() }) }}
       </p>
     </header>
 
     @if (categories().length) {
-      <nav class="chips" aria-label="Categorías">
+      <nav class="chips" [attr.aria-label]="i18n.t('blog.categoriesAria')">
         <a class="chip" routerLink="/blog" [class.chip-active]="!activeCategory()">{{ i18n.t('blog.all') }}</a>
         @for (category of categories(); track category.id) {
           <a
@@ -34,7 +35,7 @@ import { PostCardComponent } from '../../shared/post-card.component';
             [routerLink]="['/blog/categoria', category.slug]"
             [class.chip-active]="activeCategory() === category.slug"
           >
-            {{ category.name }}
+            {{ i18n.content(category.name, category.name_en) }}
           </a>
         }
       </nav>
@@ -54,11 +55,11 @@ import { PostCardComponent } from '../../shared/post-card.component';
       </div>
 
       @if (lastPage() > 1) {
-        <nav class="article-foot" aria-label="Paginación">
+        <nav class="article-foot" [attr.aria-label]="i18n.t('blog.paginationAria')">
           <button class="btn btn-ghost" type="button" [disabled]="page() <= 1" (click)="goToPage(page() - 1)">
             {{ i18n.t('blog.prev') }}
           </button>
-          <span class="mono muted">página {{ page() }} / {{ lastPage() }}</span>
+          <span class="mono muted">{{ i18n.t('blog.pageSlash', { page: page(), last: lastPage() }) }}</span>
           <button
             class="btn btn-ghost"
             type="button"
@@ -72,7 +73,7 @@ import { PostCardComponent } from '../../shared/post-card.component';
     } @else {
       <div class="empty">
         <h2>{{ i18n.t('blog.empty') }}</h2>
-        <p class="mono muted">No hay registros con ese filtro.</p>
+        <p class="mono muted">{{ i18n.t('blog.noResults') }}</p>
         <a class="btn" routerLink="/blog">{{ i18n.t('blog.seeAll') }}</a>
       </div>
     }
@@ -90,12 +91,43 @@ export class BlogListComponent implements OnInit {
   protected readonly meta = signal<PaginationMeta | null>(null);
   protected readonly categories = signal<Category[]>([]);
   protected readonly loading = signal(true);
-  protected readonly heading = signal<string>('Blog');
-  protected readonly intro = computed(() => this.site.setting<string>('blog_intro', ''));
+  protected readonly intro = computed(() => this.site.settingLocalized('blog_intro'));
   protected readonly activeCategory = signal<string | null>(null);
+  protected readonly activeTag = signal<string | null>(null);
+  protected readonly activeQuery = signal('');
   protected readonly page = signal(1);
   protected readonly lastPage = signal(1);
   protected readonly total = signal(0);
+
+  protected readonly heading = computed(() => {
+    const category = this.categories().find((item) => item.slug === this.activeCategory());
+
+    if (category) {
+      return this.i18n.content(category.name, category.name_en);
+    }
+
+    const tag = this.activeTag();
+
+    if (tag) {
+      return `#${tag}`;
+    }
+
+    const query = this.activeQuery();
+
+    return query
+      ? this.i18n.t('blog.resultsFor', { term: query })
+      : this.site.settingLocalized('blog_title', 'Blog');
+  });
+
+  constructor() {
+    effect(() => {
+      this.seo.set({
+        title: `${this.heading()} · ${this.site.siteName()}`,
+        description: this.site.settingLocalized('blog_intro'),
+        url: absoluteUrl(this.router.url),
+      });
+    });
+  }
 
   ngOnInit(): void {
     this.api.getCategories().subscribe((categories) => this.categories.set(categories));
@@ -107,6 +139,8 @@ export class BlogListComponent implements OnInit {
       const q = (query.get('q') ?? '').trim();
 
       this.activeCategory.set(category ?? null);
+      this.activeTag.set(tag ?? null);
+      this.activeQuery.set(q);
       this.load({ page, q, category, tag });
     });
   }
@@ -130,39 +164,12 @@ export class BlogListComponent implements OnInit {
           this.lastPage.set(response.meta.last_page);
           this.total.set(response.meta.total);
           this.loading.set(false);
-          this.updateSeo(options);
         },
         error: () => {
           this.posts.set([]);
           this.loading.set(false);
         },
       });
-  }
-
-  private updateSeo(options: { q: string; category?: string; tag?: string }): void {
-    const base = this.site.setting<string>('blog_title', 'Blog');
-    const category = this.categories().find((item) => item.slug === options.category);
-
-    let title = `${base} · ${this.site.siteName()}`;
-    let heading = base;
-
-    if (category) {
-      title = `${category.name} · ${base}`;
-      heading = category.name;
-    } else if (options.tag) {
-      title = `#${options.tag} · ${base}`;
-      heading = `#${options.tag}`;
-    } else if (options.q) {
-      title = `«${options.q}» · ${base}`;
-      heading = `Resultados para «${options.q}»`;
-    }
-
-    this.heading.set(heading);
-    this.seo.set({
-      title,
-      description: this.site.setting<string>('blog_intro', ''),
-      url: absoluteUrl(this.router.url),
-    });
   }
 
   protected goToPage(page: number): void {

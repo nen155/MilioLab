@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { absoluteUrl } from '../../core/format';
@@ -14,8 +14,7 @@ import { SiteService } from '../../core/site.service';
       <p class="kicker">{{ i18n.t('notFound.kicker') }}</p>
       <h1 class="display" style="font-size: clamp(2rem, 5vw, 3.4rem)">{{ i18n.t('notFound.title') }}</h1>
       <p class="lede" style="margin-inline: auto">
-        La muestra que buscas no está aquí. Puede que el enlace esté mal escrito o que el
-        experimento se haya archivado.
+        {{ i18n.t('notFound.text') }}
       </p>
       <div class="hero-actions" style="justify-content: center">
         <a class="btn" routerLink="/">{{ i18n.t('notFound.home') }}</a>
@@ -24,16 +23,18 @@ import { SiteService } from '../../core/site.service';
     </section>
   `,
 })
-export class NotFoundComponent implements OnInit {
+export class NotFoundComponent {
   private readonly site = inject(SiteService);
   protected readonly i18n = inject(I18nService);
   private readonly seo = inject(SeoService);
 
-  ngOnInit(): void {
-    this.seo.set({
-      title: `Página no encontrada · ${this.site.siteName()}`,
-      description: 'La página que buscas no existe.',
-      url: absoluteUrl('/404'),
+  constructor() {
+    effect(() => {
+      this.seo.set({
+        title: `${this.i18n.t('notFound.title')} · ${this.site.siteName()}`,
+        description: this.i18n.t('notFound.text'),
+        url: absoluteUrl('/404'),
+      });
     });
   }
 }

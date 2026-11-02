@@ -7,6 +7,7 @@ export interface SiteSettings {
 export interface MenuItem {
   id: number;
   label: string;
+  label_en?: string | null;
   url: string;
   target: string;
   children: MenuItem[];
@@ -15,14 +16,17 @@ export interface MenuItem {
 export interface Category {
   id: number;
   name: string;
+  name_en?: string | null;
   slug: string;
   description?: string | null;
+  description_en?: string | null;
   posts_count?: number;
 }
 
 export interface Tag {
   id: number;
   name: string;
+  name_en?: string | null;
   slug: string;
   posts_count?: number;
 }
@@ -46,32 +50,43 @@ export interface Author {
 export interface PostSummary {
   id: number;
   title: string;
+  title_en?: string | null;
   slug: string;
   excerpt?: string | null;
+  excerpt_en?: string | null;
   published_at?: string | null;
   category?: Category | null;
   cover?: Media | null;
   tags?: Tag[];
   author?: Author | null;
   reading_minutes: number;
+  reading_minutes_en?: number;
 }
 
 export interface Post extends PostSummary {
   body: string | null;
+  body_en?: string | null;
   meta_title?: string | null;
+  meta_title_en?: string | null;
   meta_description?: string | null;
+  meta_description_en?: string | null;
   updated_at?: string | null;
 }
 
 export interface Page {
   id: number;
   title: string;
+  title_en?: string | null;
   slug: string;
   excerpt?: string | null;
+  excerpt_en?: string | null;
   body: string | null;
+  body_en?: string | null;
   template: string;
   meta_title?: string | null;
+  meta_title_en?: string | null;
   meta_description?: string | null;
+  meta_description_en?: string | null;
   updated_at?: string | null;
 }
 

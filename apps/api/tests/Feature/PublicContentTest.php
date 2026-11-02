@@ -126,6 +126,56 @@ class PublicContentTest extends TestCase
             ->assertJsonPath('data.0.posts_count', 1);
     }
 
+    public function test_english_content_is_exposed_in_the_public_api(): void
+    {
+        $category = Category::query()->create(['name' => 'Noticias', 'name_en' => 'News']);
+        $this->publishedPost([
+            'title' => 'Entrada bilingüe',
+            'title_en' => 'Bilingual entry',
+            'excerpt' => 'Resumen',
+            'excerpt_en' => 'English summary',
+            'body' => '<p>Hola</p>',
+            'body_en' => '<p>Hello world</p>',
+            'category_id' => $category->id,
+        ]);
+
+        $page = Page::query()->create([
+            'title' => 'Sobre mí',
+            'title_en' => 'About me',
+            'excerpt_en' => 'Who is behind this',
+            'body' => '<p>Bio</p>',
+            'body_en' => '<p>Bio in English</p>',
+            'status' => Page::STATUS_PUBLISHED,
+        ]);
+
+        MenuItem::query()->create([
+            'label' => 'Sobre mí',
+            'label_en' => 'About me',
+            'page_id' => $page->id,
+            'position' => 0,
+        ]);
+
+        $this->getJson('/api/v1/posts/entrada-bilingue')
+            ->assertOk()
+            ->assertJsonPath('data.title_en', 'Bilingual entry')
+            ->assertJsonPath('data.excerpt_en', 'English summary')
+            ->assertJsonPath('data.body_en', '<p>Hello world</p>')
+            ->assertJsonPath('data.category.name_en', 'News');
+
+        $this->getJson('/api/v1/posts?q=Hello')
+            ->assertOk()
+            ->assertJsonCount(1, 'data');
+
+        $this->getJson('/api/v1/pages/sobre-mi')
+            ->assertOk()
+            ->assertJsonPath('data.title_en', 'About me')
+            ->assertJsonPath('data.body_en', '<p>Bio in English</p>');
+
+        $this->getJson('/api/v1/site')
+            ->assertOk()
+            ->assertJsonPath('menu.0.label_en', 'About me');
+    }
+
     public function test_sitemap_lists_pages_and_posts(): void
     {
         Page::query()->create(['title' => 'Sobre mí', 'status' => Page::STATUS_PUBLISHED]);

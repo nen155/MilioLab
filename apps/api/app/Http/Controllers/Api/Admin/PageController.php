@@ -65,6 +65,7 @@ class PageController extends Controller
         $data = $request->validated();
 
         $data['body'] = $this->sanitizer->clean($data['body'] ?? null);
+        $data['body_en'] = $this->sanitizer->clean($data['body_en'] ?? null);
         $data['status'] ??= Page::STATUS_DRAFT;
         $data['template'] ??= 'default';
 

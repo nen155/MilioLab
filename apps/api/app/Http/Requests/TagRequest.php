@@ -18,6 +18,7 @@ class TagRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:120'],
+            'name_en' => ['nullable', 'string', 'max:120'],
             'slug' => ['nullable', 'string', 'max:120'],
         ];
     }

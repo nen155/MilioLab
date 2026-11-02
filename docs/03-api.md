@@ -63,19 +63,29 @@ curl "https://miliolab.com/api/v1/posts?category=noticias&per_page=9"
     {
       "id": 1,
       "title": "Por qué he construido mi propio CMS",
+      "title_en": "Why I built my own CMS",
       "slug": "por-que-mi-propio-cms",
       "excerpt": "WordPress funciona, pero…",
+      "excerpt_en": "WordPress works, but…",
       "published_at": "2026-10-30T11:30:06+00:00",
-      "category": { "id": 1, "name": "Noticias", "slug": "noticias" },
+      "category": { "id": 1, "name": "Noticias", "name_en": "News", "slug": "noticias" },
       "cover": null,
       "tags": [],
       "author": { "id": 1, "name": "MilioLab" },
-      "reading_minutes": 1
+      "reading_minutes": 1,
+      "reading_minutes_en": 1
     }
   ],
   "meta": { "current_page": 1, "last_page": 1, "per_page": 9, "total": 3 }
 }
 ```
+
+**Contenido bilingüe.** Los recursos de entrada, página, categoría, etiqueta y
+menú incluyen los campos ingleses (`title_en`, `excerpt_en`, `body_en`,
+`meta_title_en`, `meta_description_en`, `name_en`, `description_en`,
+`label_en`, `reading_minutes_en`). Son opcionales: la web aplica *fallback* al
+español. La búsqueda pública (`q`) mira título, entradilla y cuerpo en ambos
+idiomas.
 
 ## API del panel
 
@@ -118,22 +128,27 @@ Content-Type: application/json
 
 {
   "title": "Mi entrada",
+  "title_en": "My post",
   "slug": "",
   "excerpt": "Resumen",
+  "excerpt_en": "Summary",
   "body": "<p>Contenido</p>",
+  "body_en": "<p>Content</p>",
   "status": "published",
   "published_at": null,
   "category_id": 1,
   "cover_media_id": null,
   "meta_title": null,
+  "meta_title_en": null,
   "meta_description": null,
+  "meta_description_en": null,
   "tags": [1, 3]
 }
 ```
 
 - `slug` vacío → se genera del título (`mi-entrada`); si existe, `mi-entrada-2`.
 - `status: published` sin `published_at` → se usa la fecha actual.
-- El `body` se limpia con HTMLPurifier (se permiten `iframe` de YouTube/Vimeo).
+- El `body` y el `body_en` se limpian con HTMLPurifier (se permiten `iframe` de YouTube/Vimeo).
 
 ### Subir un archivo
 
@@ -157,6 +172,7 @@ Authorization: Bearer …
 {
   "settings": [
     { "key": "site_name", "value": "MilioLab", "type": "string", "group": "general" },
+    { "key": "site_tagline_en", "value": "Ideas, code and things I keep learning", "type": "string", "group": "general" },
     { "key": "posts_per_page", "value": 9, "type": "int", "group": "blog" }
   ]
 }

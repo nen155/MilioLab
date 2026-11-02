@@ -12,7 +12,7 @@ import { Theme } from '../../core/models';
     <header class="page-head">
       <div>
         <h1>Temas</h1>
-        <p>Cambia los colores y la tipografía de la web pública. El tema activo se aplica al instante.</p>
+        <p>Cambia el diseño completo de la web pública: escenario, raíl, tarjetas y línea de tiempo, además de los colores y la tipografía. El tema activo se aplica al instante.</p>
       </div>
       <div class="row">
         <button class="btn" type="button" (click)="newTheme()">Nuevo tema</button>
@@ -37,7 +37,7 @@ import { Theme } from '../../core/models';
           <div class="table-wrap">
             <table class="table">
               <thead>
-                <tr><th>Nombre</th><th>Estado</th><th></th></tr>
+                <tr><th>Nombre</th><th>Diseño</th><th>Estado</th><th></th></tr>
               </thead>
               <tbody>
                 @for (theme of themes(); track theme.id) {
@@ -46,6 +46,7 @@ import { Theme } from '../../core/models';
                       <button class="btn btn-sm" type="button" (click)="edit(theme)">{{ theme.name }}</button>
                       <div class="small muted">{{ theme.slug }}</div>
                     </td>
+                    <td class="small muted">{{ layoutLabel(theme.layout) }}</td>
                     <td>
                       @if (theme.is_active) {
                         <span class="badge badge-published">Activo</span>
@@ -79,11 +80,12 @@ import { Theme } from '../../core/models';
         <div class="field">
           <label for="theme-layout">Diseño</label>
           <select id="theme-layout" class="input" [(ngModel)]="layout">
-            <option value="notebook">Cuaderno (papel y libreta)</option>
-            <option value="cards">Cartas (MTG)</option>
-            <option value="sketch">Croquis (boulder)</option>
-            <option value="hud">HUD (shooter)</option>
+            <option value="notebook">Cuaderno · papel milimetrado</option>
+            <option value="sketch">Roca · presas y cuerda</option>
+            <option value="cards">Cartas · marco dorado</option>
+            <option value="hud">Consola · interfaz táctica</option>
           </select>
+          <p class="small muted">El diseño cambia la estructura de la web (raíl, nodos y línea de tiempo), no solo los colores.</p>
         </div>
 
         <div class="form-row">
@@ -176,6 +178,15 @@ export class ThemesComponent implements OnInit {
 
   protected isColor(token: string): boolean {
     return /^--(paper|ink|line|accent|grid)/.test(token);
+  }
+
+  protected layoutLabel(layout: Theme['layout'] | undefined): string {
+    return {
+      notebook: 'Cuaderno',
+      sketch: 'Roca',
+      cards: 'Cartas',
+      hud: 'Consola',
+    }[layout ?? 'notebook'];
   }
 
   protected colorValue(token: string): string {

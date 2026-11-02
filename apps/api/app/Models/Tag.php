@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-#[Fillable(['name', 'slug'])]
+#[Fillable(['name', 'name_en', 'slug'])]
 class Tag extends Model
 {
     use HasSlug;

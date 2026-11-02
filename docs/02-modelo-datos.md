@@ -25,8 +25,10 @@ Tokens de Sanctum (`id`, `tokenable`, `name`, `token`, `abilities`, `last_used_a
 |---|---|---|
 | id | bigint PK | |
 | name | varchar(255) | |
+| name_en | varchar(120) | nombre en inglés (opcional) |
 | slug | varchar(255) | único, generado del nombre |
 | description | text | solo categorías |
+| description_en | text | descripción en inglés (solo categorías) |
 
 ## `posts`
 
@@ -34,16 +36,21 @@ Tokens de Sanctum (`id`, `tokenable`, `name`, `token`, `abilities`, `last_used_a
 |---|---|---|
 | id | bigint PK | |
 | title | varchar(255) | |
+| title_en | varchar(255) | título en inglés (opcional) |
 | slug | varchar(255) | único |
 | excerpt | text | entradilla para las tarjetas |
+| excerpt_en | text | entradilla en inglés |
 | body | longtext | HTML limpio |
+| body_en | longtext | HTML limpio en inglés |
 | category_id | FK categories | `nullOnDelete` |
 | cover_media_id | FK media | `nullOnDelete` |
 | status | varchar(20) | `draft` / `published` (índice) |
 | published_at | timestamp | índice; si falta al publicar se usa `now()` |
 | author_id | FK users | `nullOnDelete` |
 | meta_title | varchar(255) | SEO |
+| meta_title_en | varchar(255) | SEO en inglés |
 | meta_description | text | SEO |
+| meta_description_en | text | SEO en inglés |
 | timestamps | | |
 
 Relación N:M con `tags` mediante `post_tag (post_id, tag_id)`.
@@ -83,12 +90,24 @@ Claves iniciales: `site_name`, `site_tagline`, `site_description`, `site_url`,
 `home_page_id`, `footer_text`, `blog_title`, `blog_intro`, `posts_per_page`,
 `show_author`, `accent_color`, `contact_email`, `social_*`.
 
+Las claves con versión inglesa usan el sufijo `_en` (`site_tagline_en`,
+`site_description_en`, `footer_text_en`, `blog_title_en`, `blog_intro_en`). La
+web en inglés las usa si tienen valor y cae a la clave base si están vacías.
+
+## Contenido bilingüe
+
+Entradas, páginas, categorías, etiquetas y enlaces de menú guardan su versión
+inglesa en columnas `*_en` del mismo registro. El `slug` es único y compartido:
+la URL no cambia al cambiar de idioma. Todos los campos ingleses son opcionales;
+la web aplica *fallback* al español cuando están vacíos.
+
 ## `menu_items`
 
 | Campo | Tipo | Notas |
 |---|---|---|
 | id | bigint PK | |
 | label | varchar(255) | texto visible |
+| label_en | varchar(255) | texto visible en inglés (opcional) |
 | url | varchar(255) | enlace manual (alternativo a la página) |
 | page_id | FK pages | `nullOnDelete` |
 | parent_id | FK menu_items | soporte de submenús (`cascadeOnDelete`) |

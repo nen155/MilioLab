@@ -10,10 +10,10 @@ import { SkillsComponent } from './features/skills/skills.component';
 import { TextIndexComponent } from './features/text/text-index.component';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent, title: 'MilioLab' },
-  { path: 'texto', component: TextIndexComponent, title: 'Versión texto · MilioLab' },
-  { path: 'proyectos', component: ProjectsComponent, title: 'Proyectos · MilioLab' },
-  { path: 'habilidades', component: SkillsComponent, title: 'Habilidades · MilioLab' },
+  { path: '', component: HomeComponent },
+  { path: 'texto', component: TextIndexComponent },
+  { path: 'proyectos', component: ProjectsComponent },
+  { path: 'habilidades', component: SkillsComponent },
   { path: 'blog', component: BlogListComponent },
   { path: 'blog/categoria/:category', component: BlogListComponent },
   { path: 'blog/etiqueta/:tag', component: BlogListComponent },

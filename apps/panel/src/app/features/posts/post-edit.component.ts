@@ -59,7 +59,39 @@ import { MediaPickerComponent } from '../media/media-picker.component';
 
           <div class="field">
             <label>Contenido</label>
-            <app-rich-editor formControlName="body" (imageRequest)="openPicker('body')" />
+            <app-rich-editor #bodyEditor formControlName="body" (imageRequest)="openPicker('body')" />
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Inglés <span class="muted small">(opcional)</span></h2>
+          <p class="muted small">
+            Si dejas un campo vacío, la web en inglés muestra el contenido en español.
+          </p>
+
+          <div class="field">
+            <label for="title_en">Título</label>
+            <input id="title_en" class="input" formControlName="title_en" placeholder="Title in English" />
+          </div>
+
+          <div class="field">
+            <label for="excerpt_en">Entradilla</label>
+            <textarea id="excerpt_en" class="textarea" formControlName="excerpt_en" rows="2" placeholder="Short summary for the cards"></textarea>
+          </div>
+
+          <div class="field">
+            <label>Contenido</label>
+            <app-rich-editor #bodyEnEditor formControlName="body_en" (imageRequest)="openPicker('body_en')" />
+          </div>
+
+          <div class="field">
+            <label for="meta_title_en">Título para buscadores</label>
+            <input id="meta_title_en" class="input" formControlName="meta_title_en" />
+          </div>
+
+          <div class="field">
+            <label for="meta_description_en">Descripción para buscadores</label>
+            <textarea id="meta_description_en" class="textarea" formControlName="meta_description_en" rows="3"></textarea>
           </div>
         </div>
 
@@ -170,22 +202,28 @@ export class PostEditComponent implements OnInit {
   protected readonly error = signal<string | null>(null);
   protected readonly notice = signal<string | null>(null);
   protected readonly pickerOpen = signal(false);
-  protected readonly pickerTarget = signal<'cover' | 'body'>('body');
+  protected readonly pickerTarget = signal<'cover' | 'body' | 'body_en'>('body');
   protected readonly slug = signal('');
-  private readonly editor = viewChild(RichEditorComponent);
+  private readonly editor = viewChild<RichEditorComponent>('bodyEditor');
+  private readonly editorEn = viewChild<RichEditorComponent>('bodyEnEditor');
 
   protected readonly isNew = computed(() => !this.id());
 
   protected readonly form = this.fb.nonNullable.group({
     title: ['', [Validators.required, Validators.maxLength(190)]],
+    title_en: [''],
     slug: [''],
     excerpt: [''],
+    excerpt_en: [''],
     body: [''],
+    body_en: [''],
     status: ['draft' as 'draft' | 'published'],
     published_at: [''],
     category_id: [null as number | null],
     meta_title: [''],
+    meta_title_en: [''],
     meta_description: [''],
+    meta_description_en: [''],
   });
 
   ngOnInit(): void {
@@ -203,14 +241,19 @@ export class PostEditComponent implements OnInit {
       next: (post) => {
         this.form.patchValue({
           title: post.title,
+          title_en: post.title_en ?? '',
           slug: post.slug,
           excerpt: post.excerpt ?? '',
+          excerpt_en: post.excerpt_en ?? '',
           body: post.body ?? '',
+          body_en: post.body_en ?? '',
           status: post.status,
           published_at: this.toLocalInput(post.published_at),
           category_id: post.category?.id ?? null,
           meta_title: post.meta_title ?? '',
+          meta_title_en: post.meta_title_en ?? '',
           meta_description: post.meta_description ?? '',
+          meta_description_en: post.meta_description_en ?? '',
         });
         this.slug.set(post.slug);
         this.selectedTags.set(post.tags?.map((tag) => tag.id) ?? []);
@@ -230,7 +273,7 @@ export class PostEditComponent implements OnInit {
     );
   }
 
-  protected openPicker(target: 'cover' | 'body'): void {
+  protected openPicker(target: 'cover' | 'body' | 'body_en'): void {
     this.pickerTarget.set(target);
     this.pickerOpen.set(true);
   }
@@ -243,7 +286,8 @@ export class PostEditComponent implements OnInit {
       return;
     }
 
-    this.editor()?.insertImage(media.url, media.alt ?? '');
+    const editor = this.pickerTarget() === 'body_en' ? this.editorEn() : this.editor();
+    editor?.insertImage(media.url, media.alt ?? '');
   }
 
   protected clearCover(): void {
@@ -267,15 +311,20 @@ export class PostEditComponent implements OnInit {
 
     const payload: PostPayload = {
       title: value.title,
+      title_en: value.title_en || null,
       slug: value.slug || '',
       excerpt: value.excerpt || null,
+      excerpt_en: value.excerpt_en || null,
       body: value.body || null,
+      body_en: value.body_en || null,
       status,
       published_at: publishedAt,
       category_id: value.category_id,
       cover_media_id: this.cover()?.id ?? null,
       meta_title: value.meta_title || null,
+      meta_title_en: value.meta_title_en || null,
       meta_description: value.meta_description || null,
+      meta_description_en: value.meta_description_en || null,
       tags: this.selectedTags(),
     };
 

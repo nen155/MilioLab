@@ -19,6 +19,7 @@ class MenuItemRequest extends FormRequest
     {
         return [
             'label' => ['required', 'string', 'max:120'],
+            'label_en' => ['nullable', 'string', 'max:120'],
             'url' => ['nullable', 'string', 'max:255'],
             'page_id' => ['nullable', 'integer', 'exists:pages,id'],
             'parent_id' => [

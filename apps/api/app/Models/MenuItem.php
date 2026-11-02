@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['label', 'url', 'page_id', 'parent_id', 'position', 'target', 'is_active'])]
+#[Fillable(['label', 'label_en', 'url', 'page_id', 'parent_id', 'position', 'target', 'is_active'])]
 class MenuItem extends Model
 {
     protected function casts(): array

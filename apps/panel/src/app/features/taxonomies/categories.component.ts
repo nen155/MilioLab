@@ -29,8 +29,16 @@ import { Category } from '../../core/models';
             <input id="name" class="input" formControlName="name" />
           </div>
           <div class="field">
+            <label for="name_en">Nombre en inglés</label>
+            <input id="name_en" class="input" formControlName="name_en" />
+          </div>
+          <div class="field">
             <label for="description">Descripción (opcional)</label>
             <textarea id="description" class="textarea" formControlName="description" rows="2"></textarea>
+          </div>
+          <div class="field">
+            <label for="description_en">Descripción en inglés (opcional)</label>
+            <textarea id="description_en" class="textarea" formControlName="description_en" rows="2"></textarea>
           </div>
           <button class="btn btn-primary" type="submit" [disabled]="saving()">Añadir</button>
         </form>
@@ -57,11 +65,17 @@ import { Category } from '../../core/models';
               <tbody>
                 @for (category of categories(); track category.id) {
                   <tr>
-                    <td>{{ category.name }}</td>
+                    <td>
+                      {{ category.name }}
+                      @if (category.name_en) {
+                        <span class="muted small">· {{ category.name_en }}</span>
+                      }
+                    </td>
                     <td class="muted small">{{ category.slug }}</td>
                     <td class="muted">{{ category.posts_count ?? 0 }}</td>
                     <td class="actions">
                       <button class="btn btn-sm" type="button" (click)="rename(category)">Renombrar</button>
+                      <button class="btn btn-sm" type="button" (click)="renameEn(category)">Nombre EN</button>
                       <button class="btn btn-sm btn-danger" type="button" (click)="remove(category)">Borrar</button>
                     </td>
                   </tr>
@@ -85,7 +99,9 @@ export class CategoriesComponent implements OnInit {
 
   protected readonly form = this.fb.nonNullable.group({
     name: ['', Validators.required],
+    name_en: [''],
     description: [''],
+    description_en: [''],
   });
 
   ngOnInit(): void {
@@ -102,7 +118,7 @@ export class CategoriesComponent implements OnInit {
     this.api.createCategory(this.form.getRawValue()).subscribe({
       next: (category) => {
         this.categories.update((items) => [...items, category].sort((a, b) => a.name.localeCompare(b.name)));
-        this.form.reset({ name: '', description: '' });
+        this.form.reset({ name: '', name_en: '', description: '', description_en: '' });
         this.saving.set(false);
       },
       error: (error) => {
@@ -120,6 +136,20 @@ export class CategoriesComponent implements OnInit {
     }
 
     this.api.updateCategory(category.id, { name }).subscribe({
+      next: (updated) =>
+        this.categories.update((items) => items.map((item) => (item.id === updated.id ? updated : item))),
+      error: (error) => this.error.set(errorMessage(error)),
+    });
+  }
+
+  protected renameEn(category: Category): void {
+    const nameEn = window.prompt('Nombre en inglés', category.name_en ?? '');
+
+    if (nameEn === null || nameEn === (category.name_en ?? '')) {
+      return;
+    }
+
+    this.api.updateCategory(category.id, { name_en: nameEn || null }).subscribe({
       next: (updated) =>
         this.categories.update((items) => items.map((item) => (item.id === updated.id ? updated : item))),
       error: (error) => this.error.set(errorMessage(error)),

@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @mixin \App\Models\Post */
+/** @mixin Post */
 class PostSummaryResource extends JsonResource
 {
     /**
@@ -18,8 +19,10 @@ class PostSummaryResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
+            'title_en' => $this->title_en,
             'slug' => $this->slug,
             'excerpt' => $this->excerpt,
+            'excerpt_en' => $this->excerpt_en,
             'published_at' => $this->published_at?->toIso8601String(),
             'category' => new CategoryResource($this->whenLoaded('category')),
             'cover' => new MediaResource($this->whenLoaded('cover')),
@@ -29,6 +32,7 @@ class PostSummaryResource extends JsonResource
                 'name' => $this->author->name,
             ]),
             'reading_minutes' => $this->readingMinutes(),
+            'reading_minutes_en' => $this->readingMinutes($this->body_en),
         ];
     }
 }
