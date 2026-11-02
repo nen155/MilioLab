@@ -32,6 +32,7 @@ class SiteController extends Controller
                 'name' => $theme->name,
                 'layout' => $theme->layout,
                 'tokens' => $theme->tokens,
+                'config' => $theme->config,
             ],
             'home' => $homeId > 0 ? Page::query()->published()->whereKey($homeId)->value('slug') : null,
             'menu' => MenuItemResource::collection(

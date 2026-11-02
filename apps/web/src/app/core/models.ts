@@ -90,10 +90,28 @@ export interface Page {
   updated_at?: string | null;
 }
 
+export interface ThemeRailItem {
+  label: string;
+  value: string;
+}
+
+export interface ThemeRailConfig {
+  aria?: string;
+  subtitle?: string;
+  type?: string;
+  foot?: string;
+  items?: ThemeRailItem[];
+}
+
+export interface ThemeConfig {
+  rail?: ThemeRailConfig;
+}
+
 export interface SiteTheme {
   name: string;
-  layout?: 'notebook' | 'cards' | 'sketch' | 'hud';
+  layout?: string;
   tokens: Record<string, string>;
+  config?: ThemeConfig | null;
 }
 
 export interface Site {

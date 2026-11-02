@@ -20,6 +20,18 @@ app-scenery {
   overflow: hidden;
 }
 
+.scenery-rock,
+.scenery-felt,
+.scenery-hud {
+  display: none;
+}
+
+[data-layout="sketch"] .scenery-rock,
+[data-layout="cards"] .scenery-felt,
+[data-layout="hud"] .scenery-hud {
+  display: block;
+}
+
 .specimen-tape,
 .card-cost,
 .card-type,

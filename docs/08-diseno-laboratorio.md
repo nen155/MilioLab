@@ -55,17 +55,40 @@ Modo oscuro automático con `prefers-color-scheme`; el acento sale de
 
 ## Temas
 
-Los tokens viven en la tabla `themes` y se gestionan en el panel (**Temas**). El tema
-activo se sirve en `GET /api/v1/site` (`theme.tokens` y `theme.layout`) y la web los
-aplica como variables CSS en `:root` y como `data-layout` en `<html>`. Se pueden
-**exportar e importar** como JSON:
+Los temas viven en la tabla `themes` y se gestionan en el panel (**Temas**). El tema
+activo se sirve en `GET /api/v1/site` (`theme.tokens`, `theme.layout` y
+`theme.config`) y la web los aplica como variables CSS en `:root`, como
+`data-layout` en `<html>` y como datos del raíl. Se pueden **exportar e importar**
+como JSON:
 
 ```json
-{ "name": "Papel viejo", "tokens": { "--paper": "#f4efe3", "--ink": "#1b1a17", "--accent": "#8b5e34" } }
+{
+  "name": "Papel viejo",
+  "layout": "notebook",
+  "tokens": { "--paper": "#f4efe3", "--ink": "#1b1a17", "--accent": "#8b5e34" },
+  "config": {
+    "rail": {
+      "subtitle": "ingeniería de software",
+      "items": [
+        { "label": "proyecto", "value": "ML-2026" },
+        { "label": "estado", "value": "abierto" }
+      ]
+    }
+  }
+}
 ```
 
 Solo se aceptan las claves de `Theme::ALLOWED_TOKENS`; los valores con `{}`, `;`, `<` o
-`>` se descartan (un tema importado no puede inyectar CSS).
+`>` se descartan (un tema importado no puede inyectar CSS). La `config` solo admite
+`rail` con `aria`, `subtitle`, `type`, `foot` e `items`; cualquier otra clave se
+descarta y el texto se limpia.
+
+**Añadir un tema no requiere tocar el frontend.** La web pinta un único raíl
+(`SiteRailComponent`), un único escenario con las tres capas (`SceneryComponent`) y
+un único mapa de nodos; el CSS decide qué se ve con `data-layout`. Los textos del
+raíl salen de `config.rail` o, si no existe, de los valores por defecto. El panel
+tampoco tiene los layouts escritos a mano: los recibe de
+`GET /api/v1/admin/themes` (`layouts`).
 
 ## Diseños (layout)
 
@@ -81,12 +104,17 @@ tema se puede combinar con cualquier diseño.
 | `cards` | Mesa de fieltro y cartas al fondo | Ficha de autor con marco dorado | **Mano de cartas** superpuestas, con pips y línea de tipo | Edición con joyas romboidales |
 | `hud` | Consola táctica, rejilla y líneas de escaneo | Panel de proyecto con estado | Objetivos con esquinas recortadas y radar | Registro de proyecto con marcas |
 
-- `LayoutService` expone el diseño activo a los componentes; `SceneryComponent`
-  dibuja el escenario (montaña, mesa o HUD) y el raíl se elige en `app.ts`.
+- No hay `switch` por layout en los componentes: el raíl, el escenario y el mapa de
+  nodos son únicos y el CSS muestra u oculta sus adornos con `[data-layout="…"]`.
 - Las tarjetas y los nodos añaden marcado específico (pips, línea de tipo,
   cinta de papel, tornillo) que solo se muestra en su diseño.
 - La línea de tiempo es la misma en todas las páginas; el CSS la convierte en cuerda,
   edición o registro según `data-layout`.
+
+**Añadir un layout nuevo** (una estructura distinta, no solo otra paleta) sigue
+necesitando CSS en `layouts.css` y registrar su clave en `Theme::LAYOUTS` y
+`Theme::LAYOUT_LABELS`; el panel lo mostrará automáticamente. Lo que ya no hace falta
+es añadir un `@switch` en Angular.
 
 Temas de ejemplo del seeder: *Cuaderno de laboratorio* (`notebook`), *Nodos* y
 *Granito* (`sketch`), *Marco dorado* (`cards`) y *Consola* (`hud`).

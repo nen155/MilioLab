@@ -3,7 +3,6 @@ import { RouterLink } from '@angular/router';
 
 import { formatDate } from '../../core/format';
 import { I18nService } from '../../core/i18n';
-import { LayoutService } from '../../core/layout.service';
 import { PostSummary } from '../../core/models';
 
 /**
@@ -23,18 +22,16 @@ import { PostSummary } from '../../core/models';
       [attr.aria-label]="i18n.t('node.aria')"
       (keydown)="onKey($event)"
     >
-      @if (layout.isSketch()) {
-        <svg
-          class="node-rope"
-          viewBox="0 0 1200 300"
-          preserveAspectRatio="none"
-          [style.width.px]="posts().length * 310 + 60"
-          aria-hidden="true"
-        >
-          <path d="M0 26 C 90 72, 210 72, 300 26 S 510 72, 600 26 S 810 72, 900 26 S 1110 72, 1200 26" />
-          <path class="rope-twist" d="M0 26 C 90 72, 210 72, 300 26 S 510 72, 600 26 S 810 72, 900 26 S 1110 72, 1200 26" />
-        </svg>
-      }
+      <svg
+        class="node-rope"
+        viewBox="0 0 1200 300"
+        preserveAspectRatio="none"
+        [style.width.px]="posts().length * 310 + 60"
+        aria-hidden="true"
+      >
+        <path d="M0 26 C 90 72, 210 72, 300 26 S 510 72, 600 26 S 810 72, 900 26 S 1110 72, 1200 26" />
+        <path class="rope-twist" d="M0 26 C 90 72, 210 72, 300 26 S 510 72, 600 26 S 810 72, 900 26 S 1110 72, 1200 26" />
+      </svg>
 
       @for (post of posts(); track post.id; let index = $index; let first = $first) {
         <article
@@ -98,7 +95,6 @@ import { PostSummary } from '../../core/models';
 export class NodeMapComponent {
   readonly posts = input.required<PostSummary[]>();
 
-  protected readonly layout = inject(LayoutService);
   protected readonly i18n = inject(I18nService);
 
   protected title(post: PostSummary): string {

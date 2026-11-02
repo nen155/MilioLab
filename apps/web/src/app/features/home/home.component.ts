@@ -36,7 +36,7 @@ import { NodeMapComponent } from './node-map.component';
             {{ i18n.t('home.method') }}
             <span class="egg-note">{{ i18n.t('home.methodNote') }}</span>
           </span>
-          — {{ i18n.t('rail.observation') }}
+          — {{ i18n.t('home.observation') }}
         </p>
         <p>
           <span class="egg" tabindex="0">

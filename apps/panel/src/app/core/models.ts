@@ -148,12 +148,30 @@ export interface PagePayload {
   meta_description_en: string | null;
 }
 
+export interface ThemeRailItem {
+  label: string;
+  value: string;
+}
+
+export interface ThemeRailConfig {
+  aria?: string;
+  subtitle?: string;
+  type?: string;
+  foot?: string;
+  items?: ThemeRailItem[];
+}
+
+export interface ThemeConfig {
+  rail?: ThemeRailConfig;
+}
+
 export interface Theme {
   id: number;
   name: string;
   slug: string;
-  layout: 'notebook' | 'cards' | 'sketch' | 'hud';
+  layout: string;
   tokens: Record<string, string>;
+  config?: ThemeConfig | null;
   is_active: boolean;
   updated_at?: string | null;
 }

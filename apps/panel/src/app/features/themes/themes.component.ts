@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 
 import { ApiService } from '../../core/api.service';
 import { errorMessage } from '../../core/errors';
-import { Theme } from '../../core/models';
+import { Theme, ThemeConfig } from '../../core/models';
 
 @Component({
   selector: 'app-themes',
@@ -80,12 +80,23 @@ import { Theme } from '../../core/models';
         <div class="field">
           <label for="theme-layout">Diseño</label>
           <select id="theme-layout" class="input" [(ngModel)]="layout">
-            <option value="notebook">Cuaderno · papel milimetrado</option>
-            <option value="sketch">Roca · presas y cuerda</option>
-            <option value="cards">Cartas · marco dorado</option>
-            <option value="hud">Consola · interfaz táctica</option>
+            @for (option of layouts(); track option.key) {
+              <option [value]="option.key">{{ option.label }}</option>
+            }
           </select>
           <p class="small muted">El diseño cambia la estructura de la web (raíl, nodos y línea de tiempo), no solo los colores.</p>
+        </div>
+
+        <div class="field">
+          <label for="theme-config">Configuración del raíl (JSON opcional)</label>
+          <textarea
+            id="theme-config"
+            class="textarea"
+            rows="5"
+            [(ngModel)]="configJson"
+            placeholder='{ "rail": { "subtitle": "ingeniería de software", "items": [{ "label": "proyecto", "value": "ML-2026" }] } }'
+          ></textarea>
+          <p class="small muted">Permite cambiar los textos del raíl por tema sin tocar el frontend.</p>
         </div>
 
         <div class="form-row">
@@ -124,9 +135,9 @@ import { Theme } from '../../core/models';
       <h2>Importar tema (JSON)</h2>
       <p class="muted small">
         Pega un tema creado en otro sitio con el formato
-        <code>{{ '{ "name": "…", "tokens": { "--paper": "#…" } }' }}</code>.
+        <code>{{ '{ "name": "…", "layout": "sketch", "tokens": { "--paper": "#…" }, "config": { "rail": { … } } }' }}</code>.
       </p>
-      <textarea class="textarea" rows="6" [(ngModel)]="importJson" placeholder='{ "name": "Papel viejo", "tokens": { "--paper": "#f4efe3", "--ink": "#1b1a17", "--accent": "#8b5e34" } }'></textarea>
+      <textarea class="textarea" rows="6" [(ngModel)]="importJson" placeholder='{ "name": "Papel viejo", "layout": "notebook", "tokens": { "--paper": "#f4efe3", "--ink": "#1b1a17", "--accent": "#8b5e34" } }'></textarea>
       <div class="row" style="margin-top: .6rem">
         <label class="checkbox"><input type="checkbox" [(ngModel)]="importActivate" /> Activar al importar</label>
         <button class="btn" type="button" [disabled]="importing()" (click)="importTheme()">
@@ -141,6 +152,7 @@ export class ThemesComponent implements OnInit {
 
   protected readonly themes = signal<Theme[]>([]);
   protected readonly allowed = signal<string[]>([]);
+  protected readonly layouts = signal<Array<{ key: string; label: string }>>([]);
   protected readonly tokens = signal<Record<string, string>>({});
   protected readonly loading = signal(true);
   protected readonly saving = signal(false);
@@ -150,7 +162,8 @@ export class ThemesComponent implements OnInit {
   protected readonly editingId = signal<number | null>(null);
 
   protected name = '';
-  protected layout: 'notebook' | 'cards' | 'sketch' | 'hud' = 'notebook';
+  protected layout = 'notebook';
+  protected configJson = '';
   protected importJson = '';
   protected importActivate = true;
 
@@ -162,13 +175,15 @@ export class ThemesComponent implements OnInit {
     this.editingId.set(theme.id);
     this.name = theme.name;
     this.layout = theme.layout ?? 'notebook';
+    this.configJson = theme.config ? JSON.stringify(theme.config, null, 2) : '';
     this.tokens.set({ ...theme.tokens });
   }
 
   protected newTheme(): void {
     this.editingId.set(null);
     this.name = '';
-    this.layout = 'notebook';
+    this.layout = this.layouts()[0]?.key ?? 'notebook';
+    this.configJson = '';
     this.tokens.set({ ...(this.themes().find((t) => t.is_active)?.tokens ?? {}) });
   }
 
@@ -180,13 +195,8 @@ export class ThemesComponent implements OnInit {
     return /^--(paper|ink|line|accent|grid)/.test(token);
   }
 
-  protected layoutLabel(layout: Theme['layout'] | undefined): string {
-    return {
-      notebook: 'Cuaderno',
-      sketch: 'Roca',
-      cards: 'Cartas',
-      hud: 'Consola',
-    }[layout ?? 'notebook'];
+  protected layoutLabel(layout: string | undefined): string {
+    return this.layouts().find((option) => option.key === layout)?.label ?? (layout ?? '—');
   }
 
   protected colorValue(token: string): string {
@@ -195,9 +205,36 @@ export class ThemesComponent implements OnInit {
     return /^#[0-9a-f]{3,8}$/i.test(value) ? value : '#ffffff';
   }
 
+  private parseConfig(): ThemeConfig | null | undefined {
+    const raw = this.configJson.trim();
+
+    if (raw === '') {
+      return null;
+    }
+
+    try {
+      const parsed: unknown = JSON.parse(raw);
+
+      if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+        throw new Error('not an object');
+      }
+
+      return parsed as ThemeConfig;
+    } catch {
+      this.error.set('La configuración del raíl no es un JSON válido.');
+      return undefined;
+    }
+  }
+
   protected save(): void {
     if (!this.name.trim()) {
       this.error.set('Ponle un nombre al tema.');
+      return;
+    }
+
+    const config = this.parseConfig();
+
+    if (config === undefined) {
       return;
     }
 
@@ -205,9 +242,13 @@ export class ThemesComponent implements OnInit {
     this.error.set(null);
 
     const id = this.editingId();
-    const request = id
-      ? this.api.updateTheme(id, { name: this.name.trim(), tokens: this.tokens(), layout: this.layout })
-      : this.api.createTheme({ name: this.name.trim(), tokens: this.tokens(), layout: this.layout });
+    const payload = {
+      name: this.name.trim(),
+      tokens: this.tokens(),
+      layout: this.layout,
+      config,
+    };
+    const request = id ? this.api.updateTheme(id, payload) : this.api.createTheme(payload);
 
     request.subscribe({
       next: (theme) => {
@@ -245,7 +286,11 @@ export class ThemesComponent implements OnInit {
   }
 
   protected copy(theme: Theme): void {
-    const json = JSON.stringify({ name: theme.name, tokens: theme.tokens }, null, 2);
+    const json = JSON.stringify(
+      { name: theme.name, layout: theme.layout, tokens: theme.tokens, config: theme.config },
+      null,
+      2,
+    );
     navigator.clipboard?.writeText(json).then(
       () => this.flash('JSON copiado.'),
       () => this.error.set('No se pudo copiar.'),
@@ -255,7 +300,12 @@ export class ThemesComponent implements OnInit {
   protected importTheme(): void {
     this.error.set(null);
 
-    let parsed: { name?: string; tokens?: Record<string, string> };
+    let parsed: {
+      name?: string;
+      tokens?: Record<string, string>;
+      layout?: string;
+      config?: ThemeConfig | null;
+    };
 
     try {
       parsed = JSON.parse(this.importJson);
@@ -271,7 +321,15 @@ export class ThemesComponent implements OnInit {
 
     this.importing.set(true);
 
-    this.api.importTheme({ name: parsed.name, tokens: parsed.tokens, activate: this.importActivate }).subscribe({
+    this.api
+      .importTheme({
+        name: parsed.name,
+        tokens: parsed.tokens,
+        layout: parsed.layout,
+        config: parsed.config ?? null,
+        activate: this.importActivate,
+      })
+      .subscribe({
       next: (theme) => {
         this.importing.set(false);
         this.importJson = '';
@@ -292,6 +350,7 @@ export class ThemesComponent implements OnInit {
       next: (response) => {
         this.themes.set(response.data);
         this.allowed.set(response.allowed);
+        this.layouts.set(response.layouts);
         this.loading.set(false);
       },
       error: (error) => {

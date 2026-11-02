@@ -21,7 +21,10 @@ class ThemeController extends Controller
                 ->map(fn (Theme $theme) => $this->payload($theme))
                 ->all(),
             'allowed' => Theme::ALLOWED_TOKENS,
-            'layouts' => Theme::LAYOUTS,
+            'layouts' => array_map(
+                fn (string $key) => ['key' => $key, 'label' => Theme::LAYOUT_LABELS[$key] ?? $key],
+                Theme::LAYOUTS,
+            ),
         ];
     }
 
@@ -72,13 +75,18 @@ class ThemeController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'max:120'],
             'tokens' => ['required', 'array'],
+            'layout' => ['nullable', Rule::in(Theme::LAYOUTS)],
+            'config' => ['nullable', 'array'],
             'activate' => ['nullable', 'boolean'],
         ]);
+
+        $config = Theme::sanitizeConfig($data['config'] ?? []);
 
         $theme = Theme::query()->create([
             'name' => $data['name'],
             'tokens' => Theme::sanitizeTokens($data['tokens']),
-            'layout' => $request->input('layout', 'notebook'),
+            'layout' => $data['layout'] ?? 'notebook',
+            'config' => $config === [] ? null : $config,
             'is_active' => false,
         ]);
 
@@ -99,6 +107,7 @@ class ThemeController extends Controller
             'slug' => ['nullable', 'string', 'max:120'],
             'tokens' => ['required', 'array'],
             'layout' => ['nullable', Rule::in(Theme::LAYOUTS)],
+            'config' => ['nullable', 'array'],
         ]);
 
         $tokens = Theme::sanitizeTokens($data['tokens']);
@@ -109,11 +118,14 @@ class ThemeController extends Controller
             ]);
         }
 
+        $config = Theme::sanitizeConfig($data['config'] ?? $theme?->config ?? []);
+
         return [
             'name' => $data['name'],
             'slug' => $data['slug'] ?? null,
             'tokens' => $tokens,
             'layout' => $data['layout'] ?? $theme?->layout ?? 'notebook',
+            'config' => $config === [] ? null : $config,
             'is_active' => $theme?->is_active ?? false,
         ];
     }
@@ -129,6 +141,7 @@ class ThemeController extends Controller
             'slug' => $theme->slug,
             'tokens' => $theme->tokens,
             'layout' => $theme->layout,
+            'config' => $theme->config,
             'is_active' => $theme->is_active,
             'updated_at' => $theme->updated_at?->toIso8601String(),
         ];

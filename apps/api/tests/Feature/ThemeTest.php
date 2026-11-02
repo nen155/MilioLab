@@ -106,6 +106,35 @@ class ThemeTest extends TestCase
         ])->assertStatus(422)->assertJsonValidationErrors('layout');
     }
 
+    public function test_theme_config_is_sanitized_and_public(): void
+    {
+        $theme = $this->actingAs($this->admin())->postJson('/api/v1/admin/themes', [
+            'name' => 'Config',
+            'tokens' => ['--ink' => '#000'],
+            'layout' => 'sketch',
+            'config' => [
+                'rail' => [
+                    'subtitle' => '<b>Ingeniería</b>',
+                    'items' => [
+                        ['label' => 'proyecto', 'value' => 'ML-2026'],
+                        ['bad' => true],
+                    ],
+                    'evil' => 'no',
+                ],
+            ],
+            'activate' => true,
+        ])->assertCreated()->json('data');
+
+        $this->assertSame('Ingeniería', $theme['config']['rail']['subtitle']);
+        $this->assertSame('ML-2026', $theme['config']['rail']['items'][0]['value']);
+        $this->assertArrayNotHasKey('evil', $theme['config']['rail']);
+
+        $this->getJson('/api/v1/site')
+            ->assertOk()
+            ->assertJsonPath('theme.config.rail.subtitle', 'Ingeniería')
+            ->assertJsonPath('theme.config.rail.items.0.label', 'proyecto');
+    }
+
     public function test_the_active_theme_cannot_be_deleted(): void
     {
         $theme = Theme::query()->create(['name' => 'Activo', 'tokens' => ['--ink' => '#000'], 'is_active' => true]);

@@ -16,6 +16,7 @@ import {
   SettingsResponse,
   Stats,
   Theme,
+  ThemeConfig,
   Tag,
 } from './models';
 
@@ -195,15 +196,37 @@ export class ApiService {
 
   // --- Temas ---------------------------------------------------------------
 
-  themes(): Observable<{ data: Theme[]; allowed: string[]; layouts: string[] }> {
-    return this.http.get<{ data: Theme[]; allowed: string[]; layouts: string[] }>(`${this.base}/themes`);
+  themes(): Observable<{
+    data: Theme[];
+    allowed: string[];
+    layouts: Array<{ key: string; label: string }>;
+  }> {
+    return this.http.get<{
+      data: Theme[];
+      allowed: string[];
+      layouts: Array<{ key: string; label: string }>;
+    }>(`${this.base}/themes`);
   }
 
-  createTheme(payload: { name: string; tokens: Record<string, string>; layout?: string; activate?: boolean }) {
+  createTheme(payload: {
+    name: string;
+    tokens: Record<string, string>;
+    layout?: string;
+    config?: ThemeConfig | null;
+    activate?: boolean;
+  }) {
     return this.http.post<{ data: Theme }>(`${this.base}/themes`, payload).pipe(map((r) => r.data));
   }
 
-  updateTheme(id: number, payload: { name: string; tokens: Record<string, string>; layout?: string }) {
+  updateTheme(
+    id: number,
+    payload: {
+      name: string;
+      tokens: Record<string, string>;
+      layout?: string;
+      config?: ThemeConfig | null;
+    },
+  ) {
     return this.http.put<{ data: Theme }>(`${this.base}/themes/${id}`, payload).pipe(map((r) => r.data));
   }
 
@@ -217,7 +240,13 @@ export class ApiService {
     return this.http.delete(`${this.base}/themes/${id}`);
   }
 
-  importTheme(payload: { name: string; tokens: Record<string, string>; activate?: boolean }) {
+  importTheme(payload: {
+    name: string;
+    tokens: Record<string, string>;
+    layout?: string;
+    config?: ThemeConfig | null;
+    activate?: boolean;
+  }) {
     return this.http
       .post<{ data: Theme }>(`${this.base}/themes/import`, payload)
       .pipe(map((r) => r.data));

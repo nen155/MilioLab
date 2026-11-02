@@ -6,7 +6,7 @@ use App\Models\Concerns\HasSlug;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['name', 'slug', 'tokens', 'layout', 'is_active'])]
+#[Fillable(['name', 'slug', 'tokens', 'layout', 'config', 'is_active'])]
 class Theme extends Model
 {
     use HasSlug;
@@ -25,10 +25,19 @@ class Theme extends Model
     /** Variantes de diseño disponibles. El contenido es el mismo; cambia la piel. */
     public const LAYOUTS = ['notebook', 'cards', 'sketch', 'hud'];
 
+    /** Etiquetas que ve el panel para cada variante. */
+    public const LAYOUT_LABELS = [
+        'notebook' => 'Cuaderno · papel milimetrado',
+        'sketch' => 'Roca · presas y cuerda',
+        'cards' => 'Cartas · marco dorado',
+        'hud' => 'Consola · interfaz táctica',
+    ];
+
     protected function casts(): array
     {
         return [
             'tokens' => 'array',
+            'config' => 'array',
             'is_active' => 'boolean',
         ];
     }
@@ -57,6 +66,72 @@ class Theme extends Model
         }
 
         return $clean;
+    }
+
+    /**
+     * Configuración declarativa del tema (por ahora, los textos del raíl).
+     * Se guarda como JSON y el frontend la pinta sin conocer el tema.
+     *
+     * @param  array<string, mixed>  $config
+     * @return array<string, mixed>
+     */
+    public static function sanitizeConfig(array $config): array
+    {
+        $rail = $config['rail'] ?? null;
+
+        if (! is_array($rail)) {
+            return [];
+        }
+
+        $clean = [];
+
+        foreach (['aria', 'subtitle', 'type', 'foot'] as $key) {
+            if (! isset($rail[$key]) || ! is_scalar($rail[$key])) {
+                continue;
+            }
+
+            $value = trim(strip_tags((string) $rail[$key]));
+
+            if ($value !== '') {
+                $clean[$key] = mb_substr($value, 0, 120);
+            }
+        }
+
+        if (isset($rail['items']) && is_array($rail['items'])) {
+            $items = [];
+
+            foreach ($rail['items'] as $item) {
+                if (! is_array($item) || ! isset($item['label'], $item['value'])) {
+                    continue;
+                }
+
+                if (! is_scalar($item['label']) || ! is_scalar($item['value'])) {
+                    continue;
+                }
+
+                $label = trim(strip_tags((string) $item['label']));
+                $value = trim(strip_tags((string) $item['value']));
+
+                if ($label === '' || $value === '') {
+                    continue;
+                }
+
+                $items[] = [
+                    'label' => mb_substr($label, 0, 40),
+                    'value' => mb_substr($value, 0, 60),
+                ];
+
+                if (count($items) >= 8) {
+                    break;
+                }
+            }
+
+            if ($items !== []) {
+                $clean['items'] = $items;
+            }
+        }
+
+        return $clean === [] ? [] : ['rail' => $clean];
     }
 
     public function activate(): void
