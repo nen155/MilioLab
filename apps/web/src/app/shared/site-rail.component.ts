@@ -2,7 +2,7 @@ import { Component, computed, inject } from '@angular/core';
 
 import { I18nService } from '../core/i18n';
 import { ThemeRailConfig, ThemeRailItem } from '../core/models';
-import { SiteService } from '../core/site.service';
+import { ThemeService } from '../core/theme.service';
 
 interface RailView extends ThemeRailConfig {
   aria: string;
@@ -22,6 +22,8 @@ interface RailView extends ThemeRailConfig {
   selector: 'app-site-rail',
   template: `
     <aside class="rail" [attr.aria-label]="rail().aria">
+      <span class="rail-title">{{ railTitle() }}</span>
+
       <span class="rail-ridge" aria-hidden="true">
         <svg viewBox="0 0 200 420" preserveAspectRatio="none">
           <path class="ridge-far" d="M0 420 V250 L46 196 L92 246 L142 146 L200 214 V420 Z" />
@@ -57,12 +59,18 @@ interface RailView extends ThemeRailConfig {
   `,
 })
 export class SiteRailComponent {
-  private readonly site = inject(SiteService);
+  private readonly theme = inject(ThemeService);
   protected readonly i18n = inject(I18nService);
+
+  protected readonly railTitle = computed(() =>
+    this.theme.current()?.layout === 'playmat'
+      ? this.i18n.t('playmat.sideboard')
+      : this.i18n.t('desktop.myComputer'),
+  );
 
   protected readonly rail = computed<RailView>(() => {
     const year = new Date().getFullYear();
-    const config = this.site.site()?.theme?.config?.rail ?? {};
+    const config = this.theme.current()?.config?.rail ?? {};
     const defaults: RailView = {
       aria: this.i18n.t('rail.aria'),
       subtitle: this.i18n.t('rail.subtitle'),

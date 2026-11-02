@@ -7,31 +7,46 @@ import { I18nService } from '../../core/i18n';
 import { Page } from '../../core/models';
 import { SeoService } from '../../core/seo.service';
 import { SiteService } from '../../core/site.service';
+import { ThemeService } from '../../core/theme.service';
 import { ContentPipe } from '../../shared/content.pipe';
+import { DesktopAboutComponent } from './desktop-about.component';
+import { DesktopContactComponent } from './desktop-contact.component';
+import { PlaymatAboutComponent } from './playmat-about.component';
+import { PlaymatContactComponent } from './playmat-contact.component';
 
 @Component({
   selector: 'app-page',
-  imports: [RouterLink, ContentPipe],
+  imports: [RouterLink, ContentPipe, DesktopContactComponent, DesktopAboutComponent, PlaymatContactComponent, PlaymatAboutComponent],
   template: `
     @if (loading()) {
       <div class="article"><div class="skeleton" style="height: 280px"></div></div>
     } @else if (page(); as current) {
-      <article class="article" [style.max-width]="current.template === 'wide' ? '100%' : null">
-        <header class="article-head">
-          <p class="kicker">{{ i18n.t('page.kicker', { template: templateName() }) }}</p>
-          <h1>{{ title() }}</h1>
-          @if (excerpt()) {
-            <p class="lede">{{ excerpt() }}</p>
-          }
-        </header>
+      @if (playmat() && slug() === 'contacto') {
+        <app-playmat-contact [page]="current" />
+      } @else if (playmat() && slug() === 'sobre-mi') {
+        <app-playmat-about [page]="current" />
+      } @else if (desktop() && slug() === 'contacto') {
+        <app-desktop-contact [page]="current" />
+      } @else if (desktop() && slug() === 'sobre-mi') {
+        <app-desktop-about [page]="current" />
+      } @else {
+        <article class="article" [style.max-width]="current.template === 'wide' ? '100%' : null">
+          <header class="article-head">
+            <p class="kicker">{{ i18n.t('page.kicker', { template: templateName() }) }}</p>
+            <h1>{{ title() }}</h1>
+            @if (excerpt()) {
+              <p class="lede">{{ excerpt() }}</p>
+            }
+          </header>
 
-        <div class="prose" [innerHTML]="body() | content"></div>
+          <div class="prose" [innerHTML]="body() | content"></div>
 
-        <footer class="article-foot">
-          <a class="link-arrow" routerLink="/">{{ i18n.t('page.back') }}</a>
-          <span class="mono muted">MilioLab</span>
-        </footer>
-      </article>
+          <footer class="article-foot">
+            <a class="link-arrow" routerLink="/">{{ i18n.t('page.back') }}</a>
+            <span class="mono muted">MilioLab</span>
+          </footer>
+        </article>
+      }
     } @else {
       <section class="empty">
         <p class="kicker">404</p>
@@ -47,11 +62,14 @@ export class PageViewComponent {
 
   private readonly api = inject(ApiService);
   private readonly site = inject(SiteService);
+  private readonly theme = inject(ThemeService);
   private readonly seo = inject(SeoService);
   protected readonly i18n = inject(I18nService);
 
   protected readonly page = signal<Page | null>(null);
   protected readonly loading = signal(true);
+  protected readonly desktop = computed(() => this.theme.current()?.layout === 'desktop');
+  protected readonly playmat = computed(() => this.theme.current()?.layout === 'playmat');
 
   protected readonly title = computed(() => this.i18n.content(this.page()?.title, this.page()?.title_en));
   protected readonly excerpt = computed(() => this.i18n.content(this.page()?.excerpt, this.page()?.excerpt_en));

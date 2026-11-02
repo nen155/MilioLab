@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\FeedController;
 use App\Http\Controllers\Api\PublicPageController;
 use App\Http\Controllers\Api\PublicPostController;
+use App\Http\Controllers\Api\PublicThemeController;
 use App\Http\Controllers\Api\SiteController;
 use App\Http\Controllers\Api\SitemapController;
 use App\Http\Controllers\Api\TaxonomyController;
@@ -31,6 +32,7 @@ Route::get('feed', FeedController::class);
 */
 Route::prefix('v1')->group(function (): void {
     Route::get('site', SiteController::class);
+    Route::get('themes', PublicThemeController::class);
     Route::get('pages/{slug}', [PublicPageController::class, 'show']);
     Route::get('posts', [PublicPostController::class, 'index']);
     Route::get('posts/{slug}', [PublicPostController::class, 'show']);

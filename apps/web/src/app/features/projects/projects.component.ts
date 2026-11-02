@@ -3,14 +3,16 @@ import { Component, computed, effect, inject, signal } from '@angular/core';
 import { absoluteUrl } from '../../core/format';
 import { I18nService, Localized } from '../../core/i18n';
 import { SeoService } from '../../core/seo.service';
+import { DesktopProjectsComponent } from './desktop-projects.component';
+import { PlaymatProjectsComponent } from './playmat-projects.component';
 
-interface Tech {
+export interface Tech {
   name: string;
   short: string;
   color: string;
 }
 
-interface Project {
+export interface Project {
   name: string;
   from: number;
   to: number;
@@ -267,8 +269,13 @@ const PROJECTS: Project[] = [
 
 @Component({
   selector: 'app-projects',
+  imports: [DesktopProjectsComponent, PlaymatProjectsComponent],
   template: `
-    <header class="article-head" style="margin-top: 2rem">
+    <app-desktop-projects [projects]="projects" />
+    <app-playmat-projects [projects]="projects" />
+
+    <div class="standard-page">
+      <header class="article-head" style="margin-top: 2rem">
       <p class="kicker">{{ i18n.t('projects.kicker', { count: projects.length }) }}</p>
       <h1>{{ i18n.t('projects.title') }}</h1>
       <p class="lede">
@@ -380,6 +387,7 @@ const PROJECTS: Project[] = [
     @if (visible().length === 0) {
       <p class="empty mono muted">{{ i18n.t('projects.empty') }}</p>
     }
+    </div>
   `,
 })
 export class ProjectsComponent {

@@ -3,10 +3,12 @@ import { Component, computed, effect, inject, signal } from '@angular/core';
 import { absoluteUrl } from '../../core/format';
 import { I18nService, Localized } from '../../core/i18n';
 import { SeoService } from '../../core/seo.service';
+import { DesktopSkillsComponent } from './desktop-skills.component';
+import { PlaymatSkillsComponent } from './playmat-skills.component';
 
-type Mode = 'code' | 'soft' | 'ai';
+export type Mode = 'code' | 'soft' | 'ai';
 
-interface Skill {
+export interface Skill {
   name: Localized;
   short: string;
   color: string;
@@ -68,8 +70,13 @@ const SKILLS: Skill[] = [
 
 @Component({
   selector: 'app-skills',
+  imports: [DesktopSkillsComponent, PlaymatSkillsComponent],
   template: `
-    <header class="article-head" style="margin-top: 2rem">
+    <app-desktop-skills [skills]="skills" />
+    <app-playmat-skills [skills]="skills" />
+
+    <div class="standard-page">
+      <header class="article-head" style="margin-top: 2rem">
       <p class="kicker">{{ i18n.t('skills.kicker', { count: skills.length }) }}</p>
       <h1>{{ i18n.t('skills.title') }}</h1>
       <p class="lede">
@@ -172,6 +179,7 @@ const SKILLS: Skill[] = [
         }
       </div>
     </section>
+    </div>
   `,
 })
 export class SkillsComponent {

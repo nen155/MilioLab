@@ -44,6 +44,7 @@ app-scenery {
 .rail-card-frame,
 .rail-set,
 .rail-type,
+.rail-title,
 .hud-status {
   display: none;
 }

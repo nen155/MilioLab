@@ -26,7 +26,9 @@
             ],
             "styles": [
               "src/styles.css",
-              "src/layouts.css"
+              "src/layouts.css",
+              "src/desktop.css",
+              "src/playmat.css"
             ]
           },
           "configurations": {
@@ -34,7 +36,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
+                  "maximumWarning": "700kB",
                   "maximumError": "1MB"
                 },
                 {

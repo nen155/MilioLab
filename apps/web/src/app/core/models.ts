@@ -114,6 +114,12 @@ export interface SiteTheme {
   config?: ThemeConfig | null;
 }
 
+export interface ThemeCatalogItem extends SiteTheme {
+  id: number;
+  slug: string;
+  layout_label: string;
+}
+
 export interface Site {
   settings: SiteSettings;
   theme: SiteTheme | null;

@@ -9,13 +9,19 @@ import { I18nService } from '../../core/i18n';
 import { SiteService } from '../../core/site.service';
 import { ContentPipe } from '../../shared/content.pipe';
 import { PostCardComponent } from '../../shared/post-card.component';
+import { DesktopHomeComponent } from './desktop-home.component';
+import { PlaymatHomeComponent } from './playmat-home.component';
 import { NodeMapComponent } from './node-map.component';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, PostCardComponent, ContentPipe, NodeMapComponent],
+  imports: [RouterLink, PostCardComponent, ContentPipe, NodeMapComponent, DesktopHomeComponent, PlaymatHomeComponent],
   template: `
-    <section class="hero">
+    <app-desktop-home [page]="homePage()" />
+    <app-playmat-home />
+
+    <div class="standard-page">
+      <section class="hero">
       <div>
         <p class="kicker">{{ i18n.t('home.kicker') }} · {{ year }}</p>
         <h1 class="display">
@@ -101,6 +107,7 @@ import { NodeMapComponent } from './node-map.component';
         </ul>
       </details>
     </section>
+    </div>
   `,
 })
 export class HomeComponent implements OnInit {

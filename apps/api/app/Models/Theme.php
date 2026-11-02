@@ -23,7 +23,7 @@ class Theme extends Model
     ];
 
     /** Variantes de diseño disponibles. El contenido es el mismo; cambia la piel. */
-    public const LAYOUTS = ['notebook', 'cards', 'sketch', 'hud'];
+    public const LAYOUTS = ['notebook', 'cards', 'sketch', 'hud', 'desktop', 'playmat'];
 
     /** Etiquetas que ve el panel para cada variante. */
     public const LAYOUT_LABELS = [
@@ -31,6 +31,8 @@ class Theme extends Model
         'sketch' => 'Roca · presas y cuerda',
         'cards' => 'Cartas · marco dorado',
         'hud' => 'Consola · interfaz táctica',
+        'desktop' => 'Escritorio · CRT 95',
+        'playmat' => 'Tapete · Magic',
     ];
 
     protected function casts(): array

@@ -11,6 +11,7 @@ import {
   PostSummary,
   Site,
   Tag,
+  ThemeCatalogItem,
 } from './models';
 
 export interface PostQuery {
@@ -28,6 +29,12 @@ export class ApiService {
 
   getSite(): Observable<Site> {
     return this.http.get<Site>(`${this.base}/site`);
+  }
+
+  getThemes(): Observable<ThemeCatalogItem[]> {
+    return this.http
+      .get<{ data: ThemeCatalogItem[] }>(`${this.base}/themes`)
+      .pipe(map((response) => response.data));
   }
 
   getPage(slug: string): Observable<Page> {

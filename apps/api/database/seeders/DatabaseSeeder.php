@@ -518,6 +518,53 @@ class DatabaseSeeder extends Seeder
             ],
         );
 
+        Theme::query()->updateOrCreate(
+            ['slug' => 'escritorio-95'],
+            [
+                'name' => 'Escritorio 95',
+                'layout' => 'desktop',
+                'tokens' => [
+                    '--paper' => '#c0c0c0',
+                    '--paper-2' => '#dfdfdf',
+                    '--ink' => '#000000',
+                    '--ink-soft' => '#000080',
+                    '--ink-mute' => '#808080',
+                    '--line' => '#808080',
+                    '--line-strong' => '#000000',
+                    '--accent' => '#000080',
+                    '--accent-ink' => '#ffffff',
+                    '--accent-soft' => '#c0c0c0',
+                    '--grid' => 'transparent',
+                    '--grid-size' => '1px',
+                    '--font-sans' => '"MS Sans Serif", "Segoe UI", Tahoma, sans-serif',
+                    '--font-serif' => '"MS Serif", "Times New Roman", serif',
+                    '--font-mono' => '"Courier New", monospace',
+                ],
+            ],
+        );
+
+        Theme::query()->updateOrCreate(
+            ['slug' => 'tapete-de-mana'],
+            [
+                'name' => 'Tapete de maná',
+                'layout' => 'playmat',
+                'tokens' => [
+                    '--paper' => '#14231d',
+                    '--paper-2' => '#1c332a',
+                    '--ink' => '#f3ead3',
+                    '--ink-soft' => '#d8c9a6',
+                    '--ink-mute' => '#9a8b70',
+                    '--line' => '#2f4a3d',
+                    '--line-strong' => '#55705f',
+                    '--accent' => '#d4a13a',
+                    '--accent-ink' => '#1a1208',
+                    '--accent-soft' => '#3a2f1d',
+                    '--grid' => 'rgb(212 161 58 / 6%)',
+                    '--grid-size' => '32px',
+                ],
+            ],
+        );
+
         // El tema de nodos es el que se quiere enseñar por defecto.
         $nodos->activate();
     }

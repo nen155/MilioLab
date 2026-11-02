@@ -135,6 +135,28 @@ class ThemeTest extends TestCase
             ->assertJsonPath('theme.config.rail.items.0.label', 'proyecto');
     }
 
+    public function test_the_theme_catalog_is_public(): void
+    {
+        Theme::query()->create([
+            'name' => 'Alfa',
+            'tokens' => ['--ink' => '#000'],
+            'layout' => 'desktop',
+            'is_active' => true,
+        ]);
+        Theme::query()->create([
+            'name' => 'Beta',
+            'tokens' => ['--ink' => '#111'],
+            'layout' => 'sketch',
+        ]);
+
+        $this->getJson('/api/v1/themes')
+            ->assertOk()
+            ->assertJsonCount(2, 'data')
+            ->assertJsonPath('data.0.name', 'Alfa')
+            ->assertJsonPath('data.0.layout_label', 'Escritorio · CRT 95')
+            ->assertJsonPath('data.1.layout', 'sketch');
+    }
+
     public function test_the_active_theme_cannot_be_deleted(): void
     {
         $theme = Theme::query()->create(['name' => 'Activo', 'tokens' => ['--ink' => '#000'], 'is_active' => true]);
